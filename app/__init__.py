@@ -1,4 +1,4 @@
-from flask import Flask, app
+from flask import Flask
 from app.agent import CodingAgent
 from app.config import DevelopmentConfig
 from app.logger import logger
@@ -9,8 +9,8 @@ def create_app():
     # 2. Initialize logging
     # 3. Connect to the database
     # 4. Initialize LangChain
-    # 5. Initialize Groq
-    # 6. Initialize MCP Client
+    # 5. Initialize local model manager
+    # 6. Initialize MCP-compatible tool registry
     # 7. Register routes
     # 8. Initialize RAG
     # 9. Initialize memory
@@ -26,7 +26,7 @@ def create_app():
     except Exception:
         logger.exception("Failed to initialize LLM Manager.")
         raise
-    logger.info("Forge AI Backend Initialized Successfully.")
+    logger.info("Sanctum Backend Initialized Successfully.")
     # Register Routes
     from app.routes import main_bp
     app.register_blueprint(main_bp)

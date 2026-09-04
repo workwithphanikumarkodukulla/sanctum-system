@@ -1,0 +1,7 @@
+[32m2026-09-03 15:44:07[0m | [1mINFO    [0m | [36mapp.llm[0m:[36m__init__[0m:[36m28[0m | [1mLocal LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)[0m
+[32m2026-09-03 15:44:07[0m | [1mINFO    [0m | [36mapp.agent[0m:[36m_load_saved_workspace[0m:[36m361[0m | [1mSaved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves[0m
+[32m2026-09-03 15:44:07[0m | [1mINFO    [0m | [36mapp.memory[0m:[36m_load_history[0m:[36m43[0m | [1mConversation history loaded successfully.[0m
+[32m2026-09-03 15:44:07[0m | [1mINFO    [0m | [36mapp[0m:[36mcreate_app[0m:[36m29[0m | [1mSanctum Backend Initialized Successfully.[0m
+[32m2026-09-03 15:44:07[0m | [34m[1mDEBUG   [0m | [36m__main__[0m:[36m<module>[0m:[36m6[0m | [34m[1mAI Agent's Backend Started[0m
+ * Serving Flask app 'app'
+ * Debug mode: off

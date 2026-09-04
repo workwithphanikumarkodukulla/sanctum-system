@@ -1,0 +1,610 @@
+2026-08-04 18:03:18 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 18:03:18 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:03:18 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 18:03:20 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 18:03:20 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:03:20 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 18:03:49 | INFO     | app.memory:clear:30 | Conversation history cleared.
+2026-08-04 18:16:26 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 18:16:26 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:16:26 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 18:16:28 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 18:16:28 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:16:28 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 18:18:21 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 18:18:21 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:18:21 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 18:18:36 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 18:18:36 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:18:36 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 18:18:36 | INFO     | app.llm:health_check:23 | Groq LLM Health Check Passed.
+2026-08-04 18:19:29 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 18:19:29 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:19:29 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 18:19:31 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 18:19:31 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:19:31 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 18:22:19 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 18:22:19 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:22:19 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 18:24:07 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:24:23 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:36:43 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 18:36:43 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:36:43 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 18:36:46 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 18:36:46 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:36:46 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 18:37:16 | ERROR    | app.routes:chat:34 | Error while processing chat request.
+Traceback (most recent call last):
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 973, in _bootstrap
+    self._bootstrap_inner()
+    │    └ <function Thread._bootstrap_inner at 0x000001FDA4155F30>
+    └ <Thread(Thread-6 (process_request_thread), started daemon 31192)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 1016, in _bootstrap_inner
+    self.run()
+    │    └ <function Thread.run at 0x000001FDA4155C60>
+    └ <Thread(Thread-6 (process_request_thread), started daemon 31192)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {}
+    │    │        │    │        └ <Thread(Thread-6 (process_request_thread), started daemon 31192)>
+    │    │        │    └ (<socket.socket fd=1756, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr...
+    │    │        └ <Thread(Thread-6 (process_request_thread), started daemon 31192)>
+    │    └ <bound method ThreadingMixIn.process_request_thread of <werkzeug.serving.ThreadedWSGIServer object at 0x000001FDA81D32B0>>
+    └ <Thread(Thread-6 (process_request_thread), started daemon 31192)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 683, in process_request_thread
+    self.finish_request(request, client_address)
+    │    │              │        └ ('127.0.0.1', 55231)
+    │    │              └ <socket.socket fd=1756, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    └ <function BaseServer.finish_request at 0x000001FDA4157910>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FDA81D32B0>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 360, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    │    │                   │        │               └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FDA81D32B0>
+    │    │                   │        └ ('127.0.0.1', 55231)
+    │    │                   └ <socket.socket fd=1756, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    └ <class 'werkzeug.serving.WSGIRequestHandler'>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FDA81D32B0>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 747, in __init__
+    self.handle()
+    │    └ <function WSGIRequestHandler.handle at 0x000001FDA4595630>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000001FDA8218FD0>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 399, in handle
+    super().handle()
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 433, in handle
+    self.handle_one_request()
+    │    └ <function BaseHTTPRequestHandler.handle_one_request at 0x000001FDA436C700>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000001FDA8218FD0>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 421, in handle_one_request
+    method()
+    └ <bound method WSGIRequestHandler.run_wsgi of <werkzeug.serving.WSGIRequestHandler object at 0x000001FDA8218FD0>>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 371, in run_wsgi
+    execute(self.server.app)
+    │       │    │      └ <werkzeug.debug.DebuggedApplication object at 0x000001FDA689BD60>
+    │       │    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FDA81D32B0>
+    │       └ <werkzeug.serving.WSGIRequestHandler object at 0x000001FDA8218FD0>
+    └ <function WSGIRequestHandler.run_wsgi.<locals>.execute at 0x000001FDA81F6CB0>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 334, in execute
+    for data in application_iter:
+                └ <generator object DebuggedApplication.debug_application at 0x000001FDA815F680>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\debug\__init__.py", line 347, in debug_application
+    app_iter = self.app(environ, start_response)
+               │    │   │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000001FDA81F72E0>
+               │    │   └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=1756>, 'wsgi.errors': <_io.TextIOW...
+               │    └ <Flask 'app'>
+               └ <werkzeug.debug.DebuggedApplication object at 0x000001FDA689BD60>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           │    │        │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000001FDA81F72E0>
+           │    │        └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=1756>, 'wsgi.errors': <_io.TextIOW...
+           │    └ <function Flask.wsgi_app at 0x000001FDA4A5ADD0>
+           └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               │    └ <function Flask.full_dispatch_request at 0x000001FDA4A5A5F0>
+               └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         │    └ <function Flask.dispatch_request at 0x000001FDA4A5A560>
+         └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           │    │           │    │              │    │            └ {}
+           │    │           │    │              │    └ 'main.chat'
+           │    │           │    │              └ <Rule '/api/chat' (POST, OPTIONS) -> main.chat>
+           │    │           │    └ {'static': <function Flask.__init__.<locals>.<lambda> at 0x000001FDA6D5C0D0>, 'main.index': <function index at 0x000001FDA818...
+           │    │           └ <Flask 'app'>
+           │    └ <function Flask.ensure_sync at 0x000001FDA4A5A7A0>
+           └ <Flask 'app'>
+
+> File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\routes.py", line 28, in chat
+    result = agent.chat(message)
+             │     │    └ 'create a python file called hello.py that prints hello world'
+             │     └ <function CodingAgent.chat at 0x000001FDA6D5C430>
+             └ <app.agent.CodingAgent object at 0x000001FDA6FE4550>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\agent.py", line 203, in chat
+    response = self.llm_with_tools.invoke(messages)
+               │    │              │      └ [SystemMessage(content="You are Kepler AI, a professional AI Coding Assistant with access to workspace tools.\n\nYour capabil...
+               │    │              └ <function RunnableBindingBase.invoke at 0x000001FDA6C46950>
+               │    └ _ChatModelBinding(bound=ChatGroq(metadata={'lc_versions': {'langchain-core': '1.5.3', 'langchain': '1.3.14'}}, output_version...
+               └ <app.agent.CodingAgent object at 0x000001FDA6FE4550>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\langchain_core\runnables\base.py", line 6002, in invoke
+    return self.bound.invoke(
+           │    │     └ <function BaseChatModel.invoke at 0x000001FDA6E76C20>
+           │    └ ChatGroq(metadata={'lc_versions': {'langchain-core': '1.5.3', 'langchain': '1.3.14'}}, output_version=None, profile={'name': ...
+           └ _ChatModelBinding(bound=ChatGroq(metadata={'lc_versions': {'langchain-core': '1.5.3', 'langchain': '1.3.14'}}, output_version...
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 476, in invoke
+    self.generate_prompt(
+    │    └ <function BaseChatModel.generate_prompt at 0x000001FDA6E77B50>
+    └ ChatGroq(metadata={'lc_versions': {'langchain-core': '1.5.3', 'langchain': '1.3.14'}}, output_version=None, profile={'name': ...
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 1849, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+           │    │        │                     │               │            └ {'tags': [], 'metadata': {}, 'run_name': None, 'run_id': None, 'tools': [{'type': 'function', 'function': {'name': 'create_fi...
+           │    │        │                     │               └ None
+           │    │        │                     └ None
+           │    │        └ [[SystemMessage(content="You are Kepler AI, a professional AI Coding Assistant with access to workspace tools.\n\nYour capabi...
+           │    └ <function BaseChatModel.generate at 0x000001FDA6E77A30>
+           └ ChatGroq(metadata={'lc_versions': {'langchain-core': '1.5.3', 'langchain': '1.3.14'}}, output_version=None, profile={'name': ...
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 1656, in generate
+    self._generate_with_cache(
+    │    └ <function BaseChatModel._generate_with_cache at 0x000001FDA6E77C70>
+    └ ChatGroq(metadata={'lc_versions': {'langchain-core': '1.5.3', 'langchain': '1.3.14'}}, output_version=None, profile={'name': ...
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 1994, in _generate_with_cache
+    result = self._generate(
+             │    └ <function ChatGroq._generate at 0x000001FDA6EA27A0>
+             └ ChatGroq(metadata={'lc_versions': {'langchain-core': '1.5.3', 'langchain': '1.3.14'}}, output_version=None, profile={'name': ...
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\langchain_groq\chat_models.py", line 627, in _generate
+    response = self.client.create(messages=message_dicts, **params)
+               │    │      │               │                └ {'model': 'llama-3.3-70b-versatile', 'stream': False, 'n': 1, 'temperature': 1e-08, 'stop': None, 'reasoning_format': None, '...
+               │    │      │               └ [{'role': 'system', 'content': "You are Kepler AI, a professional AI Coding Assistant with access to workspace tools.\n\nYour...
+               │    │      └ <function Completions.create at 0x000001FDA80F4AF0>
+               │    └ <groq.resources.chat.completions.Completions object at 0x000001FDA6FE46D0>
+               └ ChatGroq(metadata={'lc_versions': {'langchain-core': '1.5.3', 'langchain': '1.3.14'}}, output_version=None, profile={'name': ...
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\groq\resources\chat\completions.py", line 461, in create
+    return self._post(
+           │    └ <bound method SyncAPIClient.post of <groq.Groq object at 0x000001FDA6ECC850>>
+           └ <groq.resources.chat.completions.Completions object at 0x000001FDA6FE46D0>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\groq\_base_client.py", line 1242, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+           │    │          │    │       │        │            │                  └ groq.Stream[groq.types.chat.chat_completion_chunk.ChatCompletionChunk]
+           │    │          │    │       │        │            └ False
+           │    │          │    │       │        └ FinalRequestOptions(method='post', url='/openai/v1/chat/completions', params={}, headers=NOT_GIVEN, max_retries=NOT_GIVEN, ti...
+           │    │          │    │       └ <class 'groq.types.chat.chat_completion.ChatCompletion'>
+           │    │          │    └ <function SyncAPIClient.request at 0x000001FDA6FE0CA0>
+           │    │          └ <groq.Groq object at 0x000001FDA6ECC850>
+           │    └ ~ResponseT
+           └ <function cast at 0x000001FDA40A2B00>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\groq\_base_client.py", line 1044, in request
+    raise self._make_status_error_from_response(err.response) from None
+          │    └ <function BaseClient._make_status_error_from_response at 0x000001FDA6FCB9A0>
+          └ <groq.Groq object at 0x000001FDA6ECC850>
+
+groq.BadRequestError: Error code: 400 - {'error': {'message': 'tool call validation failed: attempted to call tool \'create_file{"path": "hello.py", "content": "# hello.py\\nprint(\'Hello World\')"}\' which was not in request.tools', 'type': 'invalid_request_error', 'code': 'tool_use_failed', 'failed_generation': '<function=create_file{"path": "hello.py", "content": "# hello.py\\nprint(\'Hello World\')"}></function>'}}
+2026-08-04 18:39:37 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 18:39:37 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:39:37 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 18:39:39 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 18:39:39 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:39:40 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 18:39:52 | ERROR    | app.routes:chat:34 | Error while processing chat request.
+Traceback (most recent call last):
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 973, in _bootstrap
+    self._bootstrap_inner()
+    │    └ <function Thread._bootstrap_inner at 0x000001BAD96B5F30>
+    └ <Thread(Thread-2 (process_request_thread), started daemon 23304)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 1016, in _bootstrap_inner
+    self.run()
+    │    └ <function Thread.run at 0x000001BAD96B5C60>
+    └ <Thread(Thread-2 (process_request_thread), started daemon 23304)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {}
+    │    │        │    │        └ <Thread(Thread-2 (process_request_thread), started daemon 23304)>
+    │    │        │    └ (<socket.socket fd=1492, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr...
+    │    │        └ <Thread(Thread-2 (process_request_thread), started daemon 23304)>
+    │    └ <bound method ThreadingMixIn.process_request_thread of <werkzeug.serving.ThreadedWSGIServer object at 0x000001BADD6D32B0>>
+    └ <Thread(Thread-2 (process_request_thread), started daemon 23304)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 683, in process_request_thread
+    self.finish_request(request, client_address)
+    │    │              │        └ ('127.0.0.1', 62452)
+    │    │              └ <socket.socket fd=1492, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    └ <function BaseServer.finish_request at 0x000001BAD96B7910>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001BADD6D32B0>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 360, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    │    │                   │        │               └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001BADD6D32B0>
+    │    │                   │        └ ('127.0.0.1', 62452)
+    │    │                   └ <socket.socket fd=1492, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    └ <class 'werkzeug.serving.WSGIRequestHandler'>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001BADD6D32B0>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 747, in __init__
+    self.handle()
+    │    └ <function WSGIRequestHandler.handle at 0x000001BAD9AF5630>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000001BADD6D3640>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 399, in handle
+    super().handle()
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 433, in handle
+    self.handle_one_request()
+    │    └ <function BaseHTTPRequestHandler.handle_one_request at 0x000001BAD98CC700>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000001BADD6D3640>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 421, in handle_one_request
+    method()
+    └ <bound method WSGIRequestHandler.run_wsgi of <werkzeug.serving.WSGIRequestHandler object at 0x000001BADD6D3640>>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 371, in run_wsgi
+    execute(self.server.app)
+    │       │    │      └ <werkzeug.debug.DebuggedApplication object at 0x000001BADBD9BD60>
+    │       │    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001BADD6D32B0>
+    │       └ <werkzeug.serving.WSGIRequestHandler object at 0x000001BADD6D3640>
+    └ <function WSGIRequestHandler.run_wsgi.<locals>.execute at 0x000001BADD6F6A70>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 334, in execute
+    for data in application_iter:
+                └ <generator object DebuggedApplication.debug_application at 0x000001BADD65FC30>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\debug\__init__.py", line 347, in debug_application
+    app_iter = self.app(environ, start_response)
+               │    │   │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000001BADD6F69E0>
+               │    │   └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=1492>, 'wsgi.errors': <_io.TextIOW...
+               │    └ <Flask 'app'>
+               └ <werkzeug.debug.DebuggedApplication object at 0x000001BADBD9BD60>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           │    │        │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000001BADD6F69E0>
+           │    │        └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=1492>, 'wsgi.errors': <_io.TextIOW...
+           │    └ <function Flask.wsgi_app at 0x000001BADB07ADD0>
+           └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               │    └ <function Flask.full_dispatch_request at 0x000001BADB07A5F0>
+               └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         │    └ <function Flask.dispatch_request at 0x000001BADB07A560>
+         └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           │    │           │    │              │    │            └ {}
+           │    │           │    │              │    └ 'main.chat'
+           │    │           │    │              └ <Rule '/api/chat' (POST, OPTIONS) -> main.chat>
+           │    │           │    └ {'static': <function Flask.__init__.<locals>.<lambda> at 0x000001BADD25C160>, 'main.index': <function index at 0x000001BADD68...
+           │    │           └ <Flask 'app'>
+           │    └ <function Flask.ensure_sync at 0x000001BADB07A7A0>
+           └ <Flask 'app'>
+
+> File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\routes.py", line 28, in chat
+    result = agent.chat(message)
+             │     │    └ 'create a python file called hello.py that prints hello world'
+             │     └ <function CodingAgent.chat at 0x000001BADD25C4C0>
+             └ <app.agent.CodingAgent object at 0x000001BADD4E4550>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\agent.py", line 205, in chat
+    response = self.llm_with_tools.invoke(messages)
+               │    │              │      └ [SystemMessage(content="You are Kepler AI, a professional AI Coding Assistant with access to workspace tools.\n\nYour capabil...
+               │    │              └ <function RunnableBindingBase.invoke at 0x000001BADD1469E0>
+               │    └ _ChatModelBinding(bound=ChatGroq(metadata={'lc_versions': {'langchain-core': '1.5.3', 'langchain': '1.3.14'}}, output_version...
+               └ <app.agent.CodingAgent object at 0x000001BADD4E4550>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\langchain_core\runnables\base.py", line 6002, in invoke
+    return self.bound.invoke(
+           │    │     └ <function BaseChatModel.invoke at 0x000001BADD372CB0>
+           │    └ ChatGroq(metadata={'lc_versions': {'langchain-core': '1.5.3', 'langchain': '1.3.14'}}, output_version=None, profile={'name': ...
+           └ _ChatModelBinding(bound=ChatGroq(metadata={'lc_versions': {'langchain-core': '1.5.3', 'langchain': '1.3.14'}}, output_version...
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 476, in invoke
+    self.generate_prompt(
+    │    └ <function BaseChatModel.generate_prompt at 0x000001BADD373BE0>
+    └ ChatGroq(metadata={'lc_versions': {'langchain-core': '1.5.3', 'langchain': '1.3.14'}}, output_version=None, profile={'name': ...
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 1849, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+           │    │        │                     │               │            └ {'tags': [], 'metadata': {}, 'run_name': None, 'run_id': None, 'tools': [{'type': 'function', 'function': {'name': 'create_fi...
+           │    │        │                     │               └ None
+           │    │        │                     └ None
+           │    │        └ [[SystemMessage(content="You are Kepler AI, a professional AI Coding Assistant with access to workspace tools.\n\nYour capabi...
+           │    └ <function BaseChatModel.generate at 0x000001BADD373AC0>
+           └ ChatGroq(metadata={'lc_versions': {'langchain-core': '1.5.3', 'langchain': '1.3.14'}}, output_version=None, profile={'name': ...
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 1656, in generate
+    self._generate_with_cache(
+    │    └ <function BaseChatModel._generate_with_cache at 0x000001BADD373D00>
+    └ ChatGroq(metadata={'lc_versions': {'langchain-core': '1.5.3', 'langchain': '1.3.14'}}, output_version=None, profile={'name': ...
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 1994, in _generate_with_cache
+    result = self._generate(
+             │    └ <function ChatGroq._generate at 0x000001BADD3A2830>
+             └ ChatGroq(metadata={'lc_versions': {'langchain-core': '1.5.3', 'langchain': '1.3.14'}}, output_version=None, profile={'name': ...
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\langchain_groq\chat_models.py", line 627, in _generate
+    response = self.client.create(messages=message_dicts, **params)
+               │    │      │               │                └ {'model': 'llama-3.3-70b-versatile', 'stream': False, 'n': 1, 'temperature': 1e-08, 'stop': None, 'reasoning_format': None, '...
+               │    │      │               └ [{'role': 'system', 'content': "You are Kepler AI, a professional AI Coding Assistant with access to workspace tools.\n\nYour...
+               │    │      └ <function Completions.create at 0x000001BADD5F4B80>
+               │    └ <groq.resources.chat.completions.Completions object at 0x000001BADD4E46D0>
+               └ ChatGroq(metadata={'lc_versions': {'langchain-core': '1.5.3', 'langchain': '1.3.14'}}, output_version=None, profile={'name': ...
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\groq\resources\chat\completions.py", line 461, in create
+    return self._post(
+           │    └ <bound method SyncAPIClient.post of <groq.Groq object at 0x000001BADD3CC850>>
+           └ <groq.resources.chat.completions.Completions object at 0x000001BADD4E46D0>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\groq\_base_client.py", line 1242, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+           │    │          │    │       │        │            │                  └ groq.Stream[groq.types.chat.chat_completion_chunk.ChatCompletionChunk]
+           │    │          │    │       │        │            └ False
+           │    │          │    │       │        └ FinalRequestOptions(method='post', url='/openai/v1/chat/completions', params={}, headers=NOT_GIVEN, max_retries=NOT_GIVEN, ti...
+           │    │          │    │       └ <class 'groq.types.chat.chat_completion.ChatCompletion'>
+           │    │          │    └ <function SyncAPIClient.request at 0x000001BADD4E0D30>
+           │    │          └ <groq.Groq object at 0x000001BADD3CC850>
+           │    └ ~ResponseT
+           └ <function cast at 0x000001BAD95E2B00>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\groq\_base_client.py", line 1044, in request
+    raise self._make_status_error_from_response(err.response) from None
+          │    └ <function BaseClient._make_status_error_from_response at 0x000001BADD4C7A30>
+          └ <groq.Groq object at 0x000001BADD3CC850>
+
+groq.BadRequestError: Error code: 400 - {'error': {'message': 'tool call validation failed: attempted to call tool \'create_file{"path": "hello.py", "content": "# hello.py\\nprint(\'Hello World\')"}\' which was not in request.tools', 'type': 'invalid_request_error', 'code': 'tool_use_failed', 'failed_generation': '<function=create_file{"path": "hello.py", "content": "# hello.py\\nprint(\'Hello World\')"}></function>'}}
+2026-08-04 18:40:29 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 18:40:29 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:40:29 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 18:40:32 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 18:40:32 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:40:32 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 18:40:38 | ERROR    | app.routes:chat:34 | Error while processing chat request.
+Traceback (most recent call last):
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 973, in _bootstrap
+    self._bootstrap_inner()
+    │    └ <function Thread._bootstrap_inner at 0x000001BAD96B5F30>
+    └ <Thread(Thread-3 (process_request_thread), started daemon 17628)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 1016, in _bootstrap_inner
+    self.run()
+    │    └ <function Thread.run at 0x000001BAD96B5C60>
+    └ <Thread(Thread-3 (process_request_thread), started daemon 17628)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {}
+    │    │        │    │        └ <Thread(Thread-3 (process_request_thread), started daemon 17628)>
+    │    │        │    └ (<socket.socket fd=2020, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr...
+    │    │        └ <Thread(Thread-3 (process_request_thread), started daemon 17628)>
+    │    └ <bound method ThreadingMixIn.process_request_thread of <werkzeug.serving.ThreadedWSGIServer object at 0x000001BADD6D32B0>>
+    └ <Thread(Thread-3 (process_request_thread), started daemon 17628)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 683, in process_request_thread
+    self.finish_request(request, client_address)
+    │    │              │        └ ('127.0.0.1', 64539)
+    │    │              └ <socket.socket fd=2020, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    └ <function BaseServer.finish_request at 0x000001BAD96B7910>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001BADD6D32B0>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 360, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    │    │                   │        │               └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001BADD6D32B0>
+    │    │                   │        └ ('127.0.0.1', 64539)
+    │    │                   └ <socket.socket fd=2020, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    └ <class 'werkzeug.serving.WSGIRequestHandler'>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001BADD6D32B0>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 747, in __init__
+    self.handle()
+    │    └ <function WSGIRequestHandler.handle at 0x000001BAD9AF5630>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000001BADD6D3640>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 399, in handle
+    super().handle()
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 433, in handle
+    self.handle_one_request()
+    │    └ <function BaseHTTPRequestHandler.handle_one_request at 0x000001BAD98CC700>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000001BADD6D3640>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 421, in handle_one_request
+    method()
+    └ <bound method WSGIRequestHandler.run_wsgi of <werkzeug.serving.WSGIRequestHandler object at 0x000001BADD6D3640>>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 371, in run_wsgi
+    execute(self.server.app)
+    │       │    │      └ <werkzeug.debug.DebuggedApplication object at 0x000001BADBD9BD60>
+    │       │    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001BADD6D32B0>
+    │       └ <werkzeug.serving.WSGIRequestHandler object at 0x000001BADD6D3640>
+    └ <function WSGIRequestHandler.run_wsgi.<locals>.execute at 0x000001BADD6F6CB0>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 334, in execute
+    for data in application_iter:
+                └ <generator object DebuggedApplication.debug_application at 0x000001BADD85F450>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\debug\__init__.py", line 347, in debug_application
+    app_iter = self.app(environ, start_response)
+               │    │   │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000001BADD6F69E0>
+               │    │   └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=2020>, 'wsgi.errors': <_io.TextIOW...
+               │    └ <Flask 'app'>
+               └ <werkzeug.debug.DebuggedApplication object at 0x000001BADBD9BD60>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           │    │        │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000001BADD6F69E0>
+           │    │        └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=2020>, 'wsgi.errors': <_io.TextIOW...
+           │    └ <function Flask.wsgi_app at 0x000001BADB07ADD0>
+           └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               │    └ <function Flask.full_dispatch_request at 0x000001BADB07A5F0>
+               └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         │    └ <function Flask.dispatch_request at 0x000001BADB07A560>
+         └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           │    │           │    │              │    │            └ {}
+           │    │           │    │              │    └ 'main.chat'
+           │    │           │    │              └ <Rule '/api/chat' (POST, OPTIONS) -> main.chat>
+           │    │           │    └ {'static': <function Flask.__init__.<locals>.<lambda> at 0x000001BADD25C160>, 'main.index': <function index at 0x000001BADD68...
+           │    │           └ <Flask 'app'>
+           │    └ <function Flask.ensure_sync at 0x000001BADB07A7A0>
+           └ <Flask 'app'>
+
+> File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\routes.py", line 28, in chat
+    result = agent.chat(message)
+             │     │    └ 'create a python file called hello.py that prints hello world'
+             │     └ <function CodingAgent.chat at 0x000001BADD25C4C0>
+             └ <app.agent.CodingAgent object at 0x000001BADD4E4550>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\agent.py", line 205, in chat
+    response = self.llm_with_tools.invoke(messages)
+               │    │              │      └ [SystemMessage(content="You are Kepler AI, a professional AI Coding Assistant with access to workspace tools.\n\nYour capabil...
+               │    │              └ <function RunnableBindingBase.invoke at 0x000001BADD1469E0>
+               │    └ _ChatModelBinding(bound=ChatGroq(metadata={'lc_versions': {'langchain-core': '1.5.3', 'langchain': '1.3.14'}}, output_version...
+               └ <app.agent.CodingAgent object at 0x000001BADD4E4550>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\langchain_core\runnables\base.py", line 6002, in invoke
+    return self.bound.invoke(
+           │    │     └ <function BaseChatModel.invoke at 0x000001BADD372CB0>
+           │    └ ChatGroq(metadata={'lc_versions': {'langchain-core': '1.5.3', 'langchain': '1.3.14'}}, output_version=None, profile={'name': ...
+           └ _ChatModelBinding(bound=ChatGroq(metadata={'lc_versions': {'langchain-core': '1.5.3', 'langchain': '1.3.14'}}, output_version...
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 476, in invoke
+    self.generate_prompt(
+    │    └ <function BaseChatModel.generate_prompt at 0x000001BADD373BE0>
+    └ ChatGroq(metadata={'lc_versions': {'langchain-core': '1.5.3', 'langchain': '1.3.14'}}, output_version=None, profile={'name': ...
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 1849, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+           │    │        │                     │               │            └ {'tags': [], 'metadata': {}, 'run_name': None, 'run_id': None, 'tools': [{'type': 'function', 'function': {'name': 'create_fi...
+           │    │        │                     │               └ None
+           │    │        │                     └ None
+           │    │        └ [[SystemMessage(content="You are Kepler AI, a professional AI Coding Assistant with access to workspace tools.\n\nYour capabi...
+           │    └ <function BaseChatModel.generate at 0x000001BADD373AC0>
+           └ ChatGroq(metadata={'lc_versions': {'langchain-core': '1.5.3', 'langchain': '1.3.14'}}, output_version=None, profile={'name': ...
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 1656, in generate
+    self._generate_with_cache(
+    │    └ <function BaseChatModel._generate_with_cache at 0x000001BADD373D00>
+    └ ChatGroq(metadata={'lc_versions': {'langchain-core': '1.5.3', 'langchain': '1.3.14'}}, output_version=None, profile={'name': ...
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 1994, in _generate_with_cache
+    result = self._generate(
+             │    └ <function ChatGroq._generate at 0x000001BADD3A2830>
+             └ ChatGroq(metadata={'lc_versions': {'langchain-core': '1.5.3', 'langchain': '1.3.14'}}, output_version=None, profile={'name': ...
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\langchain_groq\chat_models.py", line 627, in _generate
+    response = self.client.create(messages=message_dicts, **params)
+               │    │      │               │                └ {'model': 'llama-3.3-70b-versatile', 'stream': False, 'n': 1, 'temperature': 1e-08, 'stop': None, 'reasoning_format': None, '...
+               │    │      │               └ [{'role': 'system', 'content': "You are Kepler AI, a professional AI Coding Assistant with access to workspace tools.\n\nYour...
+               │    │      └ <function Completions.create at 0x000001BADD5F4B80>
+               │    └ <groq.resources.chat.completions.Completions object at 0x000001BADD4E46D0>
+               └ ChatGroq(metadata={'lc_versions': {'langchain-core': '1.5.3', 'langchain': '1.3.14'}}, output_version=None, profile={'name': ...
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\groq\resources\chat\completions.py", line 461, in create
+    return self._post(
+           │    └ <bound method SyncAPIClient.post of <groq.Groq object at 0x000001BADD3CC850>>
+           └ <groq.resources.chat.completions.Completions object at 0x000001BADD4E46D0>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\groq\_base_client.py", line 1242, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+           │    │          │    │       │        │            │                  └ groq.Stream[groq.types.chat.chat_completion_chunk.ChatCompletionChunk]
+           │    │          │    │       │        │            └ False
+           │    │          │    │       │        └ FinalRequestOptions(method='post', url='/openai/v1/chat/completions', params={}, headers=NOT_GIVEN, max_retries=NOT_GIVEN, ti...
+           │    │          │    │       └ <class 'groq.types.chat.chat_completion.ChatCompletion'>
+           │    │          │    └ <function SyncAPIClient.request at 0x000001BADD4E0D30>
+           │    │          └ <groq.Groq object at 0x000001BADD3CC850>
+           │    └ ~ResponseT
+           └ <function cast at 0x000001BAD95E2B00>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\groq\_base_client.py", line 1044, in request
+    raise self._make_status_error_from_response(err.response) from None
+          │    └ <function BaseClient._make_status_error_from_response at 0x000001BADD4C7A30>
+          └ <groq.Groq object at 0x000001BADD3CC850>
+
+groq.BadRequestError: Error code: 400 - {'error': {'message': 'tool call validation failed: attempted to call tool \'create_file{"path": "hello.py", "content": "# hello.py\\nprint(\'Hello World\')"}\' which was not in request.tools', 'type': 'invalid_request_error', 'code': 'tool_use_failed', 'failed_generation': '<function=create_file{"path": "hello.py", "content": "# hello.py\\nprint(\'Hello World\')"}></function>'}}
+2026-08-04 18:41:30 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 18:41:30 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:41:30 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 18:41:32 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 18:41:33 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:41:33 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 18:41:43 | INFO     | app.agent:chat:215 | Tool call: create_file with args {'content': "# This is a Python script that prints 'Hello World'\nprint('Hello World')", 'path': 'hello.py'}
+2026-08-04 18:42:06 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 18:42:06 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:42:06 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 18:42:12 | INFO     | app.memory:clear:30 | Conversation history cleared.
+2026-08-04 18:42:13 | INFO     | app.agent:chat:215 | Tool call: list_files with args {'path': '.', 'recursive': True}
+2026-08-04 18:42:14 | INFO     | app.agent:chat:215 | Tool call: read_file with args {'path': 'hello.py'}
+2026-08-04 18:42:15 | INFO     | app.agent:chat:215 | Tool call: run_python with args {'code': 'print(2+2)'}
+2026-08-04 18:42:16 | INFO     | app.agent:chat:215 | Tool call: create_file with args {'content': "def greet(name):\n    print(f'Hello, {name}!')\n", 'path': 'greet.py'}
+2026-08-04 18:44:33 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 18:44:33 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:44:33 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 18:44:35 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 18:44:35 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:44:35 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 18:45:13 | INFO     | app.agent:chat:215 | Tool call: create_file with args {'content': '# calculator.py\n\ndef add(x, y):\n    """Return the sum of two numbers."""\n    return x + y\n\n\ndef subtract(x, y):\n    """Return the difference of two numbers."""\n    return x - y\n\n\ndef multiply(x, y):\n    """Return the product of two numbers."""\n    return x * y\n\n\ndef divide(x, y):\n    """Return the quotient of two numbers."""\n    if y == 0:\n        raise ZeroDivisionError("Cannot divide by zero.")\n    return x / y', 'path': 'calculator.py'}
+2026-08-04 18:46:10 | INFO     | app.agent:chat:215 | Tool call: workspace_tree with args {'path': '.'}
+2026-08-04 18:49:45 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 18:49:45 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:49:45 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 18:50:29 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 18:50:29 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:50:29 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 18:50:31 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 18:50:31 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 18:50:31 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 18:53:14 | INFO     | app.agent:chat:215 | Tool call: create_file with args {'content': "print('hello')\n", 'path': 'test.py'}
+2026-08-04 19:25:55 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 19:25:55 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 19:25:55 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 19:25:57 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 19:25:57 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 19:25:57 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 19:34:58 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 19:34:58 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 19:34:58 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 19:36:47 | INFO     | app.agent:chat:240 | Tool call: create_file with args {'path': 'countingSort.py', 'content': 'def counting_sort(arr):\n    max_val = max(arr)\n    count = [0] * (max_val + 1)\n\n    for num in arr:\n        count[num] += 1\n\n    sorted_arr = []\n    for i, cnt in enumerate(count):\n        sorted_arr += [i] * cnt\n\n    return sorted_arr\n\n# Example usage:\narr = [4, 2, 2, 8, 3, 3, 1]\nprint("Original array:", arr)\nprint("Sorted array:", counting_sort(arr))'}
+2026-08-04 19:37:34 | INFO     | app.agent:chat:240 | Tool call: list_files with args {'path': '.', 'recursive': True}
+2026-08-04 19:37:35 | INFO     | app.agent:chat:240 | Tool call: workspace_tree with args {'path': '.'}

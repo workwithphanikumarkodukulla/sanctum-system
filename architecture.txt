@@ -1,17 +1,17 @@
-Project
-   â†“
-Backend
-   â†“
-Configuration
-   â†“
-API
-   â†“
-LLM
-   â†“
-Agent
-   â†“
-Tools
-   â†“
-RAG
-   â†“
-MCP
+Sanctum Local Agent Studio
+   |
+   +-- Desktop-style web shell (workspace / runtime / chat)
+   +-- Flask API
+       +-- Local model manager (loopback OpenAI-compatible)
+       |   +-- model discovery
+       |   +-- task-aware model selection
+       |   +-- loopback enforcement
+       +-- Agent planner/executor loop
+       +-- Local MCP tool boundary
+       |   +-- file and workspace tools
+       |   +-- Python sandbox
+       |   +-- terminal tool
+       +-- Local memory and audit logs
+
+Data boundary: workspace -> local tools -> loopback inference server.
+No external AI provider is configured or accepted by the model manager.

@@ -1,5 +1,6 @@
 """Tool registry and execution helpers."""
 from __future__ import annotations
+from pathlib import Path
 from typing import Any, Iterable
 from app.tools.base import BaseTool
 from app.tools.file_tool import FileTool
@@ -40,3 +41,13 @@ class ToolManager:
         return sorted(self._tools)
     def execute(self, name: str, *args, **kwargs) -> Any:
         return self.get(name).execute(*args, **kwargs)
+
+    def set_root_dir(self, root_dir: str) -> str:
+        """Move every built-in workspace tool to one validated directory."""
+        root = Path(root_dir).expanduser().resolve()
+        if not root.exists() or not root.is_dir():
+            raise ValueError("Workspace path must be an existing directory.")
+        for tool in self._tools.values():
+            if hasattr(tool, "root_dir"):
+                tool.root_dir = root
+        return str(root)

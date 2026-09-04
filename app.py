@@ -4,7 +4,7 @@ from app.logger import logger
 app = create_app()
 if __name__ == "__main__":
     logger.debug("AI Agent's Backend Started")
-    app.run(debug=True)
+    app.run(debug=False)
 # Developer Note :-
 #
 # Yesterday:
@@ -12,8 +12,8 @@ if __name__ == "__main__":
 #     Laptop : "No."
 #
 # Today:
-#     Me  : "Groq API."
-#     Laptop : "Finally... some respect." ðŸ˜Œâ˜•
+#     Me  : "Local model."
+#     Laptop : "Finally... no network required."
 #
 # Moral:
 # Sometimes the smartest optimization

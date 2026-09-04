@@ -1,0 +1,28 @@
+2026-08-04 17:31:47 | INFO     | app.memory:_load_history:36 | New conversation history created.
+2026-08-04 17:33:58 | INFO     | app.memory:_load_history:44 | Conversation history loaded successfully.
+2026-08-04 17:33:58 | INFO     | app.memory:clear:31 | Conversation history cleared.
+2026-08-04 17:46:06 | INFO     | app.memory:_load_history:44 | Conversation history loaded successfully.
+2026-08-04 17:55:26 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 17:55:26 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 17:55:26 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 17:56:06 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 17:56:06 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 17:56:06 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 17:58:33 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 17:58:33 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 17:58:33 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 17:59:08 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 17:59:08 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 17:59:08 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-08-04 17:59:21 | INFO     | app.llm:__init__:15 | Groq LLM initialized successfully.
+2026-08-04 17:59:21 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-08-04 17:59:21 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+
+2026-09-03 14:21:12 | INFO     | app.llm:__init__:24 | Local LLM initialized: %s (%s)
+2026-09-03 14:21:12 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-09-03 14:21:12 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-09-03 14:22:27 | INFO     | app.llm:__init__:28 | Local LLM initialized: local-model (http://127.0.0.1:11434/v1)
+2026-09-03 14:22:27 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-09-03 14:22:28 | INFO     | app:create_app:29 | Kepler AI Backend Initialized Successfully.
+2026-09-03 14:22:34 | INFO     | app.llm:health_check:37 | Local LLM health check: no models
+2026-09-03 14:22:55 | INFO     | app.llm:__init__:28 | Local LLM initialized: local-model (http://127.0.0.1:11434/v1)
