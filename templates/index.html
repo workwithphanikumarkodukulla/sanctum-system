@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+
+Sanctum Locker - Home
+
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<!-- =========================
+     HERO SECTION
+     ========================= -->
+
+<section class="hero">
+
+
+    <div class="hero-content">
+
+
+        <!-- Main Icon -->
+
+        <div class="security-icon">
+
+            <i class="fa-solid fa-shield-halved"></i>
+
+        </div>
+
+
+
+        <!-- Main Heading -->
+
+        <h1>
+            Sanctum Locker
+        </h1>
+
+
+        <h2>
+            Secure Your Files
+        </h2>
+
+
+        <p>
+            Protect your important files with
+            password-based file locking and
+            integrity protection.
+        </p>
+
+
+
+        <!-- Buttons -->
+
+        <div class="hero-buttons">
+
+
+            <a href="{{ url_for('lock_page') }}"
+               class="btn primary">
+
+                <i class="fa-solid fa-lock"></i>
+
+                <span>
+                    Lock a File
+                </span>
+
+            </a>
+
+
+
+            <a href="{{ url_for('unlock_page') }}"
+               class="btn secondary">
+
+                <i class="fa-solid fa-lock-open"></i>
+
+                <span>
+                    Unlock a File
+                </span>
+
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =========================
+     FEATURES
+     ========================= -->
+
+<section class="features">
+
+
+    <!-- Feature 1 -->
+
+    <div class="feature-card">
+
+
+        <div class="feature-icon">
+
+            <i class="fa-solid fa-key"></i>
+
+        </div>
+
+
+        <h3>
+            Password Protection
+        </h3>
+
+
+        <p>
+            Protect your files using
+            a password.
+        </p>
+
+
+    </div>
+
+
+
+    <!-- Feature 2 -->
+
+    <div class="feature-card">
+
+
+        <div class="feature-icon">
+
+            <i class="fa-solid fa-shield-halved"></i>
+
+        </div>
+
+
+        <h3>
+            Integrity Protection
+        </h3>
+
+
+        <p>
+            Detect unauthorized modification
+            of locked files.
+        </p>
+
+
+    </div>
+
+
+
+    <!-- Feature 3 -->
+
+    <div class="feature-card">
+
+
+        <div class="feature-icon">
+
+            <i class="fa-solid fa-file-circle-check"></i>
+
+        </div>
+
+
+        <h3>
+            Easy File Handling
+        </h3>
+
+
+        <p>
+            Upload, lock, download and
+            restore files easily.
+        </p>
+
+
+    </div>
+
+
+</section>
+
+
+{% endblock %}

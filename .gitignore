@@ -1,0 +1,27 @@
+# Python virtual environment
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Flask generated files
+instance/
+
+# Uploaded files
+uploads/
+
+# Generated output files
+output/
+
+# Environment variables
+.env
+
+# IDE files
+.vscode/
+.idea/
+
+# Windows files
+Thumbs.db
+Desktop.ini

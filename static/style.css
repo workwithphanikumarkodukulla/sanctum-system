@@ -1,0 +1,1051 @@
+/* =========================================
+   SANCTUM LOCKER
+   Dark Professional UI
+   CSS ONLY - HTML UNCHANGED
+   ========================================= */
+
+
+/* =========================================
+   RESET
+   ========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+body {
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: #080f1c;
+
+    color: #e8edf5;
+
+    min-height: 100vh;
+}
+
+
+/* =========================================
+   REMOVE EXISTING NAVBAR
+   ========================================= */
+
+.navbar {
+    display: none;
+}
+
+
+/* =========================================
+   MAIN
+   ========================================= */
+
+main {
+    min-height: 100vh;
+
+    width: 100%;
+
+    background:
+        radial-gradient(
+            circle at 15% 10%,
+            rgba(83, 62, 180, 0.13),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 85% 15%,
+            rgba(38, 112, 210, 0.10),
+            transparent 25%
+        ),
+        #080f1c;
+}
+
+
+/* =========================================
+   HERO
+   ========================================= */
+
+.hero {
+    min-height: 500px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 80px 25px 55px;
+
+    position: relative;
+}
+
+
+/* subtle background line */
+
+.hero::before {
+    content: "";
+
+    position: absolute;
+
+    width: 600px;
+
+    height: 300px;
+
+    background:
+        radial-gradient(
+            ellipse,
+            rgba(75, 62, 180, 0.10),
+            transparent 70%
+        );
+
+    top: 20px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    pointer-events: none;
+}
+
+
+.hero-content {
+    width: 100%;
+
+    max-width: 760px;
+
+    position: relative;
+
+    z-index: 1;
+}
+
+
+/* =========================================
+   SECURITY ICON
+   ========================================= */
+
+.security-icon {
+    width: 70px;
+
+    height: 70px;
+
+    margin: 0 auto 25px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            145deg,
+            #3034b8,
+            #5934c7
+        );
+
+    border: 1px solid #6258e5;
+
+    border-radius: 16px;
+
+    color: #ffffff;
+
+    font-size: 27px;
+
+    box-shadow:
+        0 10px 35px rgba(74, 62, 190, 0.25);
+}
+
+
+/* =========================================
+   HERO TEXT
+   ========================================= */
+
+.hero h1 {
+    color: #f4f7fb;
+
+    font-size: 48px;
+
+    font-weight: 700;
+
+    letter-spacing: -1px;
+
+    margin-bottom: 8px;
+}
+
+
+.hero h2 {
+    color: #738cff;
+
+    font-size: 24px;
+
+    font-weight: 600;
+
+    margin-bottom: 18px;
+}
+
+
+.hero p {
+    max-width: 690px;
+
+    margin: 0 auto 32px;
+
+    color: #8f9bad;
+
+    font-size: 16px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================
+   BUTTONS
+   ========================================= */
+
+.hero-buttons {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 12px;
+}
+
+
+.btn {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    min-height: 46px;
+
+    padding: 12px 23px;
+
+    border-radius: 7px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    border: 1px solid transparent;
+
+    transition: all 0.2s ease;
+}
+
+
+.btn i {
+    font-size: 13px;
+}
+
+
+/* Primary button */
+
+.btn.primary {
+    background:
+        linear-gradient(
+            135deg,
+            #315eea,
+            #4d38c9
+        );
+
+    color: #ffffff;
+
+    border-color: #4b65e8;
+
+    box-shadow:
+        0 5px 18px rgba(57, 73, 210, 0.22);
+}
+
+
+.btn.primary:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 25px rgba(57, 73, 210, 0.32);
+}
+
+
+/* Secondary button */
+
+.btn.secondary {
+    background: #141e2e;
+
+    color: #dce4ef;
+
+    border-color: #2b394d;
+}
+
+
+.btn.secondary:hover {
+    background: #1a2739;
+
+    border-color: #465770;
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================================
+   FEATURES
+   ========================================= */
+
+.features {
+    width: 100%;
+
+    max-width: 1000px;
+
+    margin: 0 auto;
+
+    padding: 10px 25px 80px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 17px;
+}
+
+
+.feature-card {
+    background:
+        linear-gradient(
+            145deg,
+            #111c2c,
+            #0e1827
+        );
+
+    border: 1px solid #253349;
+
+    border-radius: 10px;
+
+    padding: 29px 24px;
+
+    text-align: center;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.18);
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+
+.feature-card:hover {
+    transform: translateY(-3px);
+
+    border-color: #394a65;
+
+    background:
+        linear-gradient(
+            145deg,
+            #142136,
+            #101b2b
+        );
+}
+
+
+/* =========================================
+   FEATURE ICONS
+   ========================================= */
+
+.feature-icon {
+    width: 46px;
+
+    height: 46px;
+
+    margin: 0 auto 17px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #18253a;
+
+    border: 1px solid #2e4059;
+
+    border-radius: 9px;
+
+    color: #7185ff;
+
+    font-size: 17px;
+}
+
+
+.feature-card h3 {
+    color: #e8edf5;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    margin-bottom: 9px;
+}
+
+
+.feature-card p {
+    color: #8592a5;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================
+   FORM PAGE
+   ========================================= */
+
+.page-container {
+    min-height: 100vh;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 65px 20px;
+}
+
+
+.form-card {
+    width: 100%;
+
+    max-width: 535px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #111c2c,
+            #0d1726
+        );
+
+    border: 1px solid #29384e;
+
+    border-radius: 12px;
+
+    padding: 38px;
+
+    box-shadow:
+        0 15px 45px rgba(0, 0, 0, 0.30);
+}
+
+
+/* =========================================
+   FORM ICON
+   ========================================= */
+
+.form-icon {
+    width: 53px;
+
+    height: 53px;
+
+    margin: 0 auto 18px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #182640;
+
+    border: 1px solid #30466b;
+
+    border-radius: 10px;
+
+    color: #7388ff;
+
+    font-size: 20px;
+}
+
+
+/* =========================================
+   FORM TEXT
+   ========================================= */
+
+.form-card h1 {
+    text-align: center;
+
+    color: #f0f4fa;
+
+    font-size: 27px;
+
+    font-weight: 700;
+
+    margin-bottom: 9px;
+}
+
+
+.subtitle {
+    text-align: center;
+
+    color: #8794a8;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+
+    margin-bottom: 29px;
+}
+
+
+/* =========================================
+   FORM GROUP
+   ========================================= */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+
+.form-group label {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: #b9c4d3;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    margin-bottom: 8px;
+}
+
+
+.form-group label i {
+    color: #7087ff;
+
+    font-size: 12px;
+}
+
+
+/* =========================================
+   DRAG & DROP
+   ========================================= */
+
+.file-drop-area {
+    position: relative;
+
+    width: 100%;
+
+    min-height: 160px;
+
+    padding: 25px 18px;
+
+    background: #0c1625;
+
+    border: 1.5px dashed #3a4a61;
+
+    border-radius: 9px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.file-drop-area:hover {
+    background: #111d2e;
+
+    border-color: #566a86;
+}
+
+
+.file-drop-area.dragover {
+    background: #172544;
+
+    border-color: #637cff;
+
+    box-shadow:
+        0 0 0 3px rgba(99, 124, 255, 0.10);
+}
+
+
+.file-drop-area.file-selected {
+    background: #101f30;
+
+    border-color: #4d69c9;
+}
+
+
+/* Upload icon */
+
+.file-drop-icon {
+    width: 43px;
+
+    height: 43px;
+
+    margin-bottom: 11px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #182640;
+
+    border: 1px solid #2f4162;
+
+    border-radius: 8px;
+
+    color: #7187ff;
+
+    font-size: 17px;
+}
+
+
+/* Drop text */
+
+.file-drop-area strong {
+    color: #cdd6e2;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    margin-bottom: 5px;
+}
+
+
+.file-drop-area span {
+    color: #78879b;
+
+    font-size: 11px;
+
+    margin-bottom: 5px;
+}
+
+
+.file-drop-area small {
+    color: #5e6d80;
+
+    font-size: 10px;
+}
+
+
+/* Hide input */
+
+.file-drop-area input[type="file"] {
+    display: none;
+}
+
+
+/* Selected file */
+
+.selected-file {
+    max-width: 100%;
+
+    margin-top: 10px;
+
+    padding: 7px 11px;
+
+    background: #192b45;
+
+    border: 1px solid #2e4767;
+
+    border-radius: 5px;
+
+    color: #8fa5ff;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+.selected-file:empty {
+    display: none;
+}
+
+
+/* =========================================
+   PASSWORD
+   ========================================= */
+
+.password-wrapper {
+    position: relative;
+}
+
+
+.password-wrapper input {
+    padding-right: 45px !important;
+}
+
+
+.password-toggle {
+    position: absolute;
+
+    right: 8px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    width: 32px;
+
+    height: 32px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #68778c;
+
+    cursor: pointer;
+
+    border-radius: 5px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+
+.password-toggle:hover {
+    background: #1b2a3f;
+
+    color: #8194ff;
+}
+
+
+/* =========================================
+   PASSWORD INPUT
+   ========================================= */
+
+.form-group input[type="password"] {
+    width: 100%;
+
+    height: 44px;
+
+    padding: 11px 13px;
+
+    background: #0c1625;
+
+    color: #dce4ee;
+
+    border: 1px solid #34445a;
+
+    border-radius: 7px;
+
+    font-size: 13px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+
+.form-group input[type="password"]:focus {
+    background: #101c2d;
+
+    border-color: #5b71d8;
+
+    box-shadow:
+        0 0 0 3px rgba(91, 113, 216, 0.10);
+}
+
+
+.form-group input::placeholder {
+    color: #647287;
+}
+
+
+/* =========================================
+   INFO BOX
+   ========================================= */
+
+.info-box {
+    margin-top: 22px;
+
+    padding: 14px 15px;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 11px;
+
+    background: #111e30;
+
+    border: 1px solid #293c54;
+
+    border-left: 3px solid #536bd2;
+
+    border-radius: 6px;
+}
+
+
+.info-icon {
+    width: 27px;
+
+    height: 27px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: #7085ed;
+
+    background: #1a2940;
+
+    border-radius: 6px;
+
+    font-size: 12px;
+}
+
+
+.info-box strong {
+    display: block;
+
+    color: #c5cfdd;
+
+    font-size: 12px;
+
+    margin-bottom: 4px;
+}
+
+
+.info-box p {
+    color: #78879a;
+
+    font-size: 11px;
+
+    line-height: 1.55;
+}
+
+
+/* =========================================
+   FLASH MESSAGE
+   ========================================= */
+
+.messages {
+    width: 100%;
+
+    max-width: 900px;
+
+    margin: 18px auto 0;
+
+    padding: 0 20px;
+}
+
+
+.message {
+    min-height: 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 10px 15px;
+
+    background: #291a24;
+
+    border: 1px solid #58303d;
+
+    border-radius: 7px;
+
+    color: #e9a1a9;
+
+    font-size: 13px;
+}
+
+
+.message i {
+    font-size: 13px;
+}
+
+
+/* =========================================
+   FOOTER
+   ========================================= */
+
+footer {
+    background: #080f1c;
+
+    border-top: 1px solid #182436;
+
+    padding: 22px 20px;
+
+    color: #647287;
+
+    font-size: 12px;
+
+    text-align: center;
+}
+
+
+.footer-content {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+}
+
+
+.footer-brand {
+    color: #8b98aa;
+
+    font-weight: 600;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+}
+
+
+.footer-brand i {
+    color: #657cff;
+
+    font-size: 11px;
+}
+
+
+.footer-separator {
+    color: #394659;
+}
+
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 800px) {
+
+    .features {
+        grid-template-columns: 1fr;
+
+        max-width: 520px;
+    }
+
+
+    .hero h1 {
+        font-size: 40px;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .hero {
+        min-height: 450px;
+
+        padding: 55px 20px 40px;
+    }
+
+
+    .hero h1 {
+        font-size: 34px;
+    }
+
+
+    .hero h2 {
+        font-size: 21px;
+    }
+
+
+    .hero p {
+        font-size: 14px;
+    }
+
+
+    .hero-buttons {
+        flex-direction: column;
+
+        width: 100%;
+
+        max-width: 290px;
+
+        margin: auto;
+    }
+
+
+    .hero-buttons .btn {
+        width: 100%;
+    }
+
+
+    .form-card {
+        padding: 28px 21px;
+    }
+
+
+    .form-card h1 {
+        font-size: 24px;
+    }
+
+
+    .page-container {
+        padding: 35px 15px;
+    }
+
+
+    .footer-content {
+        flex-wrap: wrap;
+    }
+
+}

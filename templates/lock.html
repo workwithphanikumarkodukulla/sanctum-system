@@ -1,0 +1,358 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+
+Lock File - Sanctum Locker
+
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<div class="page-container">
+
+
+    <div class="form-card">
+
+
+        <!-- Icon -->
+
+        <div class="form-icon">
+
+            <i class="fa-solid fa-lock"></i>
+
+        </div>
+
+
+
+        <!-- Heading -->
+
+        <h1>
+            Lock Your File
+        </h1>
+
+
+        <p class="subtitle">
+
+            Select a file and protect it
+            with a password.
+
+        </p>
+
+
+
+        <!-- =========================
+             FORM
+             ========================= -->
+
+        <form action="{{ url_for('lock_file') }}"
+              method="POST"
+              enctype="multipart/form-data">
+
+
+
+            <!-- File -->
+
+            <div class="form-group">
+
+
+                <label for="file">
+
+                    <i class="fa-solid fa-file"></i>
+
+                    Select File
+
+                </label>
+
+
+
+                <!-- Drag and Drop Area -->
+
+                <div class="file-drop-area"
+                     id="drop-area">
+
+
+                    <div class="file-drop-icon">
+
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+
+                    </div>
+
+
+                    <strong>
+                        Drag and drop your file here
+                    </strong>
+
+
+                    <span>
+                        or click to browse from your computer
+                    </span>
+
+
+                    <small>
+                        Select the file you want to protect
+                    </small>
+
+
+                    <input
+                        type="file"
+                        id="file"
+                        name="file"
+                        required
+                    >
+
+
+                    <div class="selected-file"
+                         id="selected-file">
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- Password -->
+
+            <div class="form-group">
+
+
+                <label for="password">
+
+                    <i class="fa-solid fa-key"></i>
+
+                    Password
+
+                </label>
+
+
+                <div class="password-wrapper">
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter a strong password"
+                        required
+                    >
+
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        id="password-toggle"
+                        aria-label="Show password">
+
+                        <i class="fa-solid fa-eye"></i>
+
+                    </button>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- Submit -->
+
+            <button
+                type="submit"
+                class="btn primary full">
+
+
+                <i class="fa-solid fa-lock"></i>
+
+
+                <span>
+                    Lock File
+                </span>
+
+
+            </button>
+
+
+        </form>
+
+
+
+        <!-- Information -->
+
+        <div class="info-box">
+
+
+            <div class="info-icon">
+
+                <i class="fa-solid fa-circle-info"></i>
+
+            </div>
+
+
+            <div>
+
+                <strong>
+                    Tip
+                </strong>
+
+
+                <p>
+                    Use a strong password and remember it.
+                    You will need the same password to
+                    unlock the file.
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- =========================
+     DRAG AND DROP SCRIPT
+     ========================= -->
+
+<script>
+
+const dropArea = document.getElementById("drop-area");
+
+const fileInput = document.getElementById("file");
+
+const selectedFile = document.getElementById("selected-file");
+
+
+
+/* Click drop area */
+
+dropArea.addEventListener("click", function () {
+
+    fileInput.click();
+
+});
+
+
+
+/* File selected normally */
+
+fileInput.addEventListener("change", function () {
+
+    if (fileInput.files.length > 0) {
+
+        selectedFile.innerHTML =
+            '<i class="fa-solid fa-file"></i> ' +
+            fileInput.files[0].name;
+
+        dropArea.classList.add("file-selected");
+
+    }
+
+});
+
+
+
+/* Drag over */
+
+dropArea.addEventListener("dragover", function (event) {
+
+    event.preventDefault();
+
+    dropArea.classList.add("dragover");
+
+});
+
+
+
+/* Drag leave */
+
+dropArea.addEventListener("dragleave", function () {
+
+    dropArea.classList.remove("dragover");
+
+});
+
+
+
+/* Drop */
+
+dropArea.addEventListener("drop", function (event) {
+
+    event.preventDefault();
+
+    dropArea.classList.remove("dragover");
+
+
+    if (event.dataTransfer.files.length > 0) {
+
+        fileInput.files = event.dataTransfer.files;
+
+
+        selectedFile.innerHTML =
+            '<i class="fa-solid fa-file"></i> ' +
+            event.dataTransfer.files[0].name;
+
+
+        dropArea.classList.add("file-selected");
+
+    }
+
+});
+
+
+
+/* Password show / hide */
+
+const passwordInput =
+    document.getElementById("password");
+
+const passwordToggle =
+    document.getElementById("password-toggle");
+
+
+passwordToggle.addEventListener("click", function () {
+
+    if (passwordInput.type === "password") {
+
+        passwordInput.type = "text";
+
+        passwordToggle.innerHTML =
+            '<i class="fa-solid fa-eye-slash"></i>';
+
+        passwordToggle.setAttribute(
+            "aria-label",
+            "Hide password"
+        );
+
+    }
+
+    else {
+
+        passwordInput.type = "password";
+
+        passwordToggle.innerHTML =
+            '<i class="fa-solid fa-eye"></i>';
+
+        passwordToggle.setAttribute(
+            "aria-label",
+            "Show password"
+        );
+
+    }
+
+});
+
+</script>
+
+
+{% endblock %}
