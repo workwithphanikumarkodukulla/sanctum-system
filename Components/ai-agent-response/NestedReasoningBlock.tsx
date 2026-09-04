@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { cn } from "../lib/utils";
+import { cn } from "@/lib/utils";
 import { Brain, ChevronDown } from "lucide-react";
 
 const SENT_H = 46;

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { cn } from "../lib/utils";
+import { cn } from "@/lib/utils";
 
 const CHEVRON_DELAYS = Array.from({ length: 9 }, (_, i) => {
   const r = Math.floor(i / 3);

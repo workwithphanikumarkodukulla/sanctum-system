@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { cn } from "../lib/utils";
+import { cn } from "@/lib/utils";
 import { ThinkingState } from "./ThinkingState";
 import { StreamingText } from "./StreamingText";
 import type { AgentWorkflowProps, ToolDefinition } from "./types";
