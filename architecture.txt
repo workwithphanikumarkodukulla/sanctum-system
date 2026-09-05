@@ -1,17 +1,358 @@
-Sanctum Local Agent Studio
-   |
-   +-- Desktop-style web shell (workspace / runtime / chat)
-   +-- Flask API
-       +-- Local model manager (loopback OpenAI-compatible)
-       |   +-- model discovery
-       |   +-- task-aware model selection
-       |   +-- loopback enforcement
-       +-- Agent planner/executor loop
-       +-- Local MCP tool boundary
-       |   +-- file and workspace tools
-       |   +-- Python sandbox
-       |   +-- terminal tool
-       +-- Local memory and audit logs
+SANCTUM-FLUID ARCHITECTURE
+==========================
 
-Data boundary: workspace -> local tools -> loopback inference server.
-No external AI provider is configured or accepted by the model manager.
+Sanctum-Fluid is a complete architecture built from scratch for the Sanctum
+system. It is not a cloud orchestration layer or a wrapper around a remote AI
+service. It is a local-first, workspace-scoped architecture that connects the
+user interface, agent reasoning, local models, tools, memory, and verification
+into one controlled execution system.
+
+The word "Fluid" describes the movement of a request through the architecture:
+the request enters through the interface, is classified and routed to the
+best available local model, receives workspace and knowledge context, uses
+approved tools when needed, and returns through verification to the user.
+Every stage is connected, but each stage has a defined responsibility and
+boundary.
+
+
+1. DIAGRAM OVERVIEW
+------------------
+
+                                        USER
+                                            |
+                                            v
+                +-------------------------------+
+                |  LAYER 1: SANCTUM UI          |
+                |  Browser shell and screens    |
+                +-------------------------------+
+                                            |
+                    HTTP / JSON / Server-Sent Events
+                                            |
+                                            v
+                +-------------------------------+
+                |  LAYER 2: FLASK API GATEWAY   |
+                |  Routes, validation, sessions |
+                +-------------------------------+
+                                            |
+                                            v
+                +-------------------------------+
+                |  LAYER 3: FLUID ORCHESTRATOR  |
+                |  Agent + router + context     |
+                +-------------------------------+
+                         |              |             |
+                         v              v             v
+             Model rooms     Memory rooms    Tool rooms
+             and routing     and LKB         through MCP
+                         |              |             |
+                         +--------------+-------------+
+                                                        |
+                                                        v
+                +-------------------------------+
+                |  LAYER 4: LOCAL EXECUTION     |
+                |  Loopback models and host     |
+                |  workspace operations         |
+                +-------------------------------+
+                                                        |
+                                                        v
+                +-------------------------------+
+                |  LAYER 5: VERIFICATION        |
+                |  Tool results, audit, reply   |
+                +-------------------------------+
+                                                        |
+                                                        v
+                                                     USER
+
+Draw five horizontal layers. Inside the Fluid Orchestrator layer, draw
+separate blocks for the router, agent loop, context providers, and execution
+controller. Draw each model as an individual block inside the Local Model
+layer, with a private capability profile and a logical "room" around it.
+
+
+2. LAYER 1 - SANCTUM USER INTERFACE
+-----------------------------------
+
+The first layer is the desktop-style web interface. It is implemented with
+HTML templates, CSS, and browser JavaScript. The UI does not directly access
+the file system, local models, or Python tools. It sends requests to the Flask
+API and renders the returned state.
+
+Main UI areas:
+
+* Overview: runtime status, workspace metrics, model count, LKB count, and
+    the high-level Fluid architecture view.
+* Workspace: directory tree, file reader, file metadata, workspace history,
+    and workspace selection.
+* Agent: chat input, quick prompts, streaming activity trace, tool picker,
+    and session history popup.
+* Models and Routing: model list, capability scores, active model, and route
+    preview.
+* Local Knowledge Base: document indexing, search, indexed-file list, and
+    clearing the index.
+* Tools: expandable categories containing the approved tool names.
+* Security: loopback endpoint, network scope, MCP transport, and isolation
+    evidence.
+
+The browser sends JSON requests for short operations such as listing files or
+selecting a model. Agent requests use Server-Sent Events so the UI can show
+routing, planning, reasoning, tool, LKB, verification, and completion events
+while a task is running.
+
+
+3. LAYER 2 - FLASK API GATEWAY
+------------------------------
+
+Flask is the local boundary between the browser and the Sanctum runtime.
+Routes are defined in app/routes.py and the application is assembled in
+app/__init__.py.
+
+Important API pipelines:
+
+* /api/system exposes local runtime status, model information, MCP metadata,
+    workspace information, and Fluid routing information.
+* /api/models lists local models and /api/models/select changes the active
+    model after validating that the model is available locally.
+* /api/chat/stream accepts an agent message and streams activity events and
+    the final result back to the browser.
+* /api/workspace/* selects a workspace, reads its tree, reads files, returns
+    metadata, and manages workspace history.
+* /api/lkb/index indexes a file or directory inside the active workspace.
+    /api/lkb/search searches indexed content and /api/lkb/list returns indexed
+    documents.
+* /api/tools exposes the approved tool names for the UI.
+
+The gateway validates input before calling the owning service. Workspace
+paths are resolved and constrained to the active workspace. The API does not
+provide a cloud inference route; inference configuration is local-only.
+
+
+4. LAYER 3 - SANCTUM-FLUID ORCHESTRATOR
+---------------------------------------
+
+This is the central layer, made from several cooperating blocks.
+
+4.1 Request entry block
+
+CodingAgent receives the user message, creates an execution context, records
+the user message in memory and workspace history, and emits an activity event.
+
+4.2 Fluid Router block
+
+FluidRouter classifies tasks into code, docs, reasoning, vision, or general.
+It consults ModelRegistry and selects the highest-scoring available model for
+the category. If only one local model exists, that model handles every
+category. With multiple models, each request can flow to a different room.
+
+4.3 ModelProfiler block
+
+Newly discovered models can be profiled asynchronously. The profiler measures
+or estimates model abilities and writes the results into the model registry.
+
+4.4 Prompt and context block
+
+PromptManager supplies system behavior and operating rules. The agent combines
+the system prompt with the current request, conversation memory, workspace
+history summary, and relevant Local Knowledge Base context. That package is
+the private input to the selected model.
+
+4.5 Agent planning and execution block
+
+The selected model is bound to approved LangChain-compatible tools. The agent
+invokes the model, checks for native or XML-like tool calls, dispatches calls,
+records results, adds results to the conversation, and invokes the model again.
+The loop ends when a final answer is produced or the iteration limit is met.
+
+
+5. MODEL LAYER - BLOCKS AND ROOMS
+---------------------------------
+
+Represent every installed local model as its own rectangular model block. Do
+not draw all models as one shared brain. Each model block has its own logical
+room:
+
+                +---------------------------------------+
+                | MODEL ROOM: qwen2.5-coder:7b          |
+                | code: high | docs: medium             |
+                | reasoning: medium | vision: none      |
+                | local inference endpoint               |
+                +---------------------------------------+
+
+A model room means the model has an independent capability profile, is chosen
+by the router for suitable work, is accessed through loopback inference, and
+does not receive another model's private internal state. The rooms are
+logical isolation boundaries in the diagram. One inference server may host
+several model names, but Sanctum-Fluid still treats each identity and profile
+as a separate room.
+
+Draw the router above the model rooms, with an arrow to the selected room and
+no arrows implying cross-model memory sharing. Profiles contain code, docs,
+reasoning, vision, and general-purpose scores. Profiles are stored globally
+under local Sanctum configuration, while workspace context remains scoped to
+the active workspace.
+
+
+6. WORKSPACE ROOM AND DATA BOUNDARY
+-----------------------------------
+
+The active workspace is a major room. It is the only file-system area that
+workspace and file tools may inspect or modify.
+
+                +---------------------------------------+
+                | WORKSPACE ROOM                         |
+                | project files                          |
+                | .sanctum/history.json                  |
+                | .sanctum/profile.json                 |
+                | .sanctum/knowledge/index.json         |
+                | .sanctum/knowledge/tfidf_vectors.pkl  |
+                +---------------------------------------+
+
+Workspace selection updates the root directory for file tools, workspace
+tools, document generation, workspace history, and LKB. Paths must resolve
+inside that root. The workspace room is separate from the global model
+registry and from the browser interface.
+
+
+7. LOCAL KNOWLEDGE BASE PIPELINE
+--------------------------------
+
+The LKB is a workspace-scoped context pipeline, not a remote vector service.
+
+Indexing pipeline:
+
+1. User enters a relative file or folder path.
+2. API resolves it against the active workspace.
+3. API rejects missing or escaping paths.
+4. LKBIndexer checks the supported text-file extension.
+5. File is read locally.
+6. Text is split into overlapping word chunks.
+7. Metadata is stored in .sanctum/knowledge/index.json.
+8. TF-IDF vectors are rebuilt locally and saved in the knowledge directory.
+
+Search and agent-context pipeline:
+
+1. User searches through /api/lkb/search, or the agent receives a task.
+2. LKBSearcher compares the query with indexed chunks.
+3. Relevant chunks are returned.
+4. Agent formats them as local context.
+5. Context is appended to the system message before inference.
+
+Draw LKB arrows only from the workspace room into the agent context block,
+never to the internet or a cloud embedding service.
+
+
+8. TOOL ROOMS AND MCP-SHAPED BOUNDARY
+-------------------------------------
+
+LocalMCPServer publishes registered tools and dispatches calls through
+ToolManager. This is an MCP-shaped local boundary that makes capabilities
+explicit and auditable.
+
+Tool room A - File operations:
+create_file, read_file, write_file, delete_file, rename_file.
+
+Tool room B - Workspace inspection:
+list_files, workspace_tree, file_info.
+
+Tool room C - Execution:
+run_python and run_command.
+
+Tool room D - Document generation:
+generate_excel_sheet, generate_presentation, generate_word_document,
+generate_pdf_report, generate_structured_note.
+
+Every tool call follows:
+
+                model request -> agent dispatcher -> MCP-shaped local boundary
+                -> ToolManager -> selected tool room -> active workspace or local
+                process -> result returned to agent
+
+The result is added to the model conversation and reviewed by the agent. The
+model requests a named capability; it does not directly touch the host file
+system.
+
+
+9. COMPLETE AGENT REQUEST PIPELINE
+----------------------------------
+
+1. User enters a request in Agent.
+2. Browser sends it to /api/chat/stream.
+3. Flask validates it and calls CodingAgent.
+4. CodingAgent records the request in session memory and workspace history.
+5. FluidRouter classifies the task.
+6. ModelRegistry compares available models and profiles.
+7. Router selects the best model room.
+8. LKBManager retrieves relevant workspace context when available.
+9. PromptManager combines rules, history, LKB context, and the request.
+10. Selected local model reasons over the request.
+11. If no tool is needed, it produces a final answer.
+12. If needed, it emits a tool call.
+13. CodingAgent dispatches through the MCP-shaped boundary.
+14. ToolManager executes the local capability.
+15. Result returns to CodingAgent.
+16. Agent records the action and sends the result back to the model.
+17. Model continues reasoning and may request another approved tool.
+18. Loop stops at a final response or iteration limit.
+19. Agent verifies important outcomes, such as generated files.
+20. Response and metadata are written to memory and workspace history.
+21. Activity events and final response stream to the browser.
+22. UI renders the response, trace, and updated workspace state.
+
+
+10. OTHER IMPORTANT PIPELINES
+-----------------------------
+
+Model discovery:
+local model server -> LLMManager -> model list -> ModelRegistry -> optional
+ModelProfiler -> capability profile -> FluidRouter.
+
+Workspace selection:
+folder selection -> Flask route -> CodingAgent.set_workspace -> ToolManager
+root update -> document generator update -> history switch -> LKB switch ->
+app service references update -> refreshed UI.
+
+File inspection:
+workspace screen -> /api/workspace/tree -> WorkspaceTool -> path validation ->
+tree and file list -> browser tree -> /api/workspace/file -> FileTool -> editor.
+
+Streaming activity:
+agent event -> callback queue -> Flask SSE response -> browser reader -> Agent
+activity list.
+
+History:
+message -> MemoryManager for session memory -> WorkspaceHistoryManager for
+persistent workspace history -> history API -> history popup.
+
+Security and audit:
+configuration -> loopback validation -> LLMManager -> /api/system -> security
+screen. Tool registration -> LocalMCPServer metadata -> /api/tools and
+/api/system -> visible approved-capability inventory.
+
+
+11. LAYER AND ROOM SUMMARY
+--------------------------
+
+Layer 1: Presentation room - browser UI, navigation, chat, workspace, LKB,
+models, tools, and security screens.
+
+Layer 2: API boundary room - Flask routes, validation, JSON, SSE, and service
+references.
+
+Layer 3: Fluid control room - CodingAgent, FluidRouter, PromptManager,
+ModelRegistry, ModelProfiler, MemoryManager, WorkspaceHistoryManager, and LKB.
+
+Layer 4: Model and capability rooms - one room per local model, the workspace
+room, and grouped tool rooms behind the MCP-shaped boundary.
+
+Layer 5: Local execution room - loopback inference, local files, Python
+processes, shell commands, and generated documents.
+
+Layer 6: Verification and audit return path - tool results, file verification,
+activity events, history writes, final response, and UI refresh.
+
+The strongest boundary to show is:
+
+                workspace data -> approved local tools -> local model inference
+
+There is no external AI provider in this pipeline. Sanctum-Fluid keeps
+inference and workspace operations on the local machine, with model routing,
+tool access, memory, knowledge retrieval, and verification composed from
+scratch as part of the Sanctum system.

@@ -596,3 +596,1686 @@ RuntimeError: main thread is not in main loop
 2026-09-04 14:56:36 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
 2026-09-04 14:56:36 | INFO     | app:create_app:29 | Sanctum Backend Initialized Successfully.
 2026-09-04 14:56:43 | INFO     | app.agent:set_workspace:540 | Workspace changed to C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-04 18:52:09 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-04 18:52:09 | INFO     | app.agent:_load_saved_workspace:549 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-04 18:52:09 | INFO     | app.memory:_load_history:43 | Conversation history loaded successfully.
+2026-09-04 18:52:09 | INFO     | app:create_app:29 | Sanctum Backend Initialized Successfully.
+2026-09-04 19:09:25 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-04 19:09:25 | INFO     | app.workspace_history:_load:97 | New workspace history created at C:\Users\user\OneDrive\Desktop\CodingAgent\workspace\.sanctum\history.json
+2026-09-04 19:09:25 | INFO     | app.fluid.workspace_registry:register:43 | Fluid: new workspace registered: C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-04 19:09:25 | INFO     | app.agent:_load_saved_workspace:493 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-04 19:09:25 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-04 19:09:25 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-04 19:59:37 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-04 19:59:37 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-04 19:59:37 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 0 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-04 19:59:37 | INFO     | app.agent:_load_saved_workspace:493 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-04 19:59:37 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-04 19:59:37 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-04 20:00:08 | INFO     | app.fluid.router:_detect_new_models:134 | Fluid: new model detected 'qwen2.5-coder:7b', profiling in background...
+2026-09-04 20:00:08 | INFO     | app.fluid.model_profiler:_run_profile:83 | Fluid: profiling model 'qwen2.5-coder:7b'...
+2026-09-04 20:00:08 | INFO     | app.llm:change_model:82 | Local model changed to 'qwen2.5-coder:7b'.
+2026-09-04 20:00:28 | INFO     | app.fluid.model_profiler:_run_profile:109 | Fluid: qwen2.5-coder:7b scored 1.00 on 'code'
+2026-09-04 20:01:21 | INFO     | app.fluid.model_profiler:_run_profile:109 | Fluid: qwen2.5-coder:7b scored 0.72 on 'docs'
+2026-09-04 20:01:48 | INFO     | app.fluid.model_profiler:_run_profile:109 | Fluid: qwen2.5-coder:7b scored 1.00 on 'reasoning'
+2026-09-04 20:01:48 | INFO     | app.fluid.model_registry:set_profile:70 | Fluid: model profile updated for 'qwen2.5-coder:7b'
+2026-09-04 20:01:48 | INFO     | app.llm:change_model:82 | Local model changed to 'qwen2.5-coder:7b'.
+2026-09-04 20:01:48 | INFO     | app.fluid.model_profiler:_run_profile:129 | Fluid: profiling complete for 'qwen2.5-coder:7b' → {'code': 1.0, 'docs': 0.7156, 'reasoning': 1.0, 'vision': 0.0, 'general': 0.9052}
+2026-09-04 20:22:40 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-04 20:22:40 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-04 20:22:40 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 10 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-04 20:22:40 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-04 20:22:40 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-04 20:22:40 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-04 20:23:17 | ERROR    | app.routes:pick_workspace:231 | Native workspace picker failed.
+Traceback (most recent call last):
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 973, in _bootstrap
+    self._bootstrap_inner()
+    │    └ <function Thread._bootstrap_inner at 0x000001FFCB1FDE10>
+    └ <Thread(Thread-14 (process_request_thread), started daemon 13512)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 1016, in _bootstrap_inner
+    self.run()
+    │    └ <function Thread.run at 0x000001FFCB1FDB40>
+    └ <Thread(Thread-14 (process_request_thread), started daemon 13512)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {}
+    │    │        │    │        └ <Thread(Thread-14 (process_request_thread), started daemon 13512)>
+    │    │        │    └ (<socket.socket fd=5768, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr...
+    │    │        └ <Thread(Thread-14 (process_request_thread), started daemon 13512)>
+    │    └ <bound method ThreadingMixIn.process_request_thread of <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>>
+    └ <Thread(Thread-14 (process_request_thread), started daemon 13512)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 683, in process_request_thread
+    self.finish_request(request, client_address)
+    │    │              │        └ ('127.0.0.1', 58961)
+    │    │              └ <socket.socket fd=5768, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    └ <function BaseServer.finish_request at 0x000001FFCB1FF7F0>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 360, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    │    │                   │        │               └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>
+    │    │                   │        └ ('127.0.0.1', 58961)
+    │    │                   └ <socket.socket fd=5768, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    └ <class 'werkzeug.serving.WSGIRequestHandler'>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 747, in __init__
+    self.handle()
+    │    └ <function WSGIRequestHandler.handle at 0x000001FFCB63D510>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000001FFD0C2D990>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 399, in handle
+    super().handle()
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 433, in handle
+    self.handle_one_request()
+    │    └ <function BaseHTTPRequestHandler.handle_one_request at 0x000001FFCB4105E0>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000001FFD0C2D990>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 421, in handle_one_request
+    method()
+    └ <bound method WSGIRequestHandler.run_wsgi of <werkzeug.serving.WSGIRequestHandler object at 0x000001FFD0C2D990>>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 371, in run_wsgi
+    execute(self.server.app)
+    │       │    │      └ <Flask 'app'>
+    │       │    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>
+    │       └ <werkzeug.serving.WSGIRequestHandler object at 0x000001FFD0C2D990>
+    └ <function WSGIRequestHandler.run_wsgi.<locals>.execute at 0x000001FFD0DA4E50>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 332, in execute
+    application_iter = app(environ, start_response)
+                       │   │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000001FFD0DA4DC0>
+                       │   └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=5768>, 'wsgi.errors': <_io.TextIOW...
+                       └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           │    │        │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000001FFD0DA4DC0>
+           │    │        └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=5768>, 'wsgi.errors': <_io.TextIOW...
+           │    └ <function Flask.wsgi_app at 0x000001FFCBAFACB0>
+           └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               │    └ <function Flask.full_dispatch_request at 0x000001FFCBAFA4D0>
+               └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         │    └ <function Flask.dispatch_request at 0x000001FFCBAFA440>
+         └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           │    │           │    │              │    │            └ {}
+           │    │           │    │              │    └ 'main.pick_workspace'
+           │    │           │    │              └ <Rule '/api/workspace/pick' (POST, OPTIONS) -> main.pick_workspace>
+           │    │           │    └ {'static': <function Flask.__init__.<locals>.<lambda> at 0x000001FFCFEBB9A0>, 'main.index': <function index at 0x000001FFD09F...
+           │    │           └ <Flask 'app'>
+           │    └ <function Flask.ensure_sync at 0x000001FFCBAFA680>
+           └ <Flask 'app'>
+
+> File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\routes.py", line 222, in pick_workspace
+    selected = filedialog.askdirectory(title="Choose Sanctum workspace")
+               │          └ <function askdirectory at 0x000001FFD0DA4C10>
+               └ <module 'tkinter.filedialog' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5...
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\tkinter\filedialog.py", line 442, in askdirectory
+    return Directory(**options).show()
+           │           └ {'title': 'Choose Sanctum workspace'}
+           └ <class 'tkinter.filedialog.Directory'>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\tkinter\commondialog.py", line 45, in show
+    s = master.tk.call(self.command, *master._options(self.options))
+        │      │  │    │    │         │      │        │    └ {'title': 'Choose Sanctum workspace'}
+        │      │  │    │    │         │      │        └ <tkinter.filedialog.Directory object at 0x000001FFD0C2E7D0>
+        │      │  │    │    │         │      └ <function Misc._options at 0x000001FFD0C19630>
+        │      │  │    │    │         └ <tkinter.Tk object .>
+        │      │  │    │    └ 'tk_chooseDirectory'
+        │      │  │    └ <tkinter.filedialog.Directory object at 0x000001FFD0C2E7D0>
+        │      │  └ <method 'call' of '_tkinter.tkapp' objects>
+        │      └ <_tkinter.tkapp object at 0x000001FFD0A5F9B0>
+        └ <tkinter.Tk object .>
+
+RuntimeError: main thread is not in main loop
+2026-09-04 20:23:17 | ERROR    | app.routes:pick_workspace:231 | Native workspace picker failed.
+Traceback (most recent call last):
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 973, in _bootstrap
+    self._bootstrap_inner()
+    │    └ <function Thread._bootstrap_inner at 0x000001FFCB1FDE10>
+    └ <Thread(Thread-15 (process_request_thread), started daemon 24480)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 1016, in _bootstrap_inner
+    self.run()
+    │    └ <function Thread.run at 0x000001FFCB1FDB40>
+    └ <Thread(Thread-15 (process_request_thread), started daemon 24480)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {}
+    │    │        │    │        └ <Thread(Thread-15 (process_request_thread), started daemon 24480)>
+    │    │        │    └ (<socket.socket fd=5832, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr...
+    │    │        └ <Thread(Thread-15 (process_request_thread), started daemon 24480)>
+    │    └ <bound method ThreadingMixIn.process_request_thread of <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>>
+    └ <Thread(Thread-15 (process_request_thread), started daemon 24480)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 683, in process_request_thread
+    self.finish_request(request, client_address)
+    │    │              │        └ ('127.0.0.1', 63701)
+    │    │              └ <socket.socket fd=5832, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    └ <function BaseServer.finish_request at 0x000001FFCB1FF7F0>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 360, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    │    │                   │        │               └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>
+    │    │                   │        └ ('127.0.0.1', 63701)
+    │    │                   └ <socket.socket fd=5832, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    └ <class 'werkzeug.serving.WSGIRequestHandler'>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 747, in __init__
+    self.handle()
+    │    └ <function WSGIRequestHandler.handle at 0x000001FFCB63D510>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000001FFD0C2E200>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 399, in handle
+    super().handle()
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 433, in handle
+    self.handle_one_request()
+    │    └ <function BaseHTTPRequestHandler.handle_one_request at 0x000001FFCB4105E0>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000001FFD0C2E200>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 421, in handle_one_request
+    method()
+    └ <bound method WSGIRequestHandler.run_wsgi of <werkzeug.serving.WSGIRequestHandler object at 0x000001FFD0C2E200>>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 371, in run_wsgi
+    execute(self.server.app)
+    │       │    │      └ <Flask 'app'>
+    │       │    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>
+    │       └ <werkzeug.serving.WSGIRequestHandler object at 0x000001FFD0C2E200>
+    └ <function WSGIRequestHandler.run_wsgi.<locals>.execute at 0x000001FFD0DA51B0>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 332, in execute
+    application_iter = app(environ, start_response)
+                       │   │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000001FFD0DA5120>
+                       │   └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=5832>, 'wsgi.errors': <_io.TextIOW...
+                       └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           │    │        │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000001FFD0DA5120>
+           │    │        └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=5832>, 'wsgi.errors': <_io.TextIOW...
+           │    └ <function Flask.wsgi_app at 0x000001FFCBAFACB0>
+           └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               │    └ <function Flask.full_dispatch_request at 0x000001FFCBAFA4D0>
+               └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         │    └ <function Flask.dispatch_request at 0x000001FFCBAFA440>
+         └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           │    │           │    │              │    │            └ {}
+           │    │           │    │              │    └ 'main.pick_workspace'
+           │    │           │    │              └ <Rule '/api/workspace/pick' (POST, OPTIONS) -> main.pick_workspace>
+           │    │           │    └ {'static': <function Flask.__init__.<locals>.<lambda> at 0x000001FFCFEBB9A0>, 'main.index': <function index at 0x000001FFD09F...
+           │    │           └ <Flask 'app'>
+           │    └ <function Flask.ensure_sync at 0x000001FFCBAFA680>
+           └ <Flask 'app'>
+
+> File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\routes.py", line 222, in pick_workspace
+    selected = filedialog.askdirectory(title="Choose Sanctum workspace")
+               │          └ <function askdirectory at 0x000001FFD0DA4C10>
+               └ <module 'tkinter.filedialog' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5...
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\tkinter\filedialog.py", line 442, in askdirectory
+    return Directory(**options).show()
+           │           └ {'title': 'Choose Sanctum workspace'}
+           └ <class 'tkinter.filedialog.Directory'>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\tkinter\commondialog.py", line 45, in show
+    s = master.tk.call(self.command, *master._options(self.options))
+        │      │  │    │    │         │      │        │    └ {'title': 'Choose Sanctum workspace'}
+        │      │  │    │    │         │      │        └ <tkinter.filedialog.Directory object at 0x000001FFD0B63520>
+        │      │  │    │    │         │      └ <function Misc._options at 0x000001FFD0C19630>
+        │      │  │    │    │         └ <tkinter.Tk object .>
+        │      │  │    │    └ 'tk_chooseDirectory'
+        │      │  │    └ <tkinter.filedialog.Directory object at 0x000001FFD0B63520>
+        │      │  └ <method 'call' of '_tkinter.tkapp' objects>
+        │      └ <_tkinter.tkapp object at 0x000001FFD0A5F9B0>
+        └ <tkinter.Tk object .>
+
+RuntimeError: main thread is not in main loop
+2026-09-04 20:23:17 | ERROR    | app.routes:pick_workspace:231 | Native workspace picker failed.
+Traceback (most recent call last):
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 973, in _bootstrap
+    self._bootstrap_inner()
+    │    └ <function Thread._bootstrap_inner at 0x000001FFCB1FDE10>
+    └ <Thread(Thread-17 (process_request_thread), started daemon 16444)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 1016, in _bootstrap_inner
+    self.run()
+    │    └ <function Thread.run at 0x000001FFCB1FDB40>
+    └ <Thread(Thread-17 (process_request_thread), started daemon 16444)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {}
+    │    │        │    │        └ <Thread(Thread-17 (process_request_thread), started daemon 16444)>
+    │    │        │    └ (<socket.socket fd=6448, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr...
+    │    │        └ <Thread(Thread-17 (process_request_thread), started daemon 16444)>
+    │    └ <bound method ThreadingMixIn.process_request_thread of <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>>
+    └ <Thread(Thread-17 (process_request_thread), started daemon 16444)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 683, in process_request_thread
+    self.finish_request(request, client_address)
+    │    │              │        └ ('127.0.0.1', 52806)
+    │    │              └ <socket.socket fd=6448, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    └ <function BaseServer.finish_request at 0x000001FFCB1FF7F0>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 360, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    │    │                   │        │               └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>
+    │    │                   │        └ ('127.0.0.1', 52806)
+    │    │                   └ <socket.socket fd=6448, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    └ <class 'werkzeug.serving.WSGIRequestHandler'>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 747, in __init__
+    self.handle()
+    │    └ <function WSGIRequestHandler.handle at 0x000001FFCB63D510>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000001FFD0C2F2B0>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 399, in handle
+    super().handle()
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 433, in handle
+    self.handle_one_request()
+    │    └ <function BaseHTTPRequestHandler.handle_one_request at 0x000001FFCB4105E0>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000001FFD0C2F2B0>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 421, in handle_one_request
+    method()
+    └ <bound method WSGIRequestHandler.run_wsgi of <werkzeug.serving.WSGIRequestHandler object at 0x000001FFD0C2F2B0>>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 371, in run_wsgi
+    execute(self.server.app)
+    │       │    │      └ <Flask 'app'>
+    │       │    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>
+    │       └ <werkzeug.serving.WSGIRequestHandler object at 0x000001FFD0C2F2B0>
+    └ <function WSGIRequestHandler.run_wsgi.<locals>.execute at 0x000001FFD0DA5870>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 332, in execute
+    application_iter = app(environ, start_response)
+                       │   │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000001FFD0DA57E0>
+                       │   └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=6448>, 'wsgi.errors': <_io.TextIOW...
+                       └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           │    │        │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000001FFD0DA57E0>
+           │    │        └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=6448>, 'wsgi.errors': <_io.TextIOW...
+           │    └ <function Flask.wsgi_app at 0x000001FFCBAFACB0>
+           └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               │    └ <function Flask.full_dispatch_request at 0x000001FFCBAFA4D0>
+               └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         │    └ <function Flask.dispatch_request at 0x000001FFCBAFA440>
+         └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           │    │           │    │              │    │            └ {}
+           │    │           │    │              │    └ 'main.pick_workspace'
+           │    │           │    │              └ <Rule '/api/workspace/pick' (POST, OPTIONS) -> main.pick_workspace>
+           │    │           │    └ {'static': <function Flask.__init__.<locals>.<lambda> at 0x000001FFCFEBB9A0>, 'main.index': <function index at 0x000001FFD09F...
+           │    │           └ <Flask 'app'>
+           │    └ <function Flask.ensure_sync at 0x000001FFCBAFA680>
+           └ <Flask 'app'>
+
+> File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\routes.py", line 222, in pick_workspace
+    selected = filedialog.askdirectory(title="Choose Sanctum workspace")
+               │          └ <function askdirectory at 0x000001FFD0DA4C10>
+               └ <module 'tkinter.filedialog' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5...
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\tkinter\filedialog.py", line 442, in askdirectory
+    return Directory(**options).show()
+           │           └ {'title': 'Choose Sanctum workspace'}
+           └ <class 'tkinter.filedialog.Directory'>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\tkinter\commondialog.py", line 45, in show
+    s = master.tk.call(self.command, *master._options(self.options))
+        │      │  │    │    │         │      │        │    └ {'title': 'Choose Sanctum workspace'}
+        │      │  │    │    │         │      │        └ <tkinter.filedialog.Directory object at 0x000001FFD0B635E0>
+        │      │  │    │    │         │      └ <function Misc._options at 0x000001FFD0C19630>
+        │      │  │    │    │         └ <tkinter.Tk object .>
+        │      │  │    │    └ 'tk_chooseDirectory'
+        │      │  │    └ <tkinter.filedialog.Directory object at 0x000001FFD0B635E0>
+        │      │  └ <method 'call' of '_tkinter.tkapp' objects>
+        │      └ <_tkinter.tkapp object at 0x000001FFD0A5F9B0>
+        └ <tkinter.Tk object .>
+
+RuntimeError: main thread is not in main loop
+2026-09-04 20:23:17 | ERROR    | app.routes:pick_workspace:231 | Native workspace picker failed.
+Traceback (most recent call last):
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 973, in _bootstrap
+    self._bootstrap_inner()
+    │    └ <function Thread._bootstrap_inner at 0x000001FFCB1FDE10>
+    └ <Thread(Thread-16 (process_request_thread), started daemon 33216)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 1016, in _bootstrap_inner
+    self.run()
+    │    └ <function Thread.run at 0x000001FFCB1FDB40>
+    └ <Thread(Thread-16 (process_request_thread), started daemon 33216)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {}
+    │    │        │    │        └ <Thread(Thread-16 (process_request_thread), started daemon 33216)>
+    │    │        │    └ (<socket.socket fd=6112, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr...
+    │    │        └ <Thread(Thread-16 (process_request_thread), started daemon 33216)>
+    │    └ <bound method ThreadingMixIn.process_request_thread of <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>>
+    └ <Thread(Thread-16 (process_request_thread), started daemon 33216)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 683, in process_request_thread
+    self.finish_request(request, client_address)
+    │    │              │        └ ('127.0.0.1', 56639)
+    │    │              └ <socket.socket fd=6112, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    └ <function BaseServer.finish_request at 0x000001FFCB1FF7F0>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 360, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    │    │                   │        │               └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>
+    │    │                   │        └ ('127.0.0.1', 56639)
+    │    │                   └ <socket.socket fd=6112, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    └ <class 'werkzeug.serving.WSGIRequestHandler'>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 747, in __init__
+    self.handle()
+    │    └ <function WSGIRequestHandler.handle at 0x000001FFCB63D510>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000001FFD0C2EAA0>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 399, in handle
+    super().handle()
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 433, in handle
+    self.handle_one_request()
+    │    └ <function BaseHTTPRequestHandler.handle_one_request at 0x000001FFCB4105E0>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000001FFD0C2EAA0>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 421, in handle_one_request
+    method()
+    └ <bound method WSGIRequestHandler.run_wsgi of <werkzeug.serving.WSGIRequestHandler object at 0x000001FFD0C2EAA0>>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 371, in run_wsgi
+    execute(self.server.app)
+    │       │    │      └ <Flask 'app'>
+    │       │    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>
+    │       └ <werkzeug.serving.WSGIRequestHandler object at 0x000001FFD0C2EAA0>
+    └ <function WSGIRequestHandler.run_wsgi.<locals>.execute at 0x000001FFD0DA5510>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 332, in execute
+    application_iter = app(environ, start_response)
+                       │   │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000001FFD0DA5480>
+                       │   └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=6112>, 'wsgi.errors': <_io.TextIOW...
+                       └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           │    │        │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000001FFD0DA5480>
+           │    │        └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=6112>, 'wsgi.errors': <_io.TextIOW...
+           │    └ <function Flask.wsgi_app at 0x000001FFCBAFACB0>
+           └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               │    └ <function Flask.full_dispatch_request at 0x000001FFCBAFA4D0>
+               └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         │    └ <function Flask.dispatch_request at 0x000001FFCBAFA440>
+         └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           │    │           │    │              │    │            └ {}
+           │    │           │    │              │    └ 'main.pick_workspace'
+           │    │           │    │              └ <Rule '/api/workspace/pick' (POST, OPTIONS) -> main.pick_workspace>
+           │    │           │    └ {'static': <function Flask.__init__.<locals>.<lambda> at 0x000001FFCFEBB9A0>, 'main.index': <function index at 0x000001FFD09F...
+           │    │           └ <Flask 'app'>
+           │    └ <function Flask.ensure_sync at 0x000001FFCBAFA680>
+           └ <Flask 'app'>
+
+> File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\routes.py", line 222, in pick_workspace
+    selected = filedialog.askdirectory(title="Choose Sanctum workspace")
+               │          └ <function askdirectory at 0x000001FFD0DA4C10>
+               └ <module 'tkinter.filedialog' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5...
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\tkinter\filedialog.py", line 442, in askdirectory
+    return Directory(**options).show()
+           │           └ {'title': 'Choose Sanctum workspace'}
+           └ <class 'tkinter.filedialog.Directory'>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\tkinter\commondialog.py", line 45, in show
+    s = master.tk.call(self.command, *master._options(self.options))
+        │      │  │    │    │         │      │        │    └ {'title': 'Choose Sanctum workspace'}
+        │      │  │    │    │         │      │        └ <tkinter.filedialog.Directory object at 0x000001FFD0B63400>
+        │      │  │    │    │         │      └ <function Misc._options at 0x000001FFD0C19630>
+        │      │  │    │    │         └ <tkinter.Tk object .>
+        │      │  │    │    └ 'tk_chooseDirectory'
+        │      │  │    └ <tkinter.filedialog.Directory object at 0x000001FFD0B63400>
+        │      │  └ <method 'call' of '_tkinter.tkapp' objects>
+        │      └ <_tkinter.tkapp object at 0x000001FFD0A5F9B0>
+        └ <tkinter.Tk object .>
+
+RuntimeError: main thread is not in main loop
+2026-09-04 20:23:18 | ERROR    | app.routes:pick_workspace:231 | Native workspace picker failed.
+Traceback (most recent call last):
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 973, in _bootstrap
+    self._bootstrap_inner()
+    │    └ <function Thread._bootstrap_inner at 0x000001FFCB1FDE10>
+    └ <Thread(Thread-18 (process_request_thread), started daemon 35372)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 1016, in _bootstrap_inner
+    self.run()
+    │    └ <function Thread.run at 0x000001FFCB1FDB40>
+    └ <Thread(Thread-18 (process_request_thread), started daemon 35372)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {}
+    │    │        │    │        └ <Thread(Thread-18 (process_request_thread), started daemon 35372)>
+    │    │        │    └ (<socket.socket fd=5428, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr...
+    │    │        └ <Thread(Thread-18 (process_request_thread), started daemon 35372)>
+    │    └ <bound method ThreadingMixIn.process_request_thread of <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>>
+    └ <Thread(Thread-18 (process_request_thread), started daemon 35372)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 683, in process_request_thread
+    self.finish_request(request, client_address)
+    │    │              │        └ ('127.0.0.1', 55362)
+    │    │              └ <socket.socket fd=5428, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    └ <function BaseServer.finish_request at 0x000001FFCB1FF7F0>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 360, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    │    │                   │        │               └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>
+    │    │                   │        └ ('127.0.0.1', 55362)
+    │    │                   └ <socket.socket fd=5428, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    └ <class 'werkzeug.serving.WSGIRequestHandler'>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 747, in __init__
+    self.handle()
+    │    └ <function WSGIRequestHandler.handle at 0x000001FFCB63D510>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000001FFD0A8E020>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 399, in handle
+    super().handle()
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 433, in handle
+    self.handle_one_request()
+    │    └ <function BaseHTTPRequestHandler.handle_one_request at 0x000001FFCB4105E0>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000001FFD0A8E020>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 421, in handle_one_request
+    method()
+    └ <bound method WSGIRequestHandler.run_wsgi of <werkzeug.serving.WSGIRequestHandler object at 0x000001FFD0A8E020>>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 371, in run_wsgi
+    execute(self.server.app)
+    │       │    │      └ <Flask 'app'>
+    │       │    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>
+    │       └ <werkzeug.serving.WSGIRequestHandler object at 0x000001FFD0A8E020>
+    └ <function WSGIRequestHandler.run_wsgi.<locals>.execute at 0x000001FFCF138E50>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 332, in execute
+    application_iter = app(environ, start_response)
+                       │   │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000001FFD0A67520>
+                       │   └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=5428>, 'wsgi.errors': <_io.TextIOW...
+                       └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           │    │        │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000001FFD0A67520>
+           │    │        └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=5428>, 'wsgi.errors': <_io.TextIOW...
+           │    └ <function Flask.wsgi_app at 0x000001FFCBAFACB0>
+           └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               │    └ <function Flask.full_dispatch_request at 0x000001FFCBAFA4D0>
+               └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         │    └ <function Flask.dispatch_request at 0x000001FFCBAFA440>
+         └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           │    │           │    │              │    │            └ {}
+           │    │           │    │              │    └ 'main.pick_workspace'
+           │    │           │    │              └ <Rule '/api/workspace/pick' (POST, OPTIONS) -> main.pick_workspace>
+           │    │           │    └ {'static': <function Flask.__init__.<locals>.<lambda> at 0x000001FFCFEBB9A0>, 'main.index': <function index at 0x000001FFD09F...
+           │    │           └ <Flask 'app'>
+           │    └ <function Flask.ensure_sync at 0x000001FFCBAFA680>
+           └ <Flask 'app'>
+
+> File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\routes.py", line 222, in pick_workspace
+    selected = filedialog.askdirectory(title="Choose Sanctum workspace")
+               │          └ <function askdirectory at 0x000001FFD0DA4C10>
+               └ <module 'tkinter.filedialog' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5...
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\tkinter\filedialog.py", line 442, in askdirectory
+    return Directory(**options).show()
+           │           └ {'title': 'Choose Sanctum workspace'}
+           └ <class 'tkinter.filedialog.Directory'>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\tkinter\commondialog.py", line 45, in show
+    s = master.tk.call(self.command, *master._options(self.options))
+        │      │  │    │    │         │      │        │    └ {'title': 'Choose Sanctum workspace'}
+        │      │  │    │    │         │      │        └ <tkinter.filedialog.Directory object at 0x000001FFD0A8FC10>
+        │      │  │    │    │         │      └ <function Misc._options at 0x000001FFD0C19630>
+        │      │  │    │    │         └ <tkinter.Tk object .>
+        │      │  │    │    └ 'tk_chooseDirectory'
+        │      │  │    └ <tkinter.filedialog.Directory object at 0x000001FFD0A8FC10>
+        │      │  └ <method 'call' of '_tkinter.tkapp' objects>
+        │      └ <_tkinter.tkapp object at 0x000001FFD0A5F9B0>
+        └ <tkinter.Tk object .>
+
+RuntimeError: main thread is not in main loop
+2026-09-04 20:23:18 | ERROR    | app.routes:pick_workspace:231 | Native workspace picker failed.
+Traceback (most recent call last):
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 973, in _bootstrap
+    self._bootstrap_inner()
+    │    └ <function Thread._bootstrap_inner at 0x000001FFCB1FDE10>
+    └ <Thread(Thread-20 (process_request_thread), started daemon 20964)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 1016, in _bootstrap_inner
+    self.run()
+    │    └ <function Thread.run at 0x000001FFCB1FDB40>
+    └ <Thread(Thread-20 (process_request_thread), started daemon 20964)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {}
+    │    │        │    │        └ <Thread(Thread-20 (process_request_thread), started daemon 20964)>
+    │    │        │    └ (<socket.socket fd=8820, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr...
+    │    │        └ <Thread(Thread-20 (process_request_thread), started daemon 20964)>
+    │    └ <bound method ThreadingMixIn.process_request_thread of <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>>
+    └ <Thread(Thread-20 (process_request_thread), started daemon 20964)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 683, in process_request_thread
+    self.finish_request(request, client_address)
+    │    │              │        └ ('127.0.0.1', 53551)
+    │    │              └ <socket.socket fd=8820, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    └ <function BaseServer.finish_request at 0x000001FFCB1FF7F0>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 360, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    │    │                   │        │               └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>
+    │    │                   │        └ ('127.0.0.1', 53551)
+    │    │                   └ <socket.socket fd=8820, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    └ <class 'werkzeug.serving.WSGIRequestHandler'>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 747, in __init__
+    self.handle()
+    │    └ <function WSGIRequestHandler.handle at 0x000001FFCB63D510>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000001FFD0DB89A0>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 399, in handle
+    super().handle()
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 433, in handle
+    self.handle_one_request()
+    │    └ <function BaseHTTPRequestHandler.handle_one_request at 0x000001FFCB4105E0>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000001FFD0DB89A0>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 421, in handle_one_request
+    method()
+    └ <bound method WSGIRequestHandler.run_wsgi of <werkzeug.serving.WSGIRequestHandler object at 0x000001FFD0DB89A0>>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 371, in run_wsgi
+    execute(self.server.app)
+    │       │    │      └ <Flask 'app'>
+    │       │    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000001FFD0A8D720>
+    │       └ <werkzeug.serving.WSGIRequestHandler object at 0x000001FFD0DB89A0>
+    └ <function WSGIRequestHandler.run_wsgi.<locals>.execute at 0x000001FFD0DA4D30>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 332, in execute
+    application_iter = app(environ, start_response)
+                       │   │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000001FFD0DA4DC0>
+                       │   └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=8820>, 'wsgi.errors': <_io.TextIOW...
+                       └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           │    │        │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000001FFD0DA4DC0>
+           │    │        └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=8820>, 'wsgi.errors': <_io.TextIOW...
+           │    └ <function Flask.wsgi_app at 0x000001FFCBAFACB0>
+           └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               │    └ <function Flask.full_dispatch_request at 0x000001FFCBAFA4D0>
+               └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         │    └ <function Flask.dispatch_request at 0x000001FFCBAFA440>
+         └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           │    │           │    │              │    │            └ {}
+           │    │           │    │              │    └ 'main.pick_workspace'
+           │    │           │    │              └ <Rule '/api/workspace/pick' (POST, OPTIONS) -> main.pick_workspace>
+           │    │           │    └ {'static': <function Flask.__init__.<locals>.<lambda> at 0x000001FFCFEBB9A0>, 'main.index': <function index at 0x000001FFD09F...
+           │    │           └ <Flask 'app'>
+           │    └ <function Flask.ensure_sync at 0x000001FFCBAFA680>
+           └ <Flask 'app'>
+
+> File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\routes.py", line 222, in pick_workspace
+    selected = filedialog.askdirectory(title="Choose Sanctum workspace")
+               │          └ <function askdirectory at 0x000001FFD0DA4C10>
+               └ <module 'tkinter.filedialog' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5...
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\tkinter\filedialog.py", line 442, in askdirectory
+    return Directory(**options).show()
+           │           └ {'title': 'Choose Sanctum workspace'}
+           └ <class 'tkinter.filedialog.Directory'>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\tkinter\commondialog.py", line 45, in show
+    s = master.tk.call(self.command, *master._options(self.options))
+        │      │  │    │    │         │      │        │    └ {'title': 'Choose Sanctum workspace'}
+        │      │  │    │    │         │      │        └ <tkinter.filedialog.Directory object at 0x000001FFD0A8FB50>
+        │      │  │    │    │         │      └ <function Misc._options at 0x000001FFD0C19630>
+        │      │  │    │    │         └ <tkinter.Tk object .>
+        │      │  │    │    └ 'tk_chooseDirectory'
+        │      │  │    └ <tkinter.filedialog.Directory object at 0x000001FFD0A8FB50>
+        │      │  └ <method 'call' of '_tkinter.tkapp' objects>
+        │      └ <_tkinter.tkapp object at 0x000001FFD0A5F9B0>
+        └ <tkinter.Tk object .>
+
+RuntimeError: main thread is not in main loop
+2026-09-04 20:40:28 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-04 20:40:28 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-04 20:40:28 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 14 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-04 20:40:28 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-04 20:40:28 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-04 20:40:28 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-04 20:41:18 | ERROR    | app.routes:read_workspace_file:246 | Error reading file 'generated\create_a_docs_for_explaining_each_step_to_write_hello_world_.docx'.
+Traceback (most recent call last):
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 973, in _bootstrap
+    self._bootstrap_inner()
+    │    └ <function Thread._bootstrap_inner at 0x0000025184AADEA0>
+    └ <Thread(Thread-11 (process_request_thread), started daemon 27280)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 1016, in _bootstrap_inner
+    self.run()
+    │    └ <function Thread.run at 0x0000025184AADBD0>
+    └ <Thread(Thread-11 (process_request_thread), started daemon 27280)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {}
+    │    │        │    │        └ <Thread(Thread-11 (process_request_thread), started daemon 27280)>
+    │    │        │    └ (<socket.socket fd=5480, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr...
+    │    │        └ <Thread(Thread-11 (process_request_thread), started daemon 27280)>
+    │    └ <bound method ThreadingMixIn.process_request_thread of <werkzeug.serving.ThreadedWSGIServer object at 0x000002518B361570>>
+    └ <Thread(Thread-11 (process_request_thread), started daemon 27280)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 683, in process_request_thread
+    self.finish_request(request, client_address)
+    │    │              │        └ ('127.0.0.1', 52284)
+    │    │              └ <socket.socket fd=5480, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    └ <function BaseServer.finish_request at 0x0000025184AAF880>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000002518B361570>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 360, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    │    │                   │        │               └ <werkzeug.serving.ThreadedWSGIServer object at 0x000002518B361570>
+    │    │                   │        └ ('127.0.0.1', 52284)
+    │    │                   └ <socket.socket fd=5480, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    └ <class 'werkzeug.serving.WSGIRequestHandler'>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000002518B361570>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 747, in __init__
+    self.handle()
+    │    └ <function WSGIRequestHandler.handle at 0x0000025184EED5A0>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000002518B363730>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 399, in handle
+    super().handle()
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 433, in handle
+    self.handle_one_request()
+    │    └ <function BaseHTTPRequestHandler.handle_one_request at 0x0000025184CC0670>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000002518B363730>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 421, in handle_one_request
+    method()
+    └ <bound method WSGIRequestHandler.run_wsgi of <werkzeug.serving.WSGIRequestHandler object at 0x000002518B363730>>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 371, in run_wsgi
+    execute(self.server.app)
+    │       │    │      └ <Flask 'app'>
+    │       │    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000002518B361570>
+    │       └ <werkzeug.serving.WSGIRequestHandler object at 0x000002518B363730>
+    └ <function WSGIRequestHandler.run_wsgi.<locals>.execute at 0x000002518B33B6D0>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 332, in execute
+    application_iter = app(environ, start_response)
+                       │   │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000002518B33B130>
+                       │   └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=5480>, 'wsgi.errors': <_io.TextIOW...
+                       └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           │    │        │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000002518B33B130>
+           │    │        └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=5480>, 'wsgi.errors': <_io.TextIOW...
+           │    └ <function Flask.wsgi_app at 0x00000251863AAD40>
+           └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               │    └ <function Flask.full_dispatch_request at 0x00000251863AA560>
+               └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         │    └ <function Flask.dispatch_request at 0x00000251863AA4D0>
+         └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           │    │           │    │              │    │            └ {}
+           │    │           │    │              │    └ 'main.read_workspace_file'
+           │    │           │    │              └ <Rule '/api/workspace/file' (OPTIONS, GET, HEAD) -> main.read_workspace_file>
+           │    │           │    └ {'static': <function Flask.__init__.<locals>.<lambda> at 0x000002518978FB50>, 'main.index': <function index at 0x000002518B2C...
+           │    │           └ <Flask 'app'>
+           │    └ <function Flask.ensure_sync at 0x00000251863AA710>
+           └ <Flask 'app'>
+
+> File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\routes.py", line 242, in read_workspace_file
+    file_res = agent.execute_tool("file", action="read_file", path=file_path)
+               │     │                                             └ 'generated\\create_a_docs_for_explaining_each_step_to_write_hello_world_.docx'
+               │     └ <function CodingAgent.execute_tool at 0x00000251886F8C10>
+               └ <app.agent.CodingAgent object at 0x000002518B26E620>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\agent.py", line 501, in execute_tool
+    return self.tool_manager.execute(name, *args, **kwargs)
+           │    │            │       │      │       └ {'action': 'read_file', 'path': 'generated\\create_a_docs_for_explaining_each_step_to_write_hello_world_.docx'}
+           │    │            │       │      └ ()
+           │    │            │       └ 'file'
+           │    │            └ <function ToolManager.execute at 0x00000251886CFE20>
+           │    └ <app.tools.manager.ToolManager object at 0x000002518B26E680>
+           └ <app.agent.CodingAgent object at 0x000002518B26E620>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\tools\manager.py", line 43, in execute
+    return self.get(name).execute(*args, **kwargs)
+           │    │   │              │       └ {'action': 'read_file', 'path': 'generated\\create_a_docs_for_explaining_each_step_to_write_hello_world_.docx'}
+           │    │   │              └ ()
+           │    │   └ 'file'
+           │    └ <function ToolManager.get at 0x00000251886CFC70>
+           └ <app.tools.manager.ToolManager object at 0x000002518B26E680>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\tools\file_tool.py", line 25, in execute
+    return self.read_file(*args, **kwargs)
+           │    │          │       └ {'path': 'generated\\create_a_docs_for_explaining_each_step_to_write_hello_world_.docx'}
+           │    │          └ ()
+           │    └ <function FileTool.read_file at 0x00000251886CE9E0>
+           └ <app.tools.file_tool.FileTool object at 0x000002518B26E6E0>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\tools\file_tool.py", line 51, in read_file
+    text = file_path.read_text(encoding="utf-8")
+           │         └ <function Path.read_text at 0x000002518615A320>
+           └ WindowsPath('C:/Users/user/OneDrive/Desktop/Nerves/generated/create_a_docs_for_explaining_each_step_to_write_hello_world_.docx')
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\pathlib.py", line 1135, in read_text
+    return f.read()
+           │ └ <method 'read' of '_io.TextIOWrapper' objects>
+           └ <_io.TextIOWrapper name='C:\\Users\\user\\OneDrive\\Desktop\\Nerves\\generated\\create_a_docs_for_explaining_each_step_to_wri...
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\codecs.py", line 322, in decode
+    (result, consumed) = self._buffer_decode(data, self.errors, final)
+                         │    │              │     │    │       └ True
+                         │    │              │     │    └ 'strict'
+                         │    │              │     └ <encodings.utf_8.IncrementalDecoder object at 0x000002518B362BC0>
+                         │    │              └ b'PK\x03\x04\x14\x00\x00\x00\x08\x00Rw$]\xadR\xa5\x91\x95\x01\x00\x00\xca\x06\x00\x00\x13\x00\x00\x00[Content_Types].xml\xb5\...
+                         │    └ <built-in function utf_8_decode>
+                         └ <encodings.utf_8.IncrementalDecoder object at 0x000002518B362BC0>
+
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xad in position 14: invalid start byte
+2026-09-04 20:41:26 | ERROR    | app.routes:read_workspace_file:246 | Error reading file 'main_notes.pdf'.
+Traceback (most recent call last):
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 973, in _bootstrap
+    self._bootstrap_inner()
+    │    └ <function Thread._bootstrap_inner at 0x0000025184AADEA0>
+    └ <Thread(Thread-15 (process_request_thread), started daemon 19396)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 1016, in _bootstrap_inner
+    self.run()
+    │    └ <function Thread.run at 0x0000025184AADBD0>
+    └ <Thread(Thread-15 (process_request_thread), started daemon 19396)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {}
+    │    │        │    │        └ <Thread(Thread-15 (process_request_thread), started daemon 19396)>
+    │    │        │    └ (<socket.socket fd=948, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    │        └ <Thread(Thread-15 (process_request_thread), started daemon 19396)>
+    │    └ <bound method ThreadingMixIn.process_request_thread of <werkzeug.serving.ThreadedWSGIServer object at 0x000002518B361570>>
+    └ <Thread(Thread-15 (process_request_thread), started daemon 19396)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 683, in process_request_thread
+    self.finish_request(request, client_address)
+    │    │              │        └ ('127.0.0.1', 55070)
+    │    │              └ <socket.socket fd=948, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=(...
+    │    └ <function BaseServer.finish_request at 0x0000025184AAF880>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000002518B361570>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 360, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    │    │                   │        │               └ <werkzeug.serving.ThreadedWSGIServer object at 0x000002518B361570>
+    │    │                   │        └ ('127.0.0.1', 55070)
+    │    │                   └ <socket.socket fd=948, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=(...
+    │    └ <class 'werkzeug.serving.WSGIRequestHandler'>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000002518B361570>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 747, in __init__
+    self.handle()
+    │    └ <function WSGIRequestHandler.handle at 0x0000025184EED5A0>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000002518B3633D0>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 399, in handle
+    super().handle()
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 433, in handle
+    self.handle_one_request()
+    │    └ <function BaseHTTPRequestHandler.handle_one_request at 0x0000025184CC0670>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000002518B3633D0>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 421, in handle_one_request
+    method()
+    └ <bound method WSGIRequestHandler.run_wsgi of <werkzeug.serving.WSGIRequestHandler object at 0x000002518B3633D0>>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 371, in run_wsgi
+    execute(self.server.app)
+    │       │    │      └ <Flask 'app'>
+    │       │    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000002518B361570>
+    │       └ <werkzeug.serving.WSGIRequestHandler object at 0x000002518B3633D0>
+    └ <function WSGIRequestHandler.run_wsgi.<locals>.execute at 0x000002518B33B6D0>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 332, in execute
+    application_iter = app(environ, start_response)
+                       │   │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000002518B33B130>
+                       │   └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=948>, 'wsgi.errors': <_io.TextIOWr...
+                       └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           │    │        │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000002518B33B130>
+           │    │        └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=948>, 'wsgi.errors': <_io.TextIOWr...
+           │    └ <function Flask.wsgi_app at 0x00000251863AAD40>
+           └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               │    └ <function Flask.full_dispatch_request at 0x00000251863AA560>
+               └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         │    └ <function Flask.dispatch_request at 0x00000251863AA4D0>
+         └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           │    │           │    │              │    │            └ {}
+           │    │           │    │              │    └ 'main.read_workspace_file'
+           │    │           │    │              └ <Rule '/api/workspace/file' (OPTIONS, GET, HEAD) -> main.read_workspace_file>
+           │    │           │    └ {'static': <function Flask.__init__.<locals>.<lambda> at 0x000002518978FB50>, 'main.index': <function index at 0x000002518B2C...
+           │    │           └ <Flask 'app'>
+           │    └ <function Flask.ensure_sync at 0x00000251863AA710>
+           └ <Flask 'app'>
+
+> File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\routes.py", line 242, in read_workspace_file
+    file_res = agent.execute_tool("file", action="read_file", path=file_path)
+               │     │                                             └ 'main_notes.pdf'
+               │     └ <function CodingAgent.execute_tool at 0x00000251886F8C10>
+               └ <app.agent.CodingAgent object at 0x000002518B26E620>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\agent.py", line 501, in execute_tool
+    return self.tool_manager.execute(name, *args, **kwargs)
+           │    │            │       │      │       └ {'action': 'read_file', 'path': 'main_notes.pdf'}
+           │    │            │       │      └ ()
+           │    │            │       └ 'file'
+           │    │            └ <function ToolManager.execute at 0x00000251886CFE20>
+           │    └ <app.tools.manager.ToolManager object at 0x000002518B26E680>
+           └ <app.agent.CodingAgent object at 0x000002518B26E620>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\tools\manager.py", line 43, in execute
+    return self.get(name).execute(*args, **kwargs)
+           │    │   │              │       └ {'action': 'read_file', 'path': 'main_notes.pdf'}
+           │    │   │              └ ()
+           │    │   └ 'file'
+           │    └ <function ToolManager.get at 0x00000251886CFC70>
+           └ <app.tools.manager.ToolManager object at 0x000002518B26E680>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\tools\file_tool.py", line 25, in execute
+    return self.read_file(*args, **kwargs)
+           │    │          │       └ {'path': 'main_notes.pdf'}
+           │    │          └ ()
+           │    └ <function FileTool.read_file at 0x00000251886CE9E0>
+           └ <app.tools.file_tool.FileTool object at 0x000002518B26E6E0>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\tools\file_tool.py", line 51, in read_file
+    text = file_path.read_text(encoding="utf-8")
+           │         └ <function Path.read_text at 0x000002518615A320>
+           └ WindowsPath('C:/Users/user/OneDrive/Desktop/Nerves/main_notes.pdf')
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\pathlib.py", line 1135, in read_text
+    return f.read()
+           │ └ <method 'read' of '_io.TextIOWrapper' objects>
+           └ <_io.TextIOWrapper name='C:\\Users\\user\\OneDrive\\Desktop\\Nerves\\main_notes.pdf' mode='r' encoding='utf-8'>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\codecs.py", line 322, in decode
+    (result, consumed) = self._buffer_decode(data, self.errors, final)
+                         │    │              │     │    │       └ True
+                         │    │              │     │    └ 'strict'
+                         │    │              │     └ <encodings.utf_8.IncrementalDecoder object at 0x000002518B363640>
+                         │    │              └ b'%PDF-1.5\n%\xd0\xd4\xc5\xd8\n2 0 obj\n<<\n/Type /ObjStm\n/N 100\n/First 830\n/Length 1732      \n/Filter /FlateDecode\n>>\n...
+                         │    └ <built-in function utf_8_decode>
+                         └ <encodings.utf_8.IncrementalDecoder object at 0x000002518B363640>
+
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xd0 in position 10: invalid continuation byte
+2026-09-04 20:41:57 | ERROR    | app.routes:read_workspace_file:246 | Error reading file 'generated\create_a_docs_for_explaining_each_step_to_write_hello_world_.docx'.
+Traceback (most recent call last):
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 973, in _bootstrap
+    self._bootstrap_inner()
+    │    └ <function Thread._bootstrap_inner at 0x0000025184AADEA0>
+    └ <Thread(Thread-20 (process_request_thread), started daemon 544)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 1016, in _bootstrap_inner
+    self.run()
+    │    └ <function Thread.run at 0x0000025184AADBD0>
+    └ <Thread(Thread-20 (process_request_thread), started daemon 544)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {}
+    │    │        │    │        └ <Thread(Thread-20 (process_request_thread), started daemon 544)>
+    │    │        │    └ (<socket.socket fd=908, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    │        └ <Thread(Thread-20 (process_request_thread), started daemon 544)>
+    │    └ <bound method ThreadingMixIn.process_request_thread of <werkzeug.serving.ThreadedWSGIServer object at 0x000002518B361570>>
+    └ <Thread(Thread-20 (process_request_thread), started daemon 544)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 683, in process_request_thread
+    self.finish_request(request, client_address)
+    │    │              │        └ ('127.0.0.1', 61094)
+    │    │              └ <socket.socket fd=908, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=(...
+    │    └ <function BaseServer.finish_request at 0x0000025184AAF880>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000002518B361570>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 360, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    │    │                   │        │               └ <werkzeug.serving.ThreadedWSGIServer object at 0x000002518B361570>
+    │    │                   │        └ ('127.0.0.1', 61094)
+    │    │                   └ <socket.socket fd=908, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=(...
+    │    └ <class 'werkzeug.serving.WSGIRequestHandler'>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000002518B361570>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 747, in __init__
+    self.handle()
+    │    └ <function WSGIRequestHandler.handle at 0x0000025184EED5A0>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000002518B361720>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 399, in handle
+    super().handle()
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 433, in handle
+    self.handle_one_request()
+    │    └ <function BaseHTTPRequestHandler.handle_one_request at 0x0000025184CC0670>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000002518B361720>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 421, in handle_one_request
+    method()
+    └ <bound method WSGIRequestHandler.run_wsgi of <werkzeug.serving.WSGIRequestHandler object at 0x000002518B361720>>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 371, in run_wsgi
+    execute(self.server.app)
+    │       │    │      └ <Flask 'app'>
+    │       │    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000002518B361570>
+    │       └ <werkzeug.serving.WSGIRequestHandler object at 0x000002518B361720>
+    └ <function WSGIRequestHandler.run_wsgi.<locals>.execute at 0x000002518B33B7F0>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 332, in execute
+    application_iter = app(environ, start_response)
+                       │   │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000002518B33B760>
+                       │   └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=908>, 'wsgi.errors': <_io.TextIOWr...
+                       └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           │    │        │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000002518B33B760>
+           │    │        └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=908>, 'wsgi.errors': <_io.TextIOWr...
+           │    └ <function Flask.wsgi_app at 0x00000251863AAD40>
+           └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               │    └ <function Flask.full_dispatch_request at 0x00000251863AA560>
+               └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         │    └ <function Flask.dispatch_request at 0x00000251863AA4D0>
+         └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           │    │           │    │              │    │            └ {}
+           │    │           │    │              │    └ 'main.read_workspace_file'
+           │    │           │    │              └ <Rule '/api/workspace/file' (OPTIONS, GET, HEAD) -> main.read_workspace_file>
+           │    │           │    └ {'static': <function Flask.__init__.<locals>.<lambda> at 0x000002518978FB50>, 'main.index': <function index at 0x000002518B2C...
+           │    │           └ <Flask 'app'>
+           │    └ <function Flask.ensure_sync at 0x00000251863AA710>
+           └ <Flask 'app'>
+
+> File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\routes.py", line 242, in read_workspace_file
+    file_res = agent.execute_tool("file", action="read_file", path=file_path)
+               │     │                                             └ 'generated\\create_a_docs_for_explaining_each_step_to_write_hello_world_.docx'
+               │     └ <function CodingAgent.execute_tool at 0x00000251886F8C10>
+               └ <app.agent.CodingAgent object at 0x000002518B26E620>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\agent.py", line 501, in execute_tool
+    return self.tool_manager.execute(name, *args, **kwargs)
+           │    │            │       │      │       └ {'action': 'read_file', 'path': 'generated\\create_a_docs_for_explaining_each_step_to_write_hello_world_.docx'}
+           │    │            │       │      └ ()
+           │    │            │       └ 'file'
+           │    │            └ <function ToolManager.execute at 0x00000251886CFE20>
+           │    └ <app.tools.manager.ToolManager object at 0x000002518B26E680>
+           └ <app.agent.CodingAgent object at 0x000002518B26E620>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\tools\manager.py", line 43, in execute
+    return self.get(name).execute(*args, **kwargs)
+           │    │   │              │       └ {'action': 'read_file', 'path': 'generated\\create_a_docs_for_explaining_each_step_to_write_hello_world_.docx'}
+           │    │   │              └ ()
+           │    │   └ 'file'
+           │    └ <function ToolManager.get at 0x00000251886CFC70>
+           └ <app.tools.manager.ToolManager object at 0x000002518B26E680>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\tools\file_tool.py", line 25, in execute
+    return self.read_file(*args, **kwargs)
+           │    │          │       └ {'path': 'generated\\create_a_docs_for_explaining_each_step_to_write_hello_world_.docx'}
+           │    │          └ ()
+           │    └ <function FileTool.read_file at 0x00000251886CE9E0>
+           └ <app.tools.file_tool.FileTool object at 0x000002518B26E6E0>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\tools\file_tool.py", line 51, in read_file
+    text = file_path.read_text(encoding="utf-8")
+           │         └ <function Path.read_text at 0x000002518615A320>
+           └ WindowsPath('C:/Users/user/OneDrive/Desktop/Nerves/generated/create_a_docs_for_explaining_each_step_to_write_hello_world_.docx')
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\pathlib.py", line 1135, in read_text
+    return f.read()
+           │ └ <method 'read' of '_io.TextIOWrapper' objects>
+           └ <_io.TextIOWrapper name='C:\\Users\\user\\OneDrive\\Desktop\\Nerves\\generated\\create_a_docs_for_explaining_each_step_to_wri...
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\codecs.py", line 322, in decode
+    (result, consumed) = self._buffer_decode(data, self.errors, final)
+                         │    │              │     │    │       └ True
+                         │    │              │     │    └ 'strict'
+                         │    │              │     └ <encodings.utf_8.IncrementalDecoder object at 0x000002518B363DC0>
+                         │    │              └ b'PK\x03\x04\x14\x00\x00\x00\x08\x00Rw$]\xadR\xa5\x91\x95\x01\x00\x00\xca\x06\x00\x00\x13\x00\x00\x00[Content_Types].xml\xb5\...
+                         │    └ <built-in function utf_8_decode>
+                         └ <encodings.utf_8.IncrementalDecoder object at 0x000002518B363DC0>
+
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xad in position 14: invalid start byte
+2026-09-04 20:49:10 | INFO     | app.workspace_history:_load:97 | New workspace history created at C:\Users\user\OneDrive\Desktop\Nerves\generated\.sanctum\history.json
+2026-09-04 20:49:10 | INFO     | app.lkb.manager:set_workspace:66 | LKB: switched to workspace 'C:\Users\user\OneDrive\Desktop\Nerves\generated'
+2026-09-04 20:49:10 | INFO     | app.agent:set_workspace:489 | Workspace changed to C:\Users\user\OneDrive\Desktop\Nerves\generated
+2026-09-04 20:49:10 | INFO     | app.fluid.workspace_registry:register:43 | Fluid: new workspace registered: C:\Users\user\OneDrive\Desktop\Nerves\generated
+2026-09-04 20:53:39 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-04 20:53:39 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-04 20:53:39 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 14 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-04 20:53:39 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves\generated
+2026-09-04 20:53:39 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-04 20:53:39 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-04 20:54:05 | INFO     | app.workspace_history:_load:97 | New workspace history created at C:\Users\user\OneDrive\Desktop\ISRO\.sanctum\history.json
+2026-09-04 20:54:05 | INFO     | app.lkb.manager:set_workspace:66 | LKB: switched to workspace 'C:\Users\user\OneDrive\Desktop\ISRO'
+2026-09-04 20:54:05 | INFO     | app.agent:set_workspace:489 | Workspace changed to C:\Users\user\OneDrive\Desktop\ISRO
+2026-09-04 20:54:05 | INFO     | app.fluid.workspace_registry:register:43 | Fluid: new workspace registered: C:\Users\user\OneDrive\Desktop\ISRO
+2026-09-04 20:59:46 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-04 20:59:46 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-04 20:59:46 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 14 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-04 20:59:46 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\ISRO
+2026-09-04 20:59:46 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-04 20:59:46 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-04 21:01:43 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-04 21:01:43 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-04 21:01:43 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 14 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-04 21:01:43 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\ISRO
+2026-09-04 21:01:43 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-04 21:01:43 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-04 21:04:26 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-04 21:04:26 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-04 21:04:26 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 14 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-04 21:04:26 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\ISRO
+2026-09-04 21:04:26 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-04 21:04:26 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-04 21:09:09 | ERROR    | app.routes:read_workspace_file:250 | Error reading file 'generated\create_a_word_document_titled_resume_about_an_example_resume.docx'.
+Traceback (most recent call last):
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 973, in _bootstrap
+    self._bootstrap_inner()
+    │    └ <function Thread._bootstrap_inner at 0x0000024E5962DEA0>
+    └ <Thread(Thread-38 (process_request_thread), started daemon 30616)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 1016, in _bootstrap_inner
+    self.run()
+    │    └ <function Thread.run at 0x0000024E5962DBD0>
+    └ <Thread(Thread-38 (process_request_thread), started daemon 30616)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {}
+    │    │        │    │        └ <Thread(Thread-38 (process_request_thread), started daemon 30616)>
+    │    │        │    └ (<socket.socket fd=5884, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr...
+    │    │        └ <Thread(Thread-38 (process_request_thread), started daemon 30616)>
+    │    └ <bound method ThreadingMixIn.process_request_thread of <werkzeug.serving.ThreadedWSGIServer object at 0x0000024E5EE61540>>
+    └ <Thread(Thread-38 (process_request_thread), started daemon 30616)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 683, in process_request_thread
+    self.finish_request(request, client_address)
+    │    │              │        └ ('127.0.0.1', 65101)
+    │    │              └ <socket.socket fd=5884, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    └ <function BaseServer.finish_request at 0x0000024E5962F880>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x0000024E5EE61540>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 360, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    │    │                   │        │               └ <werkzeug.serving.ThreadedWSGIServer object at 0x0000024E5EE61540>
+    │    │                   │        └ ('127.0.0.1', 65101)
+    │    │                   └ <socket.socket fd=5884, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    └ <class 'werkzeug.serving.WSGIRequestHandler'>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x0000024E5EE61540>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 747, in __init__
+    self.handle()
+    │    └ <function WSGIRequestHandler.handle at 0x0000024E59A1D5A0>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x0000024E5EE63D00>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 399, in handle
+    super().handle()
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 433, in handle
+    self.handle_one_request()
+    │    └ <function BaseHTTPRequestHandler.handle_one_request at 0x0000024E59830670>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x0000024E5EE63D00>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 421, in handle_one_request
+    method()
+    └ <bound method WSGIRequestHandler.run_wsgi of <werkzeug.serving.WSGIRequestHandler object at 0x0000024E5EE63D00>>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 371, in run_wsgi
+    execute(self.server.app)
+    │       │    │      └ <Flask 'app'>
+    │       │    └ <werkzeug.serving.ThreadedWSGIServer object at 0x0000024E5EE61540>
+    │       └ <werkzeug.serving.WSGIRequestHandler object at 0x0000024E5EE63D00>
+    └ <function WSGIRequestHandler.run_wsgi.<locals>.execute at 0x0000024E5D51B880>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 332, in execute
+    application_iter = app(environ, start_response)
+                       │   │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x0000024E5EE3BD00>
+                       │   └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=5884>, 'wsgi.errors': <_io.TextIOW...
+                       └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           │    │        │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x0000024E5EE3BD00>
+           │    │        └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=5884>, 'wsgi.errors': <_io.TextIOW...
+           │    └ <function Flask.wsgi_app at 0x0000024E59E9AD40>
+           └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               │    └ <function Flask.full_dispatch_request at 0x0000024E59E9A560>
+               └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         │    └ <function Flask.dispatch_request at 0x0000024E59E9A4D0>
+         └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           │    │           │    │              │    │            └ {}
+           │    │           │    │              │    └ 'main.read_workspace_file'
+           │    │           │    │              └ <Rule '/api/workspace/file' (GET, HEAD, OPTIONS) -> main.read_workspace_file>
+           │    │           │    └ {'static': <function Flask.__init__.<locals>.<lambda> at 0x0000024E5E293B50>, 'main.index': <function index at 0x0000024E5EDC...
+           │    │           └ <Flask 'app'>
+           │    └ <function Flask.ensure_sync at 0x0000024E59E9A710>
+           └ <Flask 'app'>
+
+> File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\routes.py", line 246, in read_workspace_file
+    file_res = agent.execute_tool("file", action="read_file", path=file_path)
+               │     │                                             └ 'generated\\create_a_word_document_titled_resume_about_an_example_resume.docx'
+               │     └ <function CodingAgent.execute_tool at 0x0000024E5D1F8C10>
+               └ <app.agent.CodingAgent object at 0x0000024E5ED6E620>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\agent.py", line 501, in execute_tool
+    return self.tool_manager.execute(name, *args, **kwargs)
+           │    │            │       │      │       └ {'action': 'read_file', 'path': 'generated\\create_a_word_document_titled_resume_about_an_example_resume.docx'}
+           │    │            │       │      └ ()
+           │    │            │       └ 'file'
+           │    │            └ <function ToolManager.execute at 0x0000024E5D1D3E20>
+           │    └ <app.tools.manager.ToolManager object at 0x0000024E5ED6E680>
+           └ <app.agent.CodingAgent object at 0x0000024E5ED6E620>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\tools\manager.py", line 43, in execute
+    return self.get(name).execute(*args, **kwargs)
+           │    │   │              │       └ {'action': 'read_file', 'path': 'generated\\create_a_word_document_titled_resume_about_an_example_resume.docx'}
+           │    │   │              └ ()
+           │    │   └ 'file'
+           │    └ <function ToolManager.get at 0x0000024E5D1D3C70>
+           └ <app.tools.manager.ToolManager object at 0x0000024E5ED6E680>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\tools\file_tool.py", line 25, in execute
+    return self.read_file(*args, **kwargs)
+           │    │          │       └ {'path': 'generated\\create_a_word_document_titled_resume_about_an_example_resume.docx'}
+           │    │          └ ()
+           │    └ <function FileTool.read_file at 0x0000024E5D1D29E0>
+           └ <app.tools.file_tool.FileTool object at 0x0000024E5ED6E6E0>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\tools\file_tool.py", line 51, in read_file
+    text = file_path.read_text(encoding="utf-8")
+           │         └ <function Path.read_text at 0x0000024E59C4A320>
+           └ WindowsPath('C:/Users/user/OneDrive/Desktop/ISRO/generated/create_a_word_document_titled_resume_about_an_example_resume.docx')
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\pathlib.py", line 1135, in read_text
+    return f.read()
+           │ └ <method 'read' of '_io.TextIOWrapper' objects>
+           └ <_io.TextIOWrapper name='C:\\Users\\user\\OneDrive\\Desktop\\ISRO\\generated\\create_a_word_document_titled_resume_about_an_e...
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\codecs.py", line 322, in decode
+    (result, consumed) = self._buffer_decode(data, self.errors, final)
+                         │    │              │     │    │       └ True
+                         │    │              │     │    └ 'strict'
+                         │    │              │     └ <encodings.utf_8.IncrementalDecoder object at 0x0000024E5EE62B90>
+                         │    │              └ b'PK\x03\x04\x14\x00\x00\x00\x08\x00 \xa9$]\xadR\xa5\x91\x95\x01\x00\x00\xca\x06\x00\x00\x13\x00\x00\x00[Content_Types].xml\x...
+                         │    └ <built-in function utf_8_decode>
+                         └ <encodings.utf_8.IncrementalDecoder object at 0x0000024E5EE62B90>
+
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xa9 in position 11: invalid start byte
+2026-09-05 08:03:48 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 08:03:48 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 08:03:48 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 16 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 08:03:48 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\ISRO
+2026-09-05 08:03:48 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 08:03:48 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 08:28:32 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 08:28:32 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 08:28:32 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 18 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 08:28:32 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\ISRO
+2026-09-05 08:28:32 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 08:28:33 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 08:29:09 | INFO     | app.workspace_history:_load:97 | New workspace history created at C:\Users\user\OneDrive\Desktop\Nerves\.sanctum\history.json
+2026-09-05 08:29:09 | INFO     | app.lkb.manager:set_workspace:66 | LKB: switched to workspace 'C:\Users\user\OneDrive\Desktop\Nerves'
+2026-09-05 08:29:09 | INFO     | app.agent:set_workspace:489 | Workspace changed to C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 08:29:09 | INFO     | app.fluid.workspace_registry:register:43 | Fluid: new workspace registered: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 08:29:16 | ERROR    | app.routes:read_workspace_file:250 | Error reading file 'main_notes.pdf'.
+Traceback (most recent call last):
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 973, in _bootstrap
+    self._bootstrap_inner()
+    │    └ <function Thread._bootstrap_inner at 0x000002509835DEA0>
+    └ <Thread(Thread-14 (process_request_thread), started daemon 20624)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 1016, in _bootstrap_inner
+    self.run()
+    │    └ <function Thread.run at 0x000002509835DBD0>
+    └ <Thread(Thread-14 (process_request_thread), started daemon 20624)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {}
+    │    │        │    │        └ <Thread(Thread-14 (process_request_thread), started daemon 20624)>
+    │    │        │    └ (<socket.socket fd=8552, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr...
+    │    │        └ <Thread(Thread-14 (process_request_thread), started daemon 20624)>
+    │    └ <bound method ThreadingMixIn.process_request_thread of <werkzeug.serving.ThreadedWSGIServer object at 0x000002509DBF5540>>
+    └ <Thread(Thread-14 (process_request_thread), started daemon 20624)>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 683, in process_request_thread
+    self.finish_request(request, client_address)
+    │    │              │        └ ('127.0.0.1', 62632)
+    │    │              └ <socket.socket fd=8552, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    └ <function BaseServer.finish_request at 0x000002509835F880>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000002509DBF5540>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 360, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    │    │                   │        │               └ <werkzeug.serving.ThreadedWSGIServer object at 0x000002509DBF5540>
+    │    │                   │        └ ('127.0.0.1', 62632)
+    │    │                   └ <socket.socket fd=8552, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5000), raddr=...
+    │    └ <class 'werkzeug.serving.WSGIRequestHandler'>
+    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000002509DBF5540>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\socketserver.py", line 747, in __init__
+    self.handle()
+    │    └ <function WSGIRequestHandler.handle at 0x000002509879D5A0>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000002509DBF5B40>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 399, in handle
+    super().handle()
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 433, in handle
+    self.handle_one_request()
+    │    └ <function BaseHTTPRequestHandler.handle_one_request at 0x0000025098570670>
+    └ <werkzeug.serving.WSGIRequestHandler object at 0x000002509DBF5B40>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\http\server.py", line 421, in handle_one_request
+    method()
+    └ <bound method WSGIRequestHandler.run_wsgi of <werkzeug.serving.WSGIRequestHandler object at 0x000002509DBF5B40>>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 371, in run_wsgi
+    execute(self.server.app)
+    │       │    │      └ <Flask 'app'>
+    │       │    └ <werkzeug.serving.ThreadedWSGIServer object at 0x000002509DBF5540>
+    │       └ <werkzeug.serving.WSGIRequestHandler object at 0x000002509DBF5B40>
+    └ <function WSGIRequestHandler.run_wsgi.<locals>.execute at 0x000002509DBCB0A0>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\werkzeug\serving.py", line 332, in execute
+    application_iter = app(environ, start_response)
+                       │   │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000002509DBCAF80>
+                       │   └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=8552>, 'wsgi.errors': <_io.TextIOW...
+                       └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           │    │        │        └ <function WSGIRequestHandler.run_wsgi.<locals>.start_response at 0x000002509DBCAF80>
+           │    │        └ {'wsgi.version': (1, 0), 'wsgi.url_scheme': 'http', 'wsgi.input': <_io.BufferedReader name=8552>, 'wsgi.errors': <_io.TextIOW...
+           │    └ <function Flask.wsgi_app at 0x0000025098C5AD40>
+           └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               │    └ <function Flask.full_dispatch_request at 0x0000025098C5A560>
+               └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         │    └ <function Flask.dispatch_request at 0x0000025098C5A4D0>
+         └ <Flask 'app'>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\.venv\lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           │    │           │    │              │    │            └ {}
+           │    │           │    │              │    └ 'main.read_workspace_file'
+           │    │           │    │              └ <Rule '/api/workspace/file' (OPTIONS, HEAD, GET) -> main.read_workspace_file>
+           │    │           │    └ {'static': <function Flask.__init__.<locals>.<lambda> at 0x000002509D013B50>, 'main.index': <function index at 0x000002509DB5...
+           │    │           └ <Flask 'app'>
+           │    └ <function Flask.ensure_sync at 0x0000025098C5A710>
+           └ <Flask 'app'>
+
+> File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\routes.py", line 246, in read_workspace_file
+    file_res = agent.execute_tool("file", action="read_file", path=file_path)
+               │     │                                             └ 'main_notes.pdf'
+               │     └ <function CodingAgent.execute_tool at 0x000002509BF68C10>
+               └ <app.agent.CodingAgent object at 0x000002509DAFE620>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\agent.py", line 501, in execute_tool
+    return self.tool_manager.execute(name, *args, **kwargs)
+           │    │            │       │      │       └ {'action': 'read_file', 'path': 'main_notes.pdf'}
+           │    │            │       │      └ ()
+           │    │            │       └ 'file'
+           │    │            └ <function ToolManager.execute at 0x000002509BF3FE20>
+           │    └ <app.tools.manager.ToolManager object at 0x000002509DAFE680>
+           └ <app.agent.CodingAgent object at 0x000002509DAFE620>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\tools\manager.py", line 43, in execute
+    return self.get(name).execute(*args, **kwargs)
+           │    │   │              │       └ {'action': 'read_file', 'path': 'main_notes.pdf'}
+           │    │   │              └ ()
+           │    │   └ 'file'
+           │    └ <function ToolManager.get at 0x000002509BF3FC70>
+           └ <app.tools.manager.ToolManager object at 0x000002509DAFE680>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\tools\file_tool.py", line 25, in execute
+    return self.read_file(*args, **kwargs)
+           │    │          │       └ {'path': 'main_notes.pdf'}
+           │    │          └ ()
+           │    └ <function FileTool.read_file at 0x000002509BF3E9E0>
+           └ <app.tools.file_tool.FileTool object at 0x000002509DAFE6E0>
+
+  File "C:\Users\user\OneDrive\Desktop\CodingAgent\app\tools\file_tool.py", line 51, in read_file
+    text = file_path.read_text(encoding="utf-8")
+           │         └ <function Path.read_text at 0x0000025098A0A320>
+           └ WindowsPath('C:/Users/user/OneDrive/Desktop/Nerves/main_notes.pdf')
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\pathlib.py", line 1135, in read_text
+    return f.read()
+           │ └ <method 'read' of '_io.TextIOWrapper' objects>
+           └ <_io.TextIOWrapper name='C:\\Users\\user\\OneDrive\\Desktop\\Nerves\\main_notes.pdf' mode='r' encoding='utf-8'>
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\codecs.py", line 322, in decode
+    (result, consumed) = self._buffer_decode(data, self.errors, final)
+                         │    │              │     │    │       └ True
+                         │    │              │     │    └ 'strict'
+                         │    │              │     └ <encodings.utf_8.IncrementalDecoder object at 0x000002509DBF6170>
+                         │    │              └ b'%PDF-1.5\n%\xd0\xd4\xc5\xd8\n2 0 obj\n<<\n/Type /ObjStm\n/N 100\n/First 830\n/Length 1732      \n/Filter /FlateDecode\n>>\n...
+                         │    └ <built-in function utf_8_decode>
+                         └ <encodings.utf_8.IncrementalDecoder object at 0x000002509DBF6170>
+
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xd0 in position 10: invalid continuation byte
+2026-09-05 08:30:19 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 08:30:19 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 08:30:19 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 18 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 08:30:19 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 08:30:19 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 08:30:19 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 08:34:56 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 08:34:56 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 08:34:56 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 18 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 08:34:56 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 08:34:56 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 08:34:56 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 08:37:43 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 08:37:43 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 08:37:43 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 18 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 08:37:43 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 08:37:43 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 08:37:43 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 08:42:16 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 08:42:16 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 08:42:16 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 18 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 08:42:16 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 08:42:16 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 08:42:16 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 08:56:35 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 08:56:35 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 08:56:35 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 18 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 08:56:35 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 08:56:35 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 08:56:35 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 08:57:36 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 08:57:36 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 08:57:36 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 18 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 08:57:36 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 08:57:36 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 08:57:37 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 09:00:06 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 09:00:06 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 09:00:06 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 18 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 09:00:06 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 09:00:06 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 09:00:06 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 09:00:37 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 09:00:37 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 09:00:37 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 18 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 09:00:37 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 09:00:37 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 09:00:37 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 09:04:25 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 09:04:25 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 09:04:25 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 18 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 09:04:25 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 09:04:25 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 09:04:25 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 09:07:48 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 09:07:48 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 09:07:48 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 18 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 09:07:48 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 09:07:48 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 09:07:48 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 09:09:06 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 09:09:06 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 09:09:06 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 18 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 09:09:06 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 09:09:06 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 09:09:06 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 09:20:05 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 09:20:05 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 09:20:05 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 18 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 09:20:05 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 09:20:05 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 09:20:06 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 09:34:29 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 09:34:29 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 09:34:29 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 18 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 09:34:29 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 09:34:29 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 09:34:29 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 09:41:19 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 09:41:19 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 09:41:19 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 18 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 09:41:19 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 09:41:19 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 09:41:19 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 09:56:14 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 09:56:14 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 09:56:14 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 18 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 09:56:14 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 09:56:14 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 09:56:15 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 10:02:20 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 10:02:20 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 10:02:20 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 20 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 10:02:20 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 10:02:20 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 10:02:20 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 10:05:57 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 10:05:57 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 10:05:57 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 20 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 10:05:57 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 10:05:57 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 10:05:57 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 10:06:00 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 10:06:00 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 10:06:00 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 20 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 10:06:00 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 10:06:00 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 10:06:00 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 10:10:10 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 10:10:10 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 10:10:10 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 20 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 10:10:10 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 10:10:10 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 10:10:10 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 10:10:35 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 10:10:35 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 10:10:35 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 20 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 10:10:35 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 10:10:35 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 10:10:35 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 10:21:58 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 10:21:58 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 10:21:58 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 20 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 10:21:58 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 10:21:58 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 10:21:59 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 10:22:11 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 10:22:11 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 10:22:11 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 20 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 10:22:11 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 10:22:11 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 10:22:11 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 10:23:37 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 10:23:37 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 10:23:37 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 20 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 10:23:37 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 10:23:37 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 10:23:37 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 10:23:51 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 10:23:51 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 10:23:51 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 20 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 10:23:51 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 10:23:51 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 10:23:52 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 10:26:22 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 10:26:22 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 10:26:22 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 20 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 10:26:22 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 10:26:22 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 10:26:22 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 10:27:05 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 10:27:05 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 10:27:05 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 20 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 10:27:05 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 10:27:05 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 10:27:05 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 10:27:29 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 10:27:29 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 10:27:29 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 20 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 10:27:29 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 10:27:29 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 10:27:29 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 10:53:11 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 10:53:11 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 10:53:11 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 20 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 10:53:11 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 10:53:11 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 10:53:11 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 16:51:24 | INFO     | app.llm:__init__:28 | Local LLM initialized: qwen2.5-coder:7b (http://127.0.0.1:11434/v1)
+2026-09-05 16:51:24 | INFO     | app.fluid.model_registry:_load:125 | Fluid: loaded 1 model profiles
+2026-09-05 16:51:24 | INFO     | app.workspace_history:_load:102 | Workspace history loaded: 30 messages from C:\Users\user\OneDrive\Desktop\CodingAgent\workspace
+2026-09-05 16:51:24 | INFO     | app.agent:_load_saved_workspace:498 | Saved workspace restored: C:\Users\user\OneDrive\Desktop\Nerves
+2026-09-05 16:51:24 | INFO     | app.memory:_load_history:48 | Conversation history loaded successfully.
+2026-09-05 16:51:24 | INFO     | app:create_app:59 | Sanctum Fluid Backend Initialized Successfully.
+2026-09-05 17:01:59 | INFO     | app.llm:change_model:82 | Local model changed to 'gemma3:1b'.
+2026-09-05 17:02:01 | INFO     | app.llm:change_model:82 | Local model changed to 'qwen2.5-coder:7b'.
