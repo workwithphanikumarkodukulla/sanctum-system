@@ -96,7 +96,7 @@ class EvidencePipeline:
                 )
 
             # 2. Formula branch: extract variables and compute LaTeX/normalization without automatic SymPy calculation
-            if target_type == ContentType.FORMULA:
+            if target_type == ContentType.FORMULA or elem.type == "formula":
                 raw_formula = elem.formula_latex or elem.text or ""
                 if raw_formula:
                     formula_detected = True

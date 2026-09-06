@@ -413,10 +413,16 @@ class EvidenceReconciler:
 
         # 4. Handle Semantic Disagreements
         if semantic_disagreements:
-            # Material disagreement detected: do NOT silently pick a winner!
+            # If one candidate has unreadable/corrupted glyphs '?' and the other is clean, prefer the clean candidate
+            chosen_candidate = higher_conf_result
+            if "?" in raw_a and "?" not in raw_b:
+                chosen_candidate = result_b
+            elif "?" in raw_b and "?" not in raw_a:
+                chosen_candidate = result_a
+
             discounted_conf = max(0.20, round(min(conf_a, conf_b) * 0.5, 4))
             return ReconciliationResult(
-                final_text=higher_conf_result.text,
+                final_text=chosen_candidate.text,
                 final_confidence=discounted_conf,
                 agreement_status=AgreementStatus.MATERIAL_DISAGREEMENT,
                 disagreement_details=semantic_disagreements,

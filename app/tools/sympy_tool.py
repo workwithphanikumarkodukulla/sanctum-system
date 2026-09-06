@@ -690,6 +690,15 @@ def process_formula(
         # Explicit operation routing
         if operation in ("diff", "derivative", "differentiation"):
             var_sym = solve_for or "x"
+            m_unwrap = re.search(
+                r"^(?:\\\\?frac\{d\}\{d([a-zA-Z])\}|d\s*/\s*d([a-zA-Z]))\s*(?:[\(\[\{](.*?)[\)\]\}]|(.+?))$",
+                expr_to_parse.strip(),
+            )
+            if m_unwrap:
+                var_sym = m_unwrap.group(1) or m_unwrap.group(2) or var_sym
+                inner_raw = m_unwrap.group(3) if m_unwrap.group(3) is not None else m_unwrap.group(4)
+                if inner_raw:
+                    expr_to_parse = inner_raw.strip()
             cleaned = _clean_for_sympy(expr_to_parse)
             parsed_expr = _parse_expr(cleaned, global_dict=_SAFE_GLOBALS, transformations=_SAFE_TRANSFORMATIONS)
             diff_res = _sympy.diff(parsed_expr, _sympy.Symbol(var_sym))

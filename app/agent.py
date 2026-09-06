@@ -430,6 +430,30 @@ class CodingAgent:
             if cand_doc:
                 message = f"{message} in {cand_doc}"
 
+        # Multi-turn explanation resolution (e.g. "explain it", "explain that problem step by step", "how to solve that"):
+        is_explain_req = False
+        if (
+            re.search(r"^\s*(explain\s+(?:it|that|that\s+problem|the\s+problem|the\s+equation)|how\s+(?:did\s+you\s+solve|to\s+solve)\s+(?:it|that)|show\s+steps?)\b", message.strip(), re.IGNORECASE)
+            and not any(k in message.lower() for k in ("document", "file", ".pdf", ".png", ".xlsx", ".docx", ".pptx", ".csv"))
+        ):
+            hist = self.memory_manager.get_history()
+            last_math_content = ""
+            for h in reversed(hist):
+                if h.get("role") == "assistant":
+                    c = h.get("content", "")
+                    if any(k in c for k in ("quadratic equation", "SymPy Calculation", "Roots", "Derivative", "Differentiation", "$$", "=")):
+                        last_math_content = c
+                        break
+            if last_math_content:
+                is_explain_req = True
+                m_eq_disp = re.search(r"\$\$(.*?)\$\$", last_math_content, re.DOTALL)
+                extracted_math = m_eq_disp.group(1).strip() if m_eq_disp else ""
+                if extracted_math:
+                    message = f"{message}: Explain how to solve/evaluate the mathematical problem $${extracted_math}$$ step by step with clear explanations of each step."
+                else:
+                    snippet = last_math_content[:250].replace("\n", " ")
+                    message = f"{message} for the previously computed result: {snippet}"
+
         self._current_message = message
 
         workflow_trace = WorkflowTrace(user_request=message)
@@ -455,7 +479,10 @@ class CodingAgent:
             routing_strategy="fluid" if self.fluid_router else "task_based",
         )
 
-        self.llm_with_tools = self.llm_manager._llm.bind_tools(self.lc_tools, tool_choice="auto")
+        if is_explain_req:
+            self.llm_with_tools = self.llm_manager._llm
+        else:
+            self.llm_with_tools = self.llm_manager._llm.bind_tools(self.lc_tools, tool_choice="auto")
 
         # ── Workspace History: record the user message ─────────────────
         if self.workspace_history:
@@ -530,6 +557,25 @@ class CodingAgent:
                         if fallback_calls:
                             response.tool_calls = fallback_calls
                             response.content = re.sub(r'(?:\*\*Tool Call:\*\*\s*)?```(?:json)?\s*\{.*?\}\s*```', '', response.content, flags=re.DOTALL).strip()
+
+                # Document query fallback: if the model emitted a conversational greeting / history summary instead of calling read_document
+                if not response.tool_calls and not tool_actions:
+                    has_doc = re.search(r"([A-Za-z0-9_\-\.]+\.(?:pdf|xlsx|docx|pptx|png|txt|csv))", message, re.IGNORECASE)
+                    is_greeting_or_canned = any(phrase in (response.content or "").lower() for phrase in (
+                        "ready to help", "how can i assist", "feel free to ask", "ready when you are",
+                        "ready for your next request", "detailed history", "see we have a detailed history",
+                        "how can i help you today", "hello! i see we have"
+                    ))
+                    if has_doc and (is_greeting_or_canned or any(k in message.lower() for k in ("what is", "amount", "allocated", "solve", "read", "summarize", "find"))):
+                        doc_target = has_doc.group(1)
+                        clean_q = message
+                        clean_q = re.sub(r"[A-Za-z0-9_\-\.]+\.(?:pdf|xlsx|docx|pptx|png|txt|csv)", "", clean_q, flags=re.IGNORECASE)
+                        clean_q = re.sub(r"\b(what is the|what is|tell me|in the|for the|amount allocated for the project|amount allocated|in lakhs|in)\b", "", clean_q, flags=re.IGNORECASE).strip(" .?:,")
+                        if len(clean_q.split()) >= 2 and not any(k in message.lower() for k in ("solve", "summary", "read", "diff")):
+                            response.tool_calls = [{"name": "read_document", "args": {"path": doc_target, "query": clean_q}, "id": "call_auto_search"}]
+                        else:
+                            response.tool_calls = [{"name": "read_document", "args": {"path": doc_target, "mode": "summary"}, "id": "call_auto_doc"}]
+                        response.content = ""
 
             messages.append(response)
 
@@ -619,9 +665,13 @@ class CodingAgent:
                             if m_expr:
                                 found_expr = m_expr.group(1).replace("^", "**").strip()
                         if found_expr:
-                            is_solve = any(k in msg_lower for k in ("solve", "root", "equation", "quadratic")) or "=" in found_expr
-                            op = "solve" if is_solve else ("diff" if any(c in found_expr for c in ("x", "y", "X", "Y")) else "simplify")
-                            s_var = "x" if ("x" in found_expr.lower() or is_solve) else ""
+                            is_diff = (
+                                any(k in msg_lower for k in ("diff", "derivative", "differentiate"))
+                                or any(k in found_expr.lower() for k in ("d/d", "frac{d}", "diff("))
+                            )
+                            is_solve = not is_diff and (any(k in msg_lower for k in ("solve", "root", "equation", "quadratic")) or "=" in found_expr)
+                            op = "diff" if is_diff else ("solve" if is_solve else ("diff" if any(c in found_expr for c in ("x", "y", "X", "Y")) else "simplify"))
+                            s_var = "x" if ("x" in found_expr.lower() or is_solve or is_diff) else ""
                             try:
                                 emit("executing", f"Computing exact result with SymPy ({op})")
                                 calc_res = self.tool_manager.execute("math", expression=found_expr, operation=op, solve_for=s_var)
@@ -641,7 +691,20 @@ class CodingAgent:
                                 )
                                 executed_tools.add("calculate")
                                 res_val = calc_res.get("result")
-                                if is_solve and isinstance(res_val, list):
+                                if is_diff and res_val is not None:
+                                    clean_disp = found_expr.replace('**', '^')
+                                    res_disp = str(res_val).replace('**', '^')
+                                    final_text = (
+                                        f"The derivative extracted from the document is:\n"
+                                        f"$${clean_disp}$$\n\n"
+                                        f"**Deterministic SymPy Calculation:**\n"
+                                        f"- **Operation:** Differentiation ($d/d{s_var}$)\n"
+                                        f"- **Derivative:** {res_disp}\n"
+                                        f"- **Result:** $${res_disp}$$\n"
+                                        f"- **Engine:** SymPy (Exact Symbolic Computation)"
+                                    )
+                                    break
+                                elif is_solve and isinstance(res_val, list):
                                     roots_str = ", ".join(f"x = {r}" for r in res_val)
                                     clean_display_eq = found_expr.replace('**', '^')
                                     if "=" not in clean_display_eq:
@@ -654,9 +717,13 @@ class CodingAgent:
                                         f"- **Solution Set:** `{res_val}`\n"
                                         f"- **Engine:** SymPy (Exact Symbolic Computation)"
                                     )
-                                else:
+                                    break
+                                elif res_val is not None:
                                     final_text = f"Deterministic calculation result via SymPy: **{res_val}**"
-                                break
+                                    break
+                                else:
+                                    continuation_prompt = f"The expression '{found_expr}' was extracted from the document. Please provide the step-by-step mathematical evaluation."
+                                    needs_continuation = True
                             except Exception as e:
                                 logger.error("SymPy execution failed: {}", e)
                         else:
@@ -1042,6 +1109,8 @@ class CodingAgent:
             if out_file and out_file not in final_text and Path(out_file).name not in final_text:
                 final_text = f"{final_text.rstrip()}\n\nOutput saved to: `{out_file}`."
 
+        if not isinstance(final_text, str):
+            final_text = str(final_text.content) if hasattr(final_text, "content") else str(final_text)
         final_text = mask_secrets(final_text)
 
         emit("complete", "Preparing response")

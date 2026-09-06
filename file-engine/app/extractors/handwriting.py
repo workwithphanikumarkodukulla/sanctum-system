@@ -92,6 +92,10 @@ class HandwritingClassifier:
         eval_text = cleaned_text
         if eval_text.count("|") >= 2 and ("---" in eval_text or "\n" in eval_text or (metadata or {}).get("is_table")):
             eval_text = eval_text.replace("|", " ")
+        # In mathematical formulas, ^, _, {, }, [, ] are standard exponents, subscripts, and delimiters
+        if (metadata or {}).get("type") == "formula" or (metadata or {}).get("content_type") == "formula" or any(kw in eval_text for kw in ("d/dx", "\\frac", "\\sqrt", "\\int", "=")):
+            for math_char in ("^", "_", "{", "}", "[", "]"):
+                eval_text = eval_text.replace(math_char, " ")
         cursive_chars = len(cls.CURSIVE_CHAR_PATTERN.findall(eval_text))
         # Strip known engineering units (kPa, MPa, GPa, etc.) before evaluating mid-word capitalization
         caps_eval_text = re.sub(r"\b(?:kPa|MPa|GPa|kHz|MHz|GHz|mL|mbar|mcg|rpm|pH)\b", "", cleaned_text)

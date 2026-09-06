@@ -31,9 +31,9 @@ class Settings(BaseSettings):
     ENABLE_PADDLE_OCR: bool = os.getenv("ENABLE_PADDLE_OCR", "false").lower() in ("true", "1")
 
     # Local Ollama multimodal escalation
-    OLLAMA_BASE_URL: str = "http://127.0.0.1:11434"
-    OLLAMA_VISION_MODEL: str = "gemma4"
-    OLLAMA_TIMEOUT_SECONDS: float = 60.0
+    OLLAMA_BASE_URL: str = os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
+    OLLAMA_VISION_MODEL: str = os.getenv("OLLAMA_VISION_MODEL", "qwen3-vl:8b")
+    OLLAMA_TIMEOUT_SECONDS: float = float(os.getenv("OLLAMA_TIMEOUT_SECONDS", "60.0"))
     OLLAMA_AUTO_UNLOAD: bool = True
 
 

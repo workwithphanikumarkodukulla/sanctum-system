@@ -116,8 +116,14 @@ class RegionEnricher:
             if re.search(r"\d+\.\.\d+|\d+,\.\d+", clean_text):
                 reasons.append("broken_decimal_number")
 
-            # 4. Formula / equation suspicion
-            if content_type == "formula" or any(kw in clean_text for kw in ["=", "\\frac", "\\sqrt"]):
+            # 4. Formula / equation suspicion & corrupted glyph loss
+            if (
+                re.search(r"[a-zA-Z0-9]\?|\?[a-zA-Z0-9]|\b\?\b", clean_text)
+                or ("?" in clean_text and any(sym in clean_text for sym in ["d/dx", "dx", "\\frac", "\\int", "+", "-", "*", "/", "=", "^"]))
+            ):
+                reasons.append("unrecognized_glyph_question_mark")
+
+            if content_type == "formula" or any(kw in clean_text for kw in ["=", "\\frac", "\\sqrt", "d/dx"]):
                 if re.search(r"(\+{2,}|\*{2,}|\/{2,}|\=\*|\+\=)", clean_text):
                     reasons.append("malformed_formula_operator_sequence")
 
