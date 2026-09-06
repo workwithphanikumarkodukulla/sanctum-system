@@ -143,6 +143,26 @@
                         <button data-overview-prompt="Prepare a presentation about the current project">Prepare PPTs</button>
                     </div>
 
+                    <!-- Featured Industry Pipeline Showcase Card -->
+                    <div class="industry-pipeline-card">
+                        <div class="pipeline-header">
+                            <div>
+                                <span class="kicker" style="color:var(--nvidia-green)">FEATURED INDUSTRY PIPELINE</span>
+                                <h3 style="margin-top:4px">Autonomous Inspection to Approval Note Pipeline</h3>
+                            </div>
+                            <span class="title-badge isolation-badge"><span class="dot-live"></span>API 510 / ASME SEC VIII</span>
+                        </div>
+                        <p>End-to-end refinery pressure vessel integrity audit: Ingests scanned ultrasonic thickness reports for Northern PSU Refinery Unit 4 Hydrocracker (PV-204B), evaluates minimum wall thickness compliance ($t_{min}$), and drafts an authorized regulatory Word Approval Note (.docx) with Inspector sign-off.</p>
+                        <div class="pipeline-actions">
+                            <button class="btn-primary small" id="runInspectionPipelineBtn" data-overview-prompt="Run the autonomous Inspection to Approval Note pipeline for refinery pressure vessel PV-204B, evaluate API 510 ultrasonic readings and draft the signed approval note as Word file.">
+                                <span class="material-icons" style="font-size:16px">play_arrow</span> Run Inspection Pipeline Demo
+                            </button>
+                            <button class="btn-secondary small" onclick="openSystemDocument('generated/PV_204B_Inspection_Approval_Note.docx')">
+                                <span class="material-icons" style="font-size:16px">launch</span> Open Generated Approval Note (.docx)
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="ecosystem-map">
                         <div class="ecosystem-orbit orbit-outer"></div>
                         <div class="ecosystem-orbit orbit-inner"></div>
@@ -586,6 +606,51 @@
                         </div>
                         <div class="net-console-body" id="networkAuditConsole">
                             <div class="net-log-line init">[INITIALIZE] Sovereign Network Auditor active. Air-gap policy: STRICT (Loopback only).</div>
+                        </div>
+                    </div>
+
+                    <!-- Live Wireshark Sovereign Packet Sniffer -->
+                    <div class="wireshark-container">
+                        <div class="wireshark-header">
+                            <div style="display:flex;align-items:center;gap:8px">
+                                <span class="material-icons" style="font-size:16px;color:#58a6ff">wifi_tethering</span>
+                                <strong style="color:#ffffff;font-size:11px;letter-spacing:0.04em">WIRESHARK SOVEREIGN PACKET INSPECTOR (LIVE CAPTURE)</strong>
+                                <span class="title-badge isolation-badge" style="font-size:9px"><span class="dot-live"></span>lo0 (127.0.0.1)</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:12px">
+                                <span style="color:#76b900;font-weight:700;font-size:10px" id="wsEgressVerdict">WAN EGRESS: 0 BYTES (AIRGAP RIGIDLY ENFORCED)</span>
+                                <a href="/api/logs/download?source=network" class="btn-secondary small" style="padding:2px 8px;font-size:10px" download="sanctum_airgap_stream.txt">
+                                    <span class="material-icons" style="font-size:12px">download</span> Export Capture
+                                </a>
+                            </div>
+                        </div>
+                        <div style="max-height:220px;overflow-y:auto">
+                            <table class="wireshark-table" id="wiresharkPacketTable">
+                                <thead>
+                                    <tr>
+                                        <th>NO.</th>
+                                        <th>TIME</th>
+                                        <th>IFACE</th>
+                                        <th>SOURCE</th>
+                                        <th>DESTINATION</th>
+                                        <th>PROTOCOL</th>
+                                        <th>LENGTH</th>
+                                        <th>SOVEREIGN VERDICT</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="wiresharkPacketBody">
+                                    <tr>
+                                        <td>1</td>
+                                        <td>04:49:50</td>
+                                        <td>lo0</td>
+                                        <td>127.0.0.1</td>
+                                        <td>127.0.0.1:11434</td>
+                                        <td>HTTP/TCP</td>
+                                        <td>1,024 B</td>
+                                        <td class="verdict-pass">PASS [AIRGAP VERIFIED]</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

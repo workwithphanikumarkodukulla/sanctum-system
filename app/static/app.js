@@ -1226,7 +1226,42 @@ function renderNetworkMonitor(data) {
         }).join("");
         consoleBody.scrollTop = consoleBody.scrollHeight;
     }
+
+    const wsBody = $("wiresharkPacketBody");
+    if (wsBody && data.recent_events && data.recent_events.length > 0) {
+        wsBody.innerHTML = data.recent_events.map((ev, i) => {
+            const isBlocked = ev.external;
+            const verdictCls = isBlocked ? "verdict-drop" : "verdict-pass";
+            const verdictText = isBlocked ? "DROP [EGRESS BLOCKED]" : `PASS [${escapeHtml(ev.service || "AIRGAP")}]`;
+            return `
+                <tr>
+                    <td>${ev.no || (i + 1)}</td>
+                    <td>${escapeHtml(ev.timestamp || "")}</td>
+                    <td>${escapeHtml(ev.interface || "lo0")}</td>
+                    <td>${escapeHtml(ev.source || "127.0.0.1")}</td>
+                    <td>${escapeHtml(ev.destination || "")}</td>
+                    <td>${escapeHtml(ev.protocol || "HTTP/TCP")}</td>
+                    <td>${(ev.length || 1024).toLocaleString()} B</td>
+                    <td class="${verdictCls}">${verdictText}</td>
+                </tr>
+            `;
+        }).join("");
+    }
 }
+
+window.openSystemDocument = async function(docPath) {
+    try {
+        const res = await api("/api/document/open", {
+            method: "POST",
+            body: JSON.stringify({ path: docPath })
+        });
+        console.log("Document opened natively:", res.path);
+    } catch (err) {
+        console.warn("Native open failed, falling back to download:", err);
+        const downloadUrl = `/api/workspace/download?path=${encodeURIComponent(docPath)}`;
+        window.open(downloadUrl, "_blank");
+    }
+};
 
 async function updateSovereignPill() {
     try {

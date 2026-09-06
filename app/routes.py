@@ -225,6 +225,43 @@ def download_logs():
     )
 
 
+@main_bp.route("/api/document/open", methods=["POST"])
+def open_system_document():
+    """Open a generated document directly in native OS application (Word / Pages / Preview)."""
+    import subprocess
+    data = request.get_json() or {}
+    rel_path = data.get("path", "generated/PV_204B_Inspection_Approval_Note.docx").strip()
+
+    candidates = [
+        Path(rel_path),
+        Path("generated") / Path(rel_path).name,
+        Path("/Users/burlaprudhviraj/Downloads/Waste") / rel_path,
+        Path("/Users/burlaprudhviraj/Downloads/integrate/sanctum-system") / rel_path,
+        Path(current_app.agent.tool_manager.get("workspace").root_dir) / rel_path,
+    ]
+
+    target = None
+    for cand in candidates:
+        if cand.exists() and cand.is_file():
+            target = cand
+            break
+
+    if not target:
+        return jsonify({"error": f"Document '{rel_path}' not found on disk."}), 404
+
+    try:
+        subprocess.Popen(["open", str(target.resolve())])
+        return jsonify({
+            "status": "opened",
+            "path": str(target.resolve()),
+            "filename": target.name,
+            "message": f"Opened {target.name} in native application."
+        })
+    except Exception as e:
+        return jsonify({"error": f"Failed to open native application: {e}"}), 500
+
+
+
 @main_bp.route("/api/models", methods=["GET"])
 @main_bp.route("/models", methods=["GET"])
 def models():
