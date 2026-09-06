@@ -32,9 +32,9 @@ class Settings(BaseSettings):
 
     # Local Ollama multimodal escalation
     OLLAMA_BASE_URL: str = os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
-    OLLAMA_VISION_MODEL: str = os.getenv("OLLAMA_VISION_MODEL", "qwen3-vl:8b")
-    OLLAMA_TIMEOUT_SECONDS: float = float(os.getenv("OLLAMA_TIMEOUT_SECONDS", "60.0"))
-    OLLAMA_AUTO_UNLOAD: bool = True
+    OLLAMA_VISION_MODEL: str = os.getenv("OLLAMA_VISION_MODEL", "gemma4:latest")
+    OLLAMA_TIMEOUT_SECONDS: float = float(os.getenv("OLLAMA_TIMEOUT_SECONDS", "180.0"))
+    OLLAMA_AUTO_UNLOAD: bool = os.getenv("OLLAMA_AUTO_UNLOAD", "false").lower() in ("true", "1")
 
 
 settings = Settings()

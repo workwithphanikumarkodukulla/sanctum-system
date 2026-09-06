@@ -197,18 +197,24 @@ class DocumentGenerator:
         styles = getSampleStyleSheet()
         styles.add(ParagraphStyle(name="ReportTitle", parent=styles["Title"], alignment=TA_CENTER, textColor=colors.HexColor("#163B52")))
         styles.add(ParagraphStyle(name="ReportSubtitle", parent=styles["Normal"], alignment=TA_CENTER, textColor=colors.HexColor("#57727D")))
-        story = [Paragraph(title, styles["ReportTitle"]), Paragraph(subtitle or "", styles["ReportSubtitle"]), Spacer(1, 0.25 * inch)]
+        def _clean_text(val: Any) -> str:
+            if val is None:
+                return ""
+            s = str(val).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            return s.replace("&lt;b&gt;", "<b>").replace("&lt;/b&gt;", "</b>").replace("&lt;i&gt;", "<i>").replace("&lt;/i&gt;", "</i>")
+
+        story = [Paragraph(_clean_text(title), styles["ReportTitle"]), Paragraph(_clean_text(subtitle or ""), styles["ReportSubtitle"]), Spacer(1, 0.25 * inch)]
         for section_data in sections or []:
-            story.append(Paragraph(str(section_data.get("heading") or "Section"), styles["Heading2"]))
+            story.append(Paragraph(_clean_text(section_data.get("heading") or "Section"), styles["Heading2"]))
             if section_data.get("content"):
-                story.append(Paragraph(str(section_data["content"]), styles["BodyText"]))
+                story.append(Paragraph(_clean_text(section_data["content"]), styles["BodyText"]))
             if section_data.get("callout"):
-                callout = Table([[Paragraph(str(section_data["callout"]), styles["BodyText"])]], colWidths=[6.5 * inch])
+                callout = Table([[Paragraph(_clean_text(section_data["callout"]), styles["BodyText"])]], colWidths=[6.5 * inch])
                 callout.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#E8F4F6")), ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#70B4B8")), ("LEFTPADDING", (0, 0), (-1, -1), 8), ("RIGHTPADDING", (0, 0), (-1, -1), 8)]))
                 story.extend([Spacer(1, 0.1 * inch), callout])
             table_data = section_data.get("table")
             if table_data:
-                rows = [list(table_data.get("headers") or [])] + [list(row) for row in table_data.get("rows") or []]
+                rows = [[_clean_text(h) for h in (table_data.get("headers") or [])]] + [[_clean_text(cell) for cell in row] for row in table_data.get("rows") or []]
                 if rows and rows[0]:
                     table = Table(rows, repeatRows=1)
                     table.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#163B52")), ("TEXTCOLOR", (0, 0), (-1, 0), colors.white), ("GRID", (0, 0), (-1, -1), 0.3, colors.HexColor("#B7C9CC")), ("VALIGN", (0, 0), (-1, -1), "TOP")]))
@@ -236,5 +242,16 @@ class DocumentGenerator:
                 lines.append(f"- {bullet}")
             lines.append("")
         output.write_text("\n".join(lines), encoding="utf-8")
+        return self._relative(output)
+
+    def generate_csv(self, filepath: str, headers: list[str] | None = None, rows: list[list[Any]] | None = None) -> str:
+        import csv
+        output = self._resolve_path(filepath, allowed_extensions=(".csv",))
+        with open(output, "w", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            if headers:
+                writer.writerow(headers)
+            for row in rows or []:
+                writer.writerow(row)
         return self._relative(output)
 

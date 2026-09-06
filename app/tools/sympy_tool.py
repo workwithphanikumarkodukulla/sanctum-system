@@ -339,6 +339,9 @@ def _try_evaluate_calculus(
     """Detect and compute calculus operations (derivatives, integrals, limits)."""
     _ensure_sympy()
     trimmed = text.strip()
+    clean_calc = trimmed.replace("$", "").replace(r"\[", "").replace(r"\]", "").strip()
+    clean_calc = re.sub(r"\\text\{\s*,?\s*if\s*\}", "", clean_calc).strip()
+    clean_calc = re.sub(r"(?i)^find\s+", "", clean_calc).strip()
 
     # 1. Differentiation
     deriv_var = None
@@ -346,11 +349,11 @@ def _try_evaluate_calculus(
 
     m_deriv_text = re.search(
         r"(?i)^(?:find\s+(?:the\s+)?)?derivative\s+of\s+(.+?)(?:\s+with\s+respect\s+to\s+([a-zA-Z]))?$",
-        trimmed,
+        clean_calc,
     )
     m_deriv_op = re.search(
-        r"^(?:\\\\?frac\{d\}\{d([a-zA-Z])\}|d\s*/\s*d([a-zA-Z]))\s*(?:[\(\[\{](.*?)[\)\]\}]|(?!\bwith\b)(.+?))$",
-        trimmed,
+        r"^(?:\\\\?frac\{d(?:y)?\}\{d([a-zA-Z])\}|d(?:y)?\s*/\s*d([a-zA-Z]))\s*,?\s*(?:if\s+)?(?:[a-zA-Z]\s*=\s*)?(?:[\(\[\{](.*?)[\)\]\}]|(?!\bwith\b)(.+?))$",
+        clean_calc,
     )
 
     if m_deriv_text:
@@ -358,9 +361,12 @@ def _try_evaluate_calculus(
         deriv_var = m_deriv_text.group(2)
     elif m_deriv_op:
         deriv_var = m_deriv_op.group(1) or m_deriv_op.group(2)
-        deriv_expr_str = (m_deriv_op.group(3) if m_deriv_op.group(3) is not None else m_deriv_op.group(4)).strip()
-    elif trimmed.startswith("diff(") and trimmed.endswith(")"):
-        inner = trimmed[5:-1]
+        deriv_expr_str = (m_deriv_op.group(3) if m_deriv_op.group(3) is not None else m_deriv_op.group(4)).strip().rstrip(".")
+        m_rhs = re.match(r"^[a-zA-Z]\s*=\s*(.+)$", deriv_expr_str)
+        if m_rhs:
+            deriv_expr_str = m_rhs.group(1).strip()
+    elif clean_calc.startswith("diff(") and clean_calc.endswith(")"):
+        inner = clean_calc[5:-1]
         parts = [p.strip() for p in inner.split(",")]
         deriv_expr_str = parts[0]
         if len(parts) > 1:
@@ -690,15 +696,23 @@ def process_formula(
         # Explicit operation routing
         if operation in ("diff", "derivative", "differentiation"):
             var_sym = solve_for or "x"
+            stripped = expr_to_parse.replace("$", "").replace(r"\[", "").replace(r"\]", "").strip()
+            stripped = re.sub(r"(?i)^find\s+", "", stripped).strip()
+            stripped = re.sub(r"\\text\{\s*,?\s*if\s*\}", "", stripped).strip()
             m_unwrap = re.search(
-                r"^(?:\\\\?frac\{d\}\{d([a-zA-Z])\}|d\s*/\s*d([a-zA-Z]))\s*(?:[\(\[\{](.*?)[\)\]\}]|(.+?))$",
-                expr_to_parse.strip(),
+                r"^(?:\\\\?frac\{d(?:y)?\}\{d([a-zA-Z])\}|d(?:y)?\s*/\s*d([a-zA-Z]))\s*,?\s*(?:if\s+)?(?:[a-zA-Z]\s*=\s*)?(?:[\(\[\{](.*?)[\)\]\}]|(.+?))$",
+                stripped,
             )
             if m_unwrap:
                 var_sym = m_unwrap.group(1) or m_unwrap.group(2) or var_sym
                 inner_raw = m_unwrap.group(3) if m_unwrap.group(3) is not None else m_unwrap.group(4)
                 if inner_raw:
-                    expr_to_parse = inner_raw.strip()
+                    expr_to_parse = inner_raw.strip().rstrip(".")
+            else:
+                expr_to_parse = stripped
+            m_rhs = re.match(r"^[a-zA-Z]\s*=\s*(.+)$", expr_to_parse)
+            if m_rhs:
+                expr_to_parse = m_rhs.group(1).strip()
             cleaned = _clean_for_sympy(expr_to_parse)
             parsed_expr = _parse_expr(cleaned, global_dict=_SAFE_GLOBALS, transformations=_SAFE_TRANSFORMATIONS)
             diff_res = _sympy.diff(parsed_expr, _sympy.Symbol(var_sym))
@@ -779,7 +793,8 @@ def process_formula(
         )
 
         if is_equation:
-            eq_text = expr_to_parse
+            eq_text = expr_to_parse.replace("$", "").strip()
+            eq_text = re.sub(r"(?i)^solve\s*:\s*", "", eq_text).strip()
             target_var = solve_for
 
             if eq_text.startswith("solve(") and eq_text.endswith(")"):

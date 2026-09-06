@@ -41,16 +41,16 @@ class TerminalTool(BaseTool):
                 raise ValueError("Command rejected by security policy: destructive or disallowed system command.")
 
         cwd = self._resolve_path(cwd)
-        if isinstance(command, str):
-            command = shlex.split(command)
+        use_shell = bool(re.search(r"[><|]", cmd_str))
+        cmd_exec = cmd_str if use_shell else (shlex.split(command) if isinstance(command, str) else command)
         try:
             result = subprocess.run(
-                command,
+                cmd_exec,
                 cwd=str(cwd),
                 capture_output=True,
                 text=True,
                 timeout=timeout,
-                shell=False,
+                shell=use_shell,
             )
             return {
                 "command": command,

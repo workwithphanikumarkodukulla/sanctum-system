@@ -592,6 +592,8 @@ class DocumentTool(BaseTool):
         # Full Text Mode
         # ----------------------------------------------------------------------
         if mode == "full_text":
+            hw_el = next((el for el in elements if el.get("type") == "handwriting" or el.get("metadata", {}).get("is_handwriting")), None)
+            handwriting_transcription = hw_el.get("text") if hw_el else None
             text_lines = []
             for el in elements:
                 if page is not None and el.get("page") != page and el.get("slide") != page:
@@ -613,6 +615,7 @@ class DocumentTool(BaseTool):
                 "requires_human_review": requires_human_review,
                 "conflicts_count": len(conflicts),
                 "full_text": "\n\n".join(text_lines),
+                "handwriting_transcription": handwriting_transcription,
             }
 
         # ----------------------------------------------------------------------
@@ -834,6 +837,74 @@ class DocumentTool(BaseTool):
             raise ValueError("Path cannot be empty or whitespace.")
         if "\x00" in str(path):
             raise ValueError("Path contains invalid null byte.")
+
+        # Clean query: strip out any parenthetical remarks like "(dont know the file name)"
+        raw_str = str(path).strip()
+        clean_name = re.sub(r"[\(\[\{].*?[\)\]\}]", "", raw_str).strip()
+        if not clean_name:
+            clean_name = raw_str
+
+        # 1. Try direct exact match
+        try:
+            candidate = (self.root_dir / clean_name).expanduser().resolve()
+            candidate.relative_to(self.root_dir)
+            if candidate.is_file():
+                return candidate
+        except (ValueError, FileNotFoundError):
+            pass
+
+        # 2. Search workspace files for fuzzy / partial stem match
+        try:
+            all_files = [p for p in self.root_dir.rglob("*") if p.is_file() and not p.name.startswith(".")]
+            target_name = Path(clean_name).name.lower()
+            target_stem = Path(clean_name).stem.lower()
+            target_ext = Path(clean_name).suffix.lower()
+
+            # A. Case-insensitive exact filename match
+            for f in all_files:
+                if f.name.lower() == target_name:
+                    return f
+
+            # B. Check token / stem overlap (e.g. 'handnotes' -> matches 'handwritten_note.png')
+            target_tokens = [w for w in re.split(r"[^a-z0-9]", target_stem) if len(w) >= 3]
+            for f in all_files:
+                if target_ext and f.suffix.lower() != target_ext:
+                    continue
+                f_stem = f.stem.lower()
+                if target_tokens and all(token in f_stem for token in target_tokens):
+                    logger.info("Fuzzy path matched '%s' to '%s'", path, f.name)
+                    return f
+
+            # Prioritize top-level files over generated/ subdirectories
+            top_level_files = [p for p in self.root_dir.iterdir() if p.is_file() and not p.name.startswith(".")]
+
+            # C. Big PDF check: if query refers to 'big pdf', 'large pdf', 'csr', match the primary large PDF in root
+            if ("big" in clean_name.lower() or "large" in clean_name.lower() or "csr" in clean_name.lower()) and "pdf" in clean_name.lower():
+                pdfs = [f for f in top_level_files if f.suffix.lower() == ".pdf"]
+                if pdfs:
+                    pdfs.sort(key=lambda x: x.stat().st_size, reverse=True)
+                    logger.info("Matched 'big pdf' to root PDF: %s", pdfs[0].name)
+                    return pdfs[0]
+
+            # D. Substring match (e.g. 'CSR' in 'CSR_Expenditure_...')
+            if len(target_stem) >= 3:
+                for f in top_level_files + all_files:
+                    if target_stem in f.stem.lower() or f.stem.lower() in target_stem:
+                        logger.info("Fuzzy substring matched '%s' to '%s'", path, f.name)
+                        return f
+
+            # E. difflib close match
+            import difflib
+            file_map = {f.name.lower(): f for f in top_level_files + all_files}
+            close = difflib.get_close_matches(target_name, list(file_map.keys()), n=1, cutoff=0.35)
+            if close:
+                matched = file_map[close[0]]
+                logger.info("difflib fuzzy matched '%s' to '%s'", path, matched.name)
+                return matched
+        except Exception as e:
+            logger.debug("Fuzzy path resolution error: %s", e)
+
+        # 3. Fallback to candidate verification
         try:
             candidate = (self.root_dir / path).expanduser().resolve()
             candidate.relative_to(self.root_dir)

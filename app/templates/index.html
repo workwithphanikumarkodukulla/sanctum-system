@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/katex.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
@@ -196,51 +197,73 @@
 
             <!-- ── AGENT CHAT ── -->
             <section class="screen" id="screen-agent">
-                <div class="agent-layout">
-                    <!-- Chat panel -->
-                    <div class="chat-column">
-                        <div class="panel chat-panel">
-                            <div class="chat-header">
-                                <div>
-                                    <span class="kicker">AUTONOMOUS WORKBENCH</span>
-                                    <div class="agent-title-row"><span class="agent-ai-star material-icons" aria-hidden="true">auto_awesome</span><h2>Build anything with Gtrix-Agent</h2></div>
-                                </div>
-                                <div class="chat-header-right">
-                                    <button class="btn-secondary small" id="newChatBtn"><span class="material-icons">add</span> New task</button>
-                                </div>
+                <div class="chat-column">
+                    <div class="panel chat-panel">
+                        <div class="chat-header">
+                            <div>
+                                <span class="kicker">AUTONOMOUS WORKBENCH</span>
+                                <div class="agent-title-row"><span class="agent-ai-star material-icons" aria-hidden="true">auto_awesome</span><h2>Build anything with Gtrix-Agent</h2></div>
                             </div>
-                            <div id="messages" class="messages-stream"></div>
-                            <div class="composer-floating-container">
-                                <form id="chatForm" class="composer">
-                                    <button id="toolPickerBtn" class="composer-tool-btn" type="button" title="Choose a tool" aria-label="Choose a tool">
-                                        <span class="material-icons">add</span>
-                                    </button>
-                                    <textarea id="messageInput" rows="1" placeholder="Type a message or instruction for Sanctum Agent..."></textarea>
-                                    <button id="sendBtn" class="send-btn" type="submit" title="Send message" aria-label="Send message">
-                                        <span class="material-icons">send</span>
-                                    </button>
-                                </form>
-                                <small class="composer-hint">Press Enter to send · Shift+Enter for new line</small>
+                            <div class="chat-header-right">
+                                <button class="btn-trace-toggle" id="toggleRailBtn" type="button" title="Toggle execution trace">
+                                    <span class="material-icons">terminal</span> Execution trace <span class="live-pill" id="headerLivePill">LIVE</span>
+                                </button>
+                                <button class="btn-secondary small" id="newChatBtn"><span class="material-icons">add</span> New task</button>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Right rail -->
-                    <div class="agent-rail">
-                        <div class="panel activity-panel">
-                            <div class="panel-header">
-                                <div><span class="kicker">ACTIVITY</span><h2>Execution trace</h2></div>
-                                <span class="live-pill">LIVE</span>
-                            </div>
-                            <div id="activityList" class="activity-list">
-                                <div class="empty-state"><span class="material-icons">bolt</span><p>Activity appears here.</p></div>
+                        <!-- Main Chat Workspace with Execution Trace below New Task button -->
+                        <div class="chat-body-layout rail-collapsed" id="agentLayout">
+                            <div id="messages" class="messages-stream"></div>
+
+                            <!-- Collapsed Dock Tab on right edge below new task button -->
+                            <button class="rail-dock-tab" id="railDockTab" type="button" title="Expand execution trace" aria-label="Expand execution trace">
+                                <span class="material-icons">chevron_left</span>
+                                <span class="dock-tab-label">Execution trace</span>
+                                <span class="dock-tab-dot"></span>
+                            </button>
+
+                            <!-- Execution trace panel positioned below new task button -->
+                            <div class="agent-rail" id="agentRail">
+                                <div class="panel activity-panel" id="activityPanel">
+                                    <div class="panel-header activity-panel-header" id="activityPanelHeader" title="Click to collapse execution trace to the right">
+                                        <div>
+                                            <span class="kicker">ACTIVITY</span>
+                                            <h2>Execution trace</h2>
+                                        </div>
+                                        <div class="activity-header-right">
+                                            <span class="live-pill" id="livePill">LIVE</span>
+                                            <button class="activity-collapse-btn" id="activityCollapseBtn" title="Collapse execution trace to the right" aria-label="Collapse execution trace">
+                                                <span class="material-icons">chevron_right</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div id="activityListWrap" class="activity-list-wrap">
+                                        <div id="activityList" class="activity-list">
+                                            <div class="empty-state"><span class="material-icons">bolt</span><p>Activity appears here.</p></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="panel history-launcher" id="historyBtn" type="button">
+                                    <span class="material-icons">history</span>
+                                    <span><b>Session history</b><small><span id="historyCount">0</span> messages saved</small></span>
+                                    <span class="material-icons">open_in_new</span>
+                                </button>
                             </div>
                         </div>
-                        <button class="panel history-launcher" id="historyBtn" type="button">
-                            <span class="material-icons">history</span>
-                            <span><b>Session history</b><small><span id="historyCount">0</span> messages saved</small></span>
-                            <span class="material-icons">open_in_new</span>
-                        </button>
+
+                        <div class="composer-floating-container">
+                            <form id="chatForm" class="composer">
+                                <button id="toolPickerBtn" class="composer-tool-btn" type="button" title="Choose a tool" aria-label="Choose a tool">
+                                    <span class="material-icons">add</span>
+                                </button>
+                                <textarea id="messageInput" rows="1" placeholder="Type a message or instruction for Sanctum Agent..."></textarea>
+                                <button id="sendBtn" class="send-btn" type="submit" title="Send message" aria-label="Send message">
+                                    <span class="material-icons">send</span>
+                                </button>
+                            </form>
+                            <small class="composer-hint">Press Enter to send · Shift+Enter for new line</small>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -624,6 +647,8 @@
     </div>
 </div>
 
+<script src="{{ url_for('static', filename='vendor/marked.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/katex.min.js') }}"></script>
 <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>

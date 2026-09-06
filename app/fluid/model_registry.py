@@ -33,7 +33,9 @@ _DEFAULT_PROFILE: dict[str, float] = {
 
 # Heuristic boosts applied from model name keywords (pre-profiling)
 _NAME_HINTS: list[tuple[list[str], dict[str, float]]] = [
-    (["code", "coder", "deepseek", "starcoder", "codellama", "qwen.*coder"],
+    (["qwen.*coder", "qwencoder"],
+     {"code": 0.95, "docs": 0.7, "reasoning": 0.8, "general": 0.8}),
+    (["code", "coder", "deepseek", "starcoder", "codellama"],
      {"code": 0.85, "docs": 0.5, "reasoning": 0.65, "general": 0.6}),
     (["reason", "qwq", "thinking", "r1"],
      {"reasoning": 0.9, "code": 0.65, "general": 0.75}),
@@ -122,6 +124,9 @@ class ModelRegistry:
             return
         try:
             self._registry = json.loads(REGISTRY_FILE.read_text(encoding="utf-8"))
+            for m, prof in list(self._registry.items()):
+                if not prof.get("_profiled"):
+                    self._registry[m] = self._heuristic_profile(m)
             logger.info("Fluid: loaded {} model profiles", len(self._registry))
         except Exception:
             logger.exception("Fluid: failed to load model registry.")

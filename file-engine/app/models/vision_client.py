@@ -12,35 +12,9 @@ from app.core.config import settings
 logger = logging.getLogger(__name__)
 
 HANDWRITING_TRANSCRIPTION_PROMPT = (
-    "You are a handwriting transcription engine.\n\n"
-    "Read the handwritten text directly from the supplied image.\n\n"
-    "Return a faithful transcription of ONLY the text that is visibly present in the image.\n\n"
-    "Rules:\n\n"
-    "1. Transcribe the complete visible handwritten content from top to bottom.\n"
-    "2. Preserve the original wording as closely as possible.\n"
-    "3. Preserve meaningful line breaks and paragraph breaks where visible.\n"
-    "4. Do not summarize the document.\n"
-    "5. Do not explain the document.\n"
-    "6. Do not interpret the document.\n"
-    "7. Do not infer missing words from context.\n"
-    "8. Do not complete unfinished sentences.\n"
-    "9. Do not invent text that is not visible.\n"
-    "10. Do not rewrite the text into polished English.\n"
-    "11. Do not correct spelling unless the correction is unquestionably part of the visible writing.\n"
-    "12. Do not repeat words, phrases, sentences, or paragraphs.\n"
-    "13. Do not output OCR candidates.\n"
-    "14. Do not compare OCR and VLM.\n"
-    "15. Do not output confidence explanations.\n"
-    "16. Do not output a 'best interpretation'.\n"
-    "17. Do not describe the image.\n"
-    "18. If a word genuinely cannot be read, write [illegible] rather than guessing.\n"
-    "19. Read the entire image before producing the transcription.\n"
-    "20. Return ONLY the transcription.\n\n"
-    "Important:\n"
-    "The complete image is provided intentionally. Use the visual context of the entire page to understand line continuation and sentence boundaries.\n\n"
-    "Do not stop after the first readable section.\n"
-    "Do not truncate the transcription merely because a section is difficult.\n"
-    "Do not repeat a previous line to compensate for uncertainty."
+    "Transcribe all visible text, handwritten notes, mathematical expressions, formulas, and equations "
+    "from this image completely and accurately from top to bottom. Preserve exact wording, line breaks, "
+    "and proper LaTeX formatting for math ($$ for display math, $ for inline math) without conversational commentary or summary."
 )
 
 
@@ -129,6 +103,26 @@ class VisionClient:
                 if response.status_code == 200:
                     data = response.json()
                     response_text = data.get("response", "").strip()
+                    # Support reasoning/thinking models (e.g. Qwen3-VL in Ollama) where output is placed in thinking
+                    if not response_text and data.get("thinking"):
+                        raw_thinking = data["thinking"]
+                        import re
+                        code_blocks = re.findall(r'```(?:[a-zA-Z0-9_-]+)?\s*\n?(.*?)\n?```', raw_thinking, re.DOTALL)
+                        if code_blocks:
+                            response_text = max(code_blocks, key=len).strip()
+                        else:
+                            quoted_blocks = [
+                                q.strip() for q in re.findall(r'"([^"]{40,})"', raw_thinking, re.DOTALL)
+                                if not q.strip().lower().startswith("the image shows")
+                                and not q.strip().lower().startswith("wait,")
+                                and not q.strip().lower().startswith("let's")
+                            ]
+                            if quoted_blocks:
+                                response_text = max(quoted_blocks, key=len).strip()
+                            else:
+                                cleaned = re.sub(r'^(?:Wait,.*?|Let\'s.*?|First,.*?)\n+', '', raw_thinking, flags=re.DOTALL | re.IGNORECASE).strip()
+                                response_text = cleaned or raw_thinking.strip()
+
                     if keep_alive == 0 or keep_alive == "0":
                         self._model_loaded = False
                     else:
@@ -189,7 +183,7 @@ class VisionClient:
         """
         # Ensure sufficient tokens and low temperature for stable verbatim transcription
         options = {
-            "num_predict": 2048,
+            "num_predict": 1000,
             "temperature": 0.1,
         }
         # Check if reread_cropped_region was mocked by test suites
@@ -207,6 +201,7 @@ class VisionClient:
         except Exception:
             pass
 
+        options = options or {"num_predict": 500, "temperature": 0.1}
         result = await self.analyze_image(
             image,
             prompt=HANDWRITING_TRANSCRIPTION_PROMPT,

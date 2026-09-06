@@ -158,10 +158,18 @@ class ImageParser(BaseParser):
                 if eval_dec.classification == HandwritingClassification.HANDWRITTEN:
                     hw_signals += 1
 
+        all_ocr_text = " ".join(r.get("text", "") for r in raw_regions)
+        has_math_or_formula = (
+            any(k in all_ocr_text.lower() for k in ("dy/dx", "d/dx", "diff", "\\frac", "log", "lim", "int", "sin", "cos", "tan", "sqrt", "^", "=", "+", "*"))
+            or any(k in source_doc.lower() for k in ("diff", "problem", "math", "eq", "calc", "formula"))
+        )
+        is_sparse_or_problem = text_count <= 4 and (has_math_or_formula or hw_signals >= 1 or not all_ocr_text.strip())
+
         is_doc_handwritten = (
             (text_count >= 2 and hw_signals >= 2)
             or (text_count > 0 and (hw_signals / text_count) >= 0.25)
             or (hw_signals >= 1 and text_count <= 2)
+            or is_sparse_or_problem
             or ("handwritten" in source_doc.lower())
         )
 

@@ -40,11 +40,17 @@ def chat():
     try:
         agent = current_app.agent
         result = agent.chat(message)
+        wf_trace = result.get("workflow_trace")
+        if hasattr(wf_trace, "to_dict"):
+            wf_trace = wf_trace.to_dict()
         return jsonify({
             "reply": result["reply"],
+            "model_used": result.get("model_used"),
+            "duration_ms": result.get("duration_ms"),
+            "duration_s": result.get("duration_s"),
             "tool_actions": result.get("tool_actions", []),
             "activity_events": result.get("activity_events", []),
-            "workflow_trace": result.get("workflow_trace"),
+            "workflow_trace": wf_trace,
             "debug_trace": result.get("debug_trace"),
         })
     except Exception:
@@ -146,6 +152,9 @@ def history():
 @main_bp.route("/api/history", methods=["DELETE"])
 def clear_history():
     current_app.agent.clear_memory()
+    wh = getattr(current_app, "workspace_history", None) or getattr(current_app.agent, "workspace_history", None)
+    if wh:
+        wh.clear()
     return jsonify({"message": "Conversation history cleared successfully."})
 
 
@@ -328,9 +337,18 @@ def read_workspace_file():
         return jsonify({"error": "File path parameter 'path' is required."}), 400
     try:
         agent = current_app.agent
-        file_res = agent.execute_tool("file", action="read_file", path=file_path)
         stat_res = agent.execute_tool("workspace", action="stat", path=file_path)
-        return jsonify({"path": file_path, "content": file_res.get("content", ""), "stat": stat_res})
+        try:
+            file_res = agent.execute_tool("file", action="read_file", path=file_path)
+            content = file_res.get("content", "")
+            is_binary = False
+        except ValueError as ve:
+            if "binary file" in str(ve).lower():
+                content = f"[Binary file / Image: {Path(file_path).name}. Use Document Analysis to inspect content.]"
+                is_binary = True
+            else:
+                raise
+        return jsonify({"path": file_path, "content": content, "stat": stat_res, "is_binary": is_binary})
     except Exception as e:
         logger.exception(f"Error reading file '{file_path}'.")
         return jsonify({"error": str(e)}), 500
@@ -441,6 +459,21 @@ def lkb_clear():
         return jsonify({"error": "LKB not initialized."}), 503
     lkb.clear()
     return jsonify({"message": "LKB cleared."})
+
+
+@main_bp.route("/api/memory", methods=["GET"])
+def get_memory():
+    """Return active ChatGPT-style memory context profile."""
+    agent = getattr(current_app, "agent", None)
+    if not agent or not hasattr(agent, "memory_manager"):
+        return jsonify({"user_name": "", "facts": [], "preferences": [], "projects": []})
+    mm = agent.memory_manager
+    return jsonify({
+        "user_name": getattr(mm, "user_name", ""),
+        "facts": getattr(mm, "facts", []),
+        "preferences": getattr(mm, "preferences", []),
+        "projects": getattr(mm, "projects", []),
+    })
 
 
 # ─────────────────────────────────────────────────────────────────────────────

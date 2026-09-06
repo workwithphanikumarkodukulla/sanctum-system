@@ -65,6 +65,7 @@ function showScreen(screenName) {
     }
 
     // Trigger data loading for specific screens
+    if (screenName === "agent") loadChatMessages();
     if (screenName === "workspace") loadWorkspace();
     if (screenName === "models") loadModels();
     if (screenName === "lkb") loadLkb();
@@ -396,9 +397,15 @@ async function sendMessage(text) {
     const messageInput = $("messageInput");
     if (messageInput) messageInput.value = "";
 
-    // Append User Message to UI
     appendChatMessage("user", text);
     renderActivityEvent("Processing mission request...", "thinking");
+    // Note: Activity panel does not auto-expand per design; user expands on demand from the right
+
+    // ── Live dynamic thinking bubble in the chat (Claude Code & Antigravity style) ──
+    const thinkingBubble = createThinkingBubble();
+    const startTime = Date.now();
+    let resultModel = "";
+    let resultDuration = "";
 
     try {
         const response = await fetch("/api/chat/stream", {
@@ -428,9 +435,19 @@ async function sendMessage(text) {
                     try {
                         const eventData = JSON.parse(trimmed.slice(6));
                         if (eventData.type === "activity") {
-                            renderActivityEvent(eventData.text || eventData.stage, "active");
+                            const stepText = eventData.text || eventData.stage;
+                            updateThinkingBubble(thinkingBubble, stepText);
+                            renderActivityEvent(stepText, "active");
                         } else if (eventData.type === "result") {
                             finalReply = eventData.reply || "";
+                            if (eventData.model_used) {
+                                resultModel = eventData.model_used;
+                            }
+                            if (eventData.duration_s !== undefined && eventData.duration_s !== null) {
+                                resultDuration = `${eventData.duration_s}s`;
+                            } else if (eventData.duration_ms !== undefined && eventData.duration_ms !== null) {
+                                resultDuration = `${(eventData.duration_ms / 1000).toFixed(1)}s`;
+                            }
                             if (eventData.tool_actions) {
                                 eventData.tool_actions.forEach((act) => {
                                     renderActivityEvent(`Tool call: ${act.tool}`, "complete");
@@ -444,33 +461,390 @@ async function sendMessage(text) {
             }
         }
 
-        if (finalReply) {
-            appendChatMessage("assistant", finalReply);
-            renderActivityEvent("Mission completed successfully.", "complete");
+        if (!resultDuration) {
+            resultDuration = `${((Date.now() - startTime) / 1000).toFixed(1)}s`;
         }
+        if (!resultModel && state.activeModel) {
+            resultModel = state.activeModel;
+        }
+
+        // Replace thinking bubble with final response
+        resolveThinkingBubble(thinkingBubble, finalReply || "", false, { model: resultModel, duration: resultDuration });
+        if (finalReply) renderActivityEvent("Mission completed successfully.", "complete");
         await loadSessionHistory();
     } catch (err) {
-        appendChatMessage("assistant", `Execution failure: ${err.message}`);
+        const errDuration = `${((Date.now() - startTime) / 1000).toFixed(1)}s`;
+        resolveThinkingBubble(thinkingBubble, `Execution failure: ${err.message}`, true, { model: state.activeModel || "", duration: errDuration });
         renderActivityEvent(`Failed: ${err.message}`, "error");
     } finally {
         state.isSending = false;
     }
 }
 
-function appendChatMessage(role, content) {
+/** Create a live thinking bubble in the chat with dynamic shimmer text */
+function createThinkingBubble() {
+    const container = $("messages");
+    if (!container) return null;
+
+    const bubble = document.createElement("div");
+    bubble.className = "message-bubble assistant thinking-bubble";
+    bubble._startTime = Date.now();
+    bubble._completedSteps = [];
+    bubble._currentStep = "Analyzing request...";
+
+    bubble.innerHTML = `
+        <div class="message-meta">
+            <span>SANCTUM AGENT</span>
+            <span class="thinking-meta-status"><span class="thinking-pulse-dot"></span>Thinking</span>
+        </div>
+        <div class="message-content thinking-bubble-content">
+            <div class="thinking-status-row">
+                <div class="thinking-spinner-wrap" aria-hidden="true">
+                    <div class="thinking-spinner-ring"></div>
+                    <div class="thinking-spinner-core"></div>
+                </div>
+                <div class="thinking-action-box">
+                    <span class="thinking-shimmer-text" id="thinkingLabel">Analyzing request...</span>
+                </div>
+                <span class="thinking-timer" id="thinkingTimer">0.0s</span>
+            </div>
+            <div class="thinking-steps-container" id="thinkingStepsContainer" style="display:none;">
+                <div class="thinking-steps-list" id="thinkingStepsList"></div>
+            </div>
+            <button type="button" class="thinking-steps-toggle" id="thinkingStepsToggle" style="display:none;" aria-expanded="false">
+                <span class="material-icons">expand_more</span>
+                <span class="steps-toggle-label">0 steps</span>
+            </button>
+        </div>
+    `;
+    container.appendChild(bubble);
+    bubble.scrollIntoView({ behavior: "smooth", block: "end" });
+
+    // Timer updater
+    bubble._timerInterval = setInterval(() => {
+        const timerEl = bubble.querySelector("#thinkingTimer");
+        if (timerEl) {
+            const elapsed = ((Date.now() - bubble._startTime) / 1000).toFixed(1);
+            timerEl.textContent = `${elapsed}s`;
+        }
+    }, 100);
+
+    // Toggle previous steps disclosure
+    const toggleBtn = bubble.querySelector("#thinkingStepsToggle");
+    const stepsContainer = bubble.querySelector("#thinkingStepsContainer");
+    if (toggleBtn && stepsContainer) {
+        toggleBtn.addEventListener("click", () => {
+            const isHidden = stepsContainer.style.display === "none";
+            stepsContainer.style.display = isHidden ? "block" : "none";
+            toggleBtn.setAttribute("aria-expanded", String(isHidden));
+            const icon = toggleBtn.querySelector(".material-icons");
+            if (icon) icon.textContent = isHidden ? "expand_less" : "expand_more";
+            bubble.scrollIntoView({ behavior: "smooth", block: "end" });
+        });
+    }
+
+    return bubble;
+}
+
+/** Update the status label in the thinking bubble with shimmer text and step recording */
+function updateThinkingBubble(bubble, text) {
+    if (!bubble || !text) return;
+    const label = bubble.querySelector("#thinkingLabel");
+    if (!label) return;
+
+    // Record previous completed step if changed
+    if (bubble._currentStep && bubble._currentStep !== text) {
+        bubble._completedSteps.push({
+            text: bubble._currentStep,
+            time: ((Date.now() - bubble._startTime) / 1000).toFixed(1) + "s"
+        });
+
+        // Update past steps list
+        const stepsContainer = bubble.querySelector("#thinkingStepsContainer");
+        const stepsList = bubble.querySelector("#thinkingStepsList");
+        const toggleBtn = bubble.querySelector("#thinkingStepsToggle");
+        const toggleLabel = bubble.querySelector(".steps-toggle-label");
+
+        if (stepsList && toggleBtn && toggleLabel) {
+            stepsList.innerHTML = bubble._completedSteps.map(s => `
+                <div class="thinking-past-step">
+                    <span class="material-icons past-step-icon">check_circle</span>
+                    <span class="past-step-text">${escapeHtml(s.text)}</span>
+                    <span class="past-step-time">${s.time}</span>
+                </div>
+            `).join("");
+
+            toggleBtn.style.display = "inline-flex";
+            const count = bubble._completedSteps.length;
+            toggleLabel.textContent = `${count} completed step${count > 1 ? "s" : ""}`;
+        }
+    }
+
+    bubble._currentStep = text;
+
+    // Smoothly animate the label update with shimmer
+    label.style.opacity = "0";
+    label.style.transform = "translateY(-3px)";
+    setTimeout(() => {
+        label.textContent = text;
+        label.style.opacity = "1";
+        label.style.transform = "translateY(0)";
+    }, 150);
+
+    bubble.scrollIntoView({ behavior: "smooth", block: "end" });
+}
+
+/** Replace thinking bubble with the real final content */
+function resolveThinkingBubble(bubble, finalText, isError = false, meta = {}) {
+    if (!bubble) {
+        if (finalText) appendChatMessage("assistant", finalText, meta);
+        return;
+    }
+    if (bubble._timerInterval) {
+        clearInterval(bubble._timerInterval);
+        bubble._timerInterval = null;
+    }
+    if (!finalText) {
+        bubble.remove();
+        return;
+    }
+    bubble.classList.remove("thinking-bubble");
+    bubble.classList.add("resolving");
+    if (isError) bubble.classList.add("error-bubble");
+
+    // Remove thinking badge from meta
+    const metaStatus = bubble.querySelector(".thinking-meta-status");
+    if (metaStatus) metaStatus.remove();
+
+    // Add model & time badges to message-meta
+    const metaEl = bubble.querySelector(".message-meta");
+    if (metaEl && (meta.model || meta.duration)) {
+        let metaTags = metaEl.querySelector(".message-meta-tags");
+        if (!metaTags) {
+            metaTags = document.createElement("div");
+            metaTags.className = "message-meta-tags";
+            metaEl.appendChild(metaTags);
+        }
+        let badgesHtml = "";
+        if (meta.model) {
+            badgesHtml += `<span class="message-meta-badge model-badge" title="Model: ${escapeHtml(meta.model)}"><span class="material-icons meta-icon">memory</span>${escapeHtml(meta.model)}</span>`;
+        }
+        if (meta.duration) {
+            badgesHtml += `<span class="message-meta-badge time-badge" title="Response time: ${escapeHtml(meta.duration)}"><span class="material-icons meta-icon">schedule</span>${escapeHtml(meta.duration)}</span>`;
+        }
+        metaTags.innerHTML = badgesHtml;
+    }
+
+    const content = bubble.querySelector(".message-content");
+    if (content) {
+        content.classList.remove("thinking-bubble-content");
+        content.innerHTML = isError
+            ? `<p style="color:#f87171">${escapeHtml(finalText)}</p>`
+            : renderMarkdownAndMath(finalText);
+        content.style.opacity = "0";
+        content.style.transform = "translateY(6px)";
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                content.style.transition = "opacity 0.32s ease, transform 0.32s cubic-bezier(0.22,1,0.36,1)";
+                content.style.opacity = "1";
+                content.style.transform = "translateY(0)";
+            });
+        });
+    }
+    bubble.scrollIntoView({ behavior: "smooth", block: "end" });
+}
+
+/**
+
+ * Render Markdown and LaTeX Math safely
+ * Converts $...$, $$...$$, \[...\], \(...\) to KaTeX typography
+ * Converts **bold**, *italic*, headers, lists, code to styled HTML
+ */
+function renderMarkdownAndMath(content) {
+    if (!content) return "";
+
+    const codePlaceholders = [];
+    const mathPlaceholders = [];
+
+    // 1. Protect fenced code blocks ``` ... ```
+    let text = content.replace(/(```[\s\S]*?```)/g, (match) => {
+        const id = "%%CODE_BLOCK_" + codePlaceholders.length + "%%";
+        codePlaceholders.push(match);
+        return id;
+    });
+
+    // 2. Protect inline code ` ... `
+    text = text.replace(/(`[^`\n\r]+?`)/g, (match) => {
+        const id = "%%CODE_INLINE_" + codePlaceholders.length + "%%";
+        codePlaceholders.push(match);
+        return id;
+    });
+
+    // Helper to render KaTeX safely
+    function renderTex(expr, isDisplay) {
+        if (typeof katex !== "undefined" && katex.renderToString) {
+            try {
+                return katex.renderToString(expr.trim(), {
+                    displayMode: isDisplay,
+                    throwOnError: false
+                });
+            } catch (e) {
+                return isDisplay
+                    ? `<div class="katex-display"><code class="tex-err">${escapeHtml(expr)}</code></div>`
+                    : `<span class="katex"><code class="tex-err">${escapeHtml(expr)}</code></span>`;
+            }
+        }
+        return isDisplay
+            ? `<div class="katex-display"><span class="math-expr">${escapeHtml(expr)}</span></div>`
+            : `<span class="katex"><span class="math-expr">${escapeHtml(expr)}</span></span>`;
+    }
+
+    // 3. Extract display math $$...$$
+    text = text.replace(/\$\$([\s\S]*?)\$\$/g, (_, math) => {
+        const id = "%%MATH_BLOCK_" + mathPlaceholders.length + "%%";
+        mathPlaceholders.push({ rendered: renderTex(math, true), isBlock: true });
+        return "\n\n" + id + "\n\n";
+    });
+
+    // 4. Extract display math \[...\]
+    text = text.replace(/\\\[([\s\S]*?)\\\]/g, (_, math) => {
+        const id = "%%MATH_BLOCK_" + mathPlaceholders.length + "%%";
+        mathPlaceholders.push({ rendered: renderTex(math, true), isBlock: true });
+        return "\n\n" + id + "\n\n";
+    });
+
+    // 5. Extract inline math \(...\)
+    text = text.replace(/\\\(([\s\S]*?)\\\)/g, (_, math) => {
+        const id = "%%MATH_INLINE_" + mathPlaceholders.length + "%%";
+        mathPlaceholders.push({ rendered: renderTex(math, false), isBlock: false });
+        return id;
+    });
+
+    // 6. Extract inline math $...$
+    text = text.replace(/(^|[^\\])\$([^$\n\r]+?)\$/g, (match, prefix, math) => {
+        const id = "%%MATH_INLINE_" + mathPlaceholders.length + "%%";
+        mathPlaceholders.push({ rendered: renderTex(math, false), isBlock: false });
+        return prefix + id;
+    });
+
+    // 7. Restore protected code blocks & inlines before passing to marked
+    codePlaceholders.forEach((code, i) => {
+        text = text.replace("%%CODE_BLOCK_" + i + "%%", code);
+        text = text.replace("%%CODE_INLINE_" + i + "%%", code);
+    });
+
+    // 8. Parse Markdown
+    let html = "";
+    if (typeof marked !== "undefined" && marked.parse) {
+        try {
+            html = marked.parse(text);
+        } catch (_) {
+            html = escapeHtml(text).replace(/\n/g, "<br>");
+        }
+    } else {
+        // Fallback simple markdown parser
+        html = escapeHtml(text)
+            .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+            .replace(/\*(.*?)\*/g, "<em>$1</em>")
+            .replace(/`([^`]+)`/g, "<code>$1</code>")
+            .replace(/\n\n/g, "</p><p>")
+            .replace(/\n/g, "<br>");
+        html = `<p>${html}</p>`;
+    }
+
+    // 9. Restore math blocks and inlines
+    mathPlaceholders.forEach((item, i) => {
+        if (item.isBlock) {
+            html = html.replace(new RegExp("<p>\\s*%%MATH_BLOCK_" + i + "%%\\s*<\\/p>", "g"), item.rendered);
+            html = html.replace(new RegExp("%%MATH_BLOCK_" + i + "%%", "g"), item.rendered);
+        } else {
+            html = html.replace(new RegExp("%%MATH_INLINE_" + i + "%%", "g"), item.rendered);
+        }
+    });
+
+    return html;
+}
+
+function appendChatMessage(role, content, meta = {}) {
     const container = $("messages");
     if (!container) return;
 
     const bubble = document.createElement("div");
     bubble.className = `message-bubble ${role}`;
+    const renderedContent = renderMarkdownAndMath(content);
+
+    let metaTagsHtml = "";
+    if (role === "assistant" && (meta.model || meta.duration)) {
+        metaTagsHtml = `<div class="message-meta-tags">`;
+        if (meta.model) {
+            metaTagsHtml += `<span class="message-meta-badge model-badge" title="Model: ${escapeHtml(meta.model)}"><span class="material-icons meta-icon">memory</span>${escapeHtml(meta.model)}</span>`;
+        }
+        if (meta.duration) {
+            metaTagsHtml += `<span class="message-meta-badge time-badge" title="Response time: ${escapeHtml(meta.duration)}"><span class="material-icons meta-icon">schedule</span>${escapeHtml(meta.duration)}</span>`;
+        }
+        metaTagsHtml += `</div>`;
+    }
+
     bubble.innerHTML = `
         <div class="message-meta">
             <span>${role === "user" ? "YOU" : "SANCTUM AGENT"}</span>
+            ${metaTagsHtml}
         </div>
-        <div class="message-content">${escapeHtml(content)}</div>
+        <div class="message-content">${renderedContent}</div>
     `;
     container.appendChild(bubble);
     container.scrollTop = container.scrollHeight;
+    bubble.scrollIntoView({ behavior: "smooth", block: "end" });
+}
+
+async function loadChatMessages() {
+    const container = $("messages");
+    if (!container || container.children.length > 0) return;
+    try {
+        const data = await api("/api/history");
+        const items = data.history || [];
+        items.forEach((item) => {
+            appendChatMessage(item.role, item.content, { model: item.model, duration: item.duration });
+        });
+    } catch (_) { }
+}
+
+function expandActivityPanel() {
+    const layout = $("agentLayout");
+    const btn = $("activityCollapseBtn");
+    const headerBtn = $("toggleRailBtn");
+    if (layout) layout.classList.remove("rail-collapsed");
+    if (btn) {
+        btn.setAttribute("aria-expanded", "true");
+        btn.setAttribute("title", "Collapse execution trace to the right");
+        const icon = btn.querySelector(".material-icons");
+        if (icon) icon.textContent = "chevron_right";
+    }
+    if (headerBtn) headerBtn.classList.add("active");
+}
+
+function collapseActivityPanel() {
+    const layout = $("agentLayout");
+    const btn = $("activityCollapseBtn");
+    const headerBtn = $("toggleRailBtn");
+    if (layout) layout.classList.add("rail-collapsed");
+    if (btn) {
+        btn.setAttribute("aria-expanded", "false");
+        btn.setAttribute("title", "Expand execution trace");
+        const icon = btn.querySelector(".material-icons");
+        if (icon) icon.textContent = "chevron_right";
+    }
+    if (headerBtn) headerBtn.classList.remove("active");
+}
+
+function toggleActivityPanel() {
+    const layout = $("agentLayout");
+    if (!layout) return;
+    if (layout.classList.contains("rail-collapsed")) {
+        expandActivityPanel();
+    } else {
+        collapseActivityPanel();
+    }
 }
 
 function renderActivityEvent(text, stateType = "info") {
@@ -480,14 +854,26 @@ function renderActivityEvent(text, stateType = "info") {
     const empty = list.querySelector(".empty-state");
     if (empty) empty.remove();
 
+    // Mark previous active item as complete
+    const prevActive = list.querySelector(".activity-event.active");
+    if (prevActive && (stateType === "active" || stateType === "complete" || stateType === "error")) {
+        prevActive.classList.remove("active");
+        prevActive.classList.add("complete");
+        const prevText = prevActive.querySelector(".activity-event-text");
+        if (prevText) prevText.classList.remove("active-shimmer");
+    }
+
     const ev = document.createElement("div");
     ev.className = `activity-event ${stateType}`;
-    ev.style.setProperty("--activity-delay", `${Math.min(list.children.length, 8) * 70}ms`);
+    ev.style.setProperty("--activity-delay", `${Math.min(list.children.length, 8) * 50}ms`);
+
+    const isLive = stateType === "active" || stateType === "thinking";
+
     ev.innerHTML = `
         <span class="activity-marker" aria-hidden="true"><span class="activity-dot"></span></span>
         <div class="activity-event-content">
-            <div>${escapeHtml(text)}</div>
-            <small style="color:var(--text-muted);font-family:var(--font-mono)">${new Date().toLocaleTimeString()}</small>
+            <div class="activity-event-text ${isLive ? 'active-shimmer' : ''}">${escapeHtml(text)}</div>
+            <small class="activity-event-time">${new Date().toLocaleTimeString()}</small>
         </div>
     `;
     list.prepend(ev);
@@ -956,8 +1342,17 @@ document.addEventListener("DOMContentLoaded", () => {
     // New Chat Button
     if ($("newChatBtn")) {
         $("newChatBtn").addEventListener("click", async () => {
+            try {
+                await api("/api/clear", { method: "POST" });
+            } catch (err) {
+                console.warn("Error clearing chat session:", err);
+            }
             if ($("messages")) $("messages").innerHTML = "";
-            if ($("activityList")) $("activityList").innerHTML = "";
+            if ($("activityList")) {
+                $("activityList").innerHTML = '<div class="empty-state"><span class="material-icons">bolt</span><p>Activity appears here.</p></div>';
+            }
+            if ($("historyCount")) $("historyCount").textContent = "0";
+            state.activeThinkingBubble = null;
         });
     }
     if ($("toolPickerBtn")) {
@@ -971,6 +1366,29 @@ document.addEventListener("DOMContentLoaded", () => {
         openModal("historyModal");
         loadSessionHistory();
     });
+    if ($("railDockTab")) {
+        $("railDockTab").addEventListener("click", () => {
+            expandActivityPanel();
+        });
+    }
+    if ($("toggleRailBtn")) {
+        $("toggleRailBtn").addEventListener("click", () => {
+            toggleActivityPanel();
+        });
+    }
+    if ($("activityCollapseBtn")) {
+        $("activityCollapseBtn").addEventListener("click", (e) => {
+            e.stopPropagation();
+            collapseActivityPanel();
+        });
+    }
+    const actHeader = document.querySelector(".activity-panel-header");
+    if (actHeader) {
+        actHeader.addEventListener("click", () => {
+            collapseActivityPanel();
+        });
+    }
+
     document.querySelectorAll("[data-modal-close]").forEach((button) => {
         button.addEventListener("click", () => closeModal(button.dataset.modalClose));
     });
