@@ -28,3 +28,8 @@ file-engine/**/__pycache__/
 file-engine/.pytest_cache/
 file-engine/.env
 file-engine/.DS_Store
+
+# Workspace runtime data
+.sanctum/
+workspace/.sanctum/
+generated/

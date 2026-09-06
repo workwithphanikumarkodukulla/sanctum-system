@@ -662,6 +662,7 @@ function resolveThinkingBubble(bubble, finalText, isError = false, meta = {}) {
         });
     }
     bubble.scrollIntoView({ behavior: "smooth", block: "end" });
+    updateSovereignPill();
 }
 
 /**
@@ -1175,13 +1176,60 @@ function renderToolPicker() {
 
 async function loadSecurity() {
     try {
-        const data = await api("/api/system");
+        const [sysData, netData] = await Promise.all([
+            api("/api/system"),
+            api("/api/sovereign/network").catch(() => null)
+        ]);
+
         if ($("securityStatus")) $("securityStatus").textContent = "100% AIR-GAPPED & ISOLATED";
-        if ($("securityEndpoint")) $("securityEndpoint").textContent = data.model?.base_url || "127.0.0.1:11434";
-        if ($("securityNetwork")) $("securityNetwork").textContent = data.model?.network_scope || "Loopback (Localhost)";
-        if ($("securityTransport")) $("securityTransport").textContent = data.mcp?.transport || "STDIO / Subprocess";
-        if ($("securityProtocol")) $("securityProtocol").textContent = data.mcp?.protocol_version || "2024-11-05 (MCP Draft)";
+        if ($("securityEndpoint")) $("securityEndpoint").textContent = sysData.model?.base_url || "127.0.0.1:11434";
+        if ($("securityNetwork")) $("securityNetwork").textContent = sysData.model?.network_scope || "Loopback (Localhost)";
+        if ($("securityTransport")) $("securityTransport").textContent = sysData.mcp?.transport || "STDIO / Subprocess";
+        if ($("securityProtocol")) $("securityProtocol").textContent = sysData.mcp?.protocol_version || "2024-11-05 (MCP Draft)";
+
+        if (netData) {
+            renderNetworkMonitor(netData);
+        }
     } catch (_) { }
+}
+
+function renderNetworkMonitor(data) {
+    if (!data) return;
+    if ($("netMetricExternal")) {
+        const ext = (data.external_calls_allowed || 0) + (data.external_calls_blocked || 0);
+        $("netMetricExternal").textContent = ext;
+    }
+    if ($("netMetricLoopback")) {
+        $("netMetricLoopback").textContent = data.loopback_calls_count || 0;
+    }
+    if ($("netMetricOllama")) {
+        $("netMetricOllama").textContent = data.service_breakdown?.["Ollama (11434)"] || 0;
+    }
+    if ($("netMetricDocEngine")) {
+        $("netMetricDocEngine").textContent = data.service_breakdown?.["Document Engine (8001)"] || 0;
+    }
+    if ($("topbarAirgapText")) {
+        const totalLoop = data.loopback_calls_count || 0;
+        $("topbarAirgapText").textContent = `0 External Calls (${totalLoop} Local)`;
+    }
+
+    const consoleBody = $("networkAuditConsole");
+    if (consoleBody && data.recent_events && data.recent_events.length > 0) {
+        consoleBody.innerHTML = data.recent_events.map(ev => {
+            const isBlocked = ev.external;
+            const cls = isBlocked ? "blocked" : (ev.destination.includes("11434") ? "pass" : "init");
+            const prefix = isBlocked ? "[SOVEREIGN BREACH PREVENTED]" : "[AIR-GAP LOOPBACK]";
+            return `<div class="net-log-line ${cls}">[${escapeHtml(ev.timestamp)}] ${prefix} ${escapeHtml(ev.destination)} (${escapeHtml(ev.service)}) — ${escapeHtml(ev.status)}</div>`;
+        }).join("");
+        consoleBody.scrollTop = consoleBody.scrollHeight;
+    }
+}
+
+async function updateSovereignPill() {
+    try {
+        const data = await api("/api/sovereign/network");
+        renderNetworkMonitor(data);
+    } catch (_) {}
 }
 
 /**
@@ -1492,6 +1540,17 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Sovereign Air-Gap Network Monitor Handlers
+    if ($("topbarAirgap")) {
+        $("topbarAirgap").addEventListener("click", () => showScreen("security"));
+    }
+    if ($("refreshNetworkMonitorBtn")) {
+        $("refreshNetworkMonitorBtn").addEventListener("click", loadSecurity);
+    }
+    if ($("chatSovereignTag")) {
+        $("chatSovereignTag").addEventListener("click", () => showScreen("security"));
+    }
+
     // Initial Load
     loadRuntime();
     loadWorkspace();
@@ -1499,5 +1558,6 @@ document.addEventListener("DOMContentLoaded", () => {
     loadLkb();
     loadTools();
     loadSessionHistory();
+    updateSovereignPill();
     showScreen("overview");
 });

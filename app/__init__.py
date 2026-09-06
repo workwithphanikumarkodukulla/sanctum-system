@@ -18,6 +18,11 @@ def create_app():
     app.config.from_object(DevelopmentConfig)
 
     try:
+        # ── Sovereign Air-Gap Network Auditor ─────────────────────────
+        from app.sovereign_network import sovereign_auditor
+        sovereign_auditor.install_interceptor()
+        app.sovereign_auditor = sovereign_auditor
+
         # ── Local LLM ─────────────────────────────────────────────────
         llm_manager = LLMManager()
 

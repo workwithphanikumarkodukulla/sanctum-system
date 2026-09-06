@@ -102,6 +102,14 @@ def system_info():
     return jsonify(current_app.agent.system_info())
 
 
+@main_bp.route("/api/sovereign/network", methods=["GET"])
+@main_bp.route("/api/network/audit", methods=["GET"])
+def sovereign_network_audit():
+    """Return live sovereign air-gap telemetry and packet egress logs."""
+    from app.sovereign_network import sovereign_auditor
+    return jsonify(sovereign_auditor.get_audit_summary())
+
+
 @main_bp.route("/api/models", methods=["GET"])
 @main_bp.route("/models", methods=["GET"])
 def models():

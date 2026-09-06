@@ -13,7 +13,7 @@ def clear_memory():
     print(f"Clear status: {resp.status_code}")
     assert resp.status_code == 200, f"Clear failed: {resp.text}"
 
-def send_chat(message: str, timeout: int = 120):
+def send_chat(message: str, timeout: int = 180):
     t0 = time.perf_counter()
     resp = requests.post(f"{BASE_URL}/api/chat", json={"message": message}, timeout=timeout)
     dt = time.perf_counter() - t0

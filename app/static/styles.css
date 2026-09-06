@@ -4250,3 +4250,268 @@ button {
     background: var(--bg-card);
     border: 1px solid var(--nvidia-green-border);
 }
+
+/* ═════════════════════════════════════════════════════════════════════
+   SOVEREIGN NETWORK MONITOR & AIR-GAP TELEMETRY STYLES
+   ═════════════════════════════════════════════════════════════════════ */
+
+.airgap-topbar-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 11px;
+    border-radius: 999px;
+    background: rgba(118, 185, 0, 0.08);
+    border: 1px solid rgba(118, 185, 0, 0.35);
+    color: #76b900;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.airgap-topbar-pill:hover {
+    background: rgba(118, 185, 0, 0.16);
+    border-color: #76b900;
+    box-shadow: 0 0 12px rgba(118, 185, 0, 0.25);
+}
+
+.airgap-radar-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #76b900;
+    box-shadow: 0 0 8px #76b900;
+    animation: airgapPulse 2s infinite ease-in-out;
+    flex-shrink: 0;
+}
+
+@keyframes airgapPulse {
+    0% { transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 0 0 rgba(118, 185, 0, 0.6); }
+    70% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 0 6px rgba(118, 185, 0, 0); }
+    100% { transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 0 0 rgba(118, 185, 0, 0); }
+}
+
+.airgap-shield-icon {
+    font-size: 14px !important;
+    color: #76b900;
+}
+
+.sovereign-live-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: rgba(118, 185, 0, 0.09);
+    border: 1px solid rgba(118, 185, 0, 0.3);
+    color: #76b900;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: var(--font-mono, monospace);
+    user-select: none;
+}
+
+.network-monitor-section {
+    margin-top: 16px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(118, 185, 0, 0.3) !important;
+    background: linear-gradient(180deg, rgba(17, 24, 18, 0.7) 0%, rgba(13, 16, 14, 0.9) 100%) !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(118, 185, 0, 0.15);
+}
+
+.network-monitor-badge-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sovereign-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: rgba(118, 185, 0, 0.15);
+    border: 1px solid #76b900;
+    color: #76b900;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.network-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin: 18px 0;
+}
+
+.net-metric-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    border-radius: 10px;
+    background: #141719;
+    border: 1px solid #22282c;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.net-metric-card:hover {
+    transform: translateY(-2px);
+    border-color: #333d44;
+}
+
+.net-metric-zero {
+    border-color: rgba(118, 185, 0, 0.45) !important;
+    background: linear-gradient(135deg, rgba(20, 26, 20, 0.9) 0%, rgba(16, 20, 17, 0.9) 100%) !important;
+    box-shadow: 0 0 16px rgba(118, 185, 0, 0.1);
+}
+
+.net-metric-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-muted, #8b949e);
+}
+
+.net-metric-zero .net-metric-icon {
+    background: rgba(118, 185, 0, 0.15);
+    color: #76b900;
+}
+
+.net-metric-data {
+    display: flex;
+    flex-direction: column;
+}
+
+.net-metric-num {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #ffffff;
+    font-family: var(--font-mono, monospace);
+}
+
+.net-metric-zero .net-metric-num {
+    color: #76b900;
+    text-shadow: 0 0 10px rgba(118, 185, 0, 0.4);
+}
+
+.net-metric-label {
+    font-size: 11px;
+    color: var(--text-muted, #8b949e);
+    margin-top: 2px;
+}
+
+.net-metric-tag {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    font-size: 9.5px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+}
+
+.net-metric-tag.secure {
+    background: rgba(118, 185, 0, 0.2);
+    color: #76b900;
+    border: 1px solid rgba(118, 185, 0, 0.4);
+}
+
+.net-metric-tag.local {
+    background: rgba(88, 166, 255, 0.12);
+    color: #58a6ff;
+    border: 1px solid rgba(88, 166, 255, 0.3);
+}
+
+.net-metric-tag.active {
+    background: rgba(187, 134, 252, 0.12);
+    color: #bb86fc;
+    border: 1px solid rgba(187, 134, 252, 0.3);
+}
+
+.net-console-wrapper {
+    margin-top: 16px;
+    border-radius: 8px;
+    border: 1px solid #1e2428;
+    background: #0b0d0e;
+    overflow: hidden;
+}
+
+.net-console-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: #111416;
+    border-bottom: 1px solid #1a1e22;
+}
+
+.net-console-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+}
+.net-console-dot.green { background: #76b900; }
+.net-console-dot.yellow { background: #d29922; }
+.net-console-dot.red { background: #f85149; }
+
+.net-console-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: #c9d1d9;
+    letter-spacing: 0.04em;
+    font-family: var(--font-mono, monospace);
+    margin-left: 4px;
+}
+
+.net-console-status {
+    margin-left: auto;
+    font-size: 10px;
+    font-weight: 700;
+    color: #76b900;
+    font-family: var(--font-mono, monospace);
+}
+
+.net-console-body {
+    padding: 12px 16px;
+    max-height: 220px;
+    overflow-y: auto;
+    font-family: var(--font-mono, "SF Mono", monospace);
+    font-size: 11.5px;
+    line-height: 1.7;
+    color: #8b949e;
+    background: #090a0b;
+}
+
+.net-log-line {
+    word-break: break-all;
+    white-space: pre-wrap;
+}
+
+.net-log-line.init {
+    color: #58a6ff;
+}
+
+.net-log-line.pass {
+    color: #76b900;
+}
+
+.net-log-line.warn {
+    color: #d29922;
+}
+
+.net-log-line.blocked {
+    color: #f85149;
+    font-weight: bold;
+}
