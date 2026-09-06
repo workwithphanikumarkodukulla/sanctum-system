@@ -217,6 +217,29 @@ class VisionClient:
             return result["text"], settings.RECHECK_CONFIDENCE, result
         return None, 0.0, result
 
+    async def analyze_diagram(
+        self,
+        image: Image.Image | bytes,
+        diagram_type: str = "technical diagram / P&ID",
+        keep_alive: str | int | None = None,
+    ) -> tuple[str | None, float, dict[str, Any]]:
+        """Analyze technical diagrams, P&ID (Piping & Instrumentation), schematics, or flowcharts."""
+        prompt = (
+            f"You are an expert engineering document analyst specializing in {diagram_type}s. "
+            "Examine this visual crop or diagram thoroughly and provide: "
+            "1. Diagram Type & Title/Header (if visible).\n"
+            "2. Equipment & Instrument Tags (e.g. pumps P-101, valves V-102, tanks T-100, transmitters FIT/PIT/LIT).\n"
+            "3. Process Streams, Flow Directions, and Line Numbers.\n"
+            "4. Operational Controls & Safety Features.\n"
+            "Be precise, factual, and concise. Output the structured breakdown."
+        )
+        options = {"temperature": 0.1}
+        result = await self.analyze_image(image, prompt=prompt, keep_alive=keep_alive, options=options)
+        if result["success"] and result["text"]:
+            return result["text"], settings.RECHECK_CONFIDENCE, result
+        return None, 0.0, result
+
 
 vision_client = VisionClient()
+
 

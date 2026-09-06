@@ -718,14 +718,41 @@ class CodingAgent:
                                         f"- **Engine:** SymPy (Exact Symbolic Computation)"
                                     )
                                     break
-                                elif res_val is not None:
+                                elif res_val is not None and calc_res.get("status") not in ("error", "failed"):
                                     final_text = f"Deterministic calculation result via SymPy: **{res_val}**"
                                     break
                                 else:
-                                    continuation_prompt = f"The expression '{found_expr}' was extracted from the document. Please provide the step-by-step mathematical evaluation."
-                                    needs_continuation = True
+                                    logger.info("SymPy returned None or failed for '%s'; invoking LLM solver fallback.", found_expr)
+                                    emit("reasoning", "Evaluating mathematical problem via LLM mathematical solver")
+                                    clean_disp = found_expr.replace('**', '^')
+                                    math_fallback = self.llm_manager._llm.invoke([
+                                        SystemMessage(content=self.prompt_manager.system_prompt + "\nYou are Sanctum's mathematical problem solver. Provide a complete, clear step-by-step mathematical solution."),
+                                        HumanMessage(content=f"Please solve this mathematical problem step by step: $${clean_disp}$$")
+                                    ])
+                                    if math_fallback and math_fallback.content:
+                                        final_text = (
+                                            f"The mathematical expression extracted from the document is:\n"
+                                            f"$${clean_disp}$$\n\n"
+                                            f"{math_fallback.content.strip()}"
+                                        )
+                                        break
+                                    else:
+                                        continuation_prompt = f"The expression '{found_expr}' was extracted from the document. Please provide the step-by-step mathematical evaluation."
+                                        needs_continuation = True
                             except Exception as e:
                                 logger.error("SymPy execution failed: {}", e)
+                                clean_disp = found_expr.replace('**', '^')
+                                math_fallback = self.llm_manager._llm.invoke([
+                                    SystemMessage(content=self.prompt_manager.system_prompt + "\nYou are Sanctum's mathematical problem solver. Provide a complete, clear step-by-step mathematical solution."),
+                                    HumanMessage(content=f"Please solve this mathematical problem step by step: $${clean_disp}$$")
+                                ])
+                                if math_fallback and math_fallback.content:
+                                    final_text = (
+                                        f"The mathematical expression extracted from the document is:\n"
+                                        f"$${clean_disp}$$\n\n"
+                                        f"{math_fallback.content.strip()}"
+                                    )
+                                    break
                         else:
                             continuation_prompt = "Now call the 'calculate' tool to evaluate the mathematical expression requested by the user."
                             needs_continuation = True
@@ -832,13 +859,22 @@ class CodingAgent:
             except Exception:
                 res_obj = last_res
 
-            if isinstance(res_obj, dict) and res_obj.get("status") == "error":
+            if isinstance(res_obj, dict) and res_obj.get("status") == "already_executed":
+                inner_r = res_obj.get("result")
+                try:
+                    res_obj = json.loads(inner_r) if isinstance(inner_r, str) else (inner_r or res_obj)
+                except Exception:
+                    pass
+
+            if isinstance(res_obj, dict) and res_obj.get("status") == "error" and last_tool != "calculate":
                 final_text = f"I could not process the request: {res_obj.get('error', 'an error occurred')}"
             elif last_tool == "read_document" and isinstance(res_obj, dict):
                 if res_obj.get("status") == "error":
                     final_text = f"I could not read the document: {res_obj.get('error')}"
                 elif res_obj.get("handwriting_transcription"):
                     final_text = f"The handwritten note says:\n\n{res_obj['handwriting_transcription']}"
+                elif res_obj.get("diagram_analysis"):
+                    final_text = f"**Technical Diagram / P&ID Analysis:**\n\n{res_obj['diagram_analysis']}"
                 elif res_obj.get("matches"):
                     matches = res_obj["matches"]
                     match_lines = []
@@ -897,7 +933,19 @@ class CodingAgent:
                         final_text = f"Successfully analyzed {res_obj.get('filename', 'the document')}."
             elif last_tool == "calculate" and isinstance(res_obj, dict):
                 res_val = res_obj.get("result")
-                if isinstance(res_val, list):
+                calc_expr = last_action.get("args", {}).get("expression", "")
+                if res_val is None or res_obj.get("status") in ("error", "failed") or res_obj.get("success") is False:
+                    clean_expr = calc_expr.replace('**', '^') if calc_expr else "the mathematical problem"
+                    math_fallback = self.llm_manager._llm.invoke([
+                        SystemMessage(content="You are Sanctum's mathematical problem solver. Provide a complete, clear, step-by-step mathematical solution."),
+                        HumanMessage(content=f"Please solve this mathematical problem step by step: $${clean_expr}$$")
+                    ])
+                    final_text = (
+                        f"The mathematical problem is:\n"
+                        f"$${clean_expr}$$\n\n"
+                        f"{math_fallback.content.strip()}"
+                    ) if (math_fallback and math_fallback.content) else f"The calculation for `{clean_expr}` could not be evaluated."
+                elif isinstance(res_val, list):
                     roots_str = ", ".join(f"x = {r}" for r in res_val)
                     final_text = (
                         f"The equation was solved deterministically using SymPy:\n\n"

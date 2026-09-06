@@ -38,6 +38,8 @@ class EvidencePipeline:
         elements: list[EvidenceElement],
         document_id: str,
         file_hash: str,
+        file_bytes: bytes | None = None,
+        file_type: str | None = None,
     ) -> list[EvidenceElement]:
         """Classify each element, route to specialized extractors (formulas, tables, handwriting/VLM),
         and perform reconciliation while preserving provenance and spatial coordinates.
@@ -239,7 +241,41 @@ class EvidencePipeline:
                         metadata={"rows": rows_count},
                     )
 
-            # 5. Unknown / Uncertain classification branch
+            # 5. Diagram & P&ID branch: extract equipment tags, flow lines, and technical schematics via VLM
+            elif target_type == ContentType.DIAGRAM or elem.type == "diagram":
+                elem.type = "diagram"
+                meta["is_diagram"] = True
+                diagram_payload = meta.get("image_bytes") or (file_bytes if file_type == "image" else None)
+
+                if diagram_payload:
+                    try:
+                        diag_text, diag_conf, _ = await vision_client.analyze_diagram(
+                            diagram_payload,
+                            diagram_type="technical diagram / P&ID",
+                        )
+                        if diag_text:
+                            elem.text = diag_text
+                            elem.confidence = max(elem.confidence, diag_conf)
+                            elem.extraction_model = f"VLM({settings.OLLAMA_VISION_MODEL})"
+                            meta["diagram_analysis"] = diag_text
+                            meta["diagram_model"] = settings.OLLAMA_VISION_MODEL
+                    except Exception as diag_err:
+                        logger.warning("Diagram VLM extraction encountered error: %s", diag_err)
+
+                if trace:
+                    trace.record_event(
+                        stage="SPECIALIZED_EXTRACTION",
+                        component="DiagramAnalyzer",
+                        event="DIAGRAM_ANALYZED",
+                        status="success",
+                        metadata={
+                            "element_id": elem.id,
+                            "has_vlm_analysis": bool(meta.get("diagram_analysis")),
+                            "model": settings.OLLAMA_VISION_MODEL,
+                        },
+                    )
+
+            # 6. Unknown / Uncertain classification branch
             elif target_type == ContentType.UNKNOWN:
                 meta["uncertain_classification"] = True
                 meta["classification_reason"] = classification.reason
@@ -470,6 +506,8 @@ class EvidencePipeline:
                 elements=elements,
                 document_id=clean_doc_id,
                 file_hash=file_hash,
+                file_bytes=file_bytes,
+                file_type=detection.file_type.value,
             )
 
             total_pages = getattr(parse_result, "total_pages", 1)

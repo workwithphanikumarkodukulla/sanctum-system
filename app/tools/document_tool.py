@@ -669,6 +669,7 @@ class DocumentTool(BaseTool):
         outline = []
         tables_summary = []
         formulas_summary = []
+        diagrams_summary = []
         text_snippets = []
 
         for el in elements:
@@ -722,10 +723,21 @@ class DocumentTool(BaseTool):
                     "bbox": el.get("bbox"),
                     "ref": f"Call read_document(path='{rel_path}', mode='formula', element_id='{el.get('id')}') for full formula details.",
                 })
+            elif el_type == "diagram" or el.get("metadata", {}).get("is_diagram"):
+                diag_ans = el.get("metadata", {}).get("diagram_analysis") or text
+                diagrams_summary.append({
+                    "id": el.get("id"),
+                    "page": el.get("page"),
+                    "slide": el.get("slide"),
+                    "bbox": el.get("bbox"),
+                    "analysis": diag_ans,
+                    "model": el.get("metadata", {}).get("diagram_model"),
+                })
             elif text and len(text_snippets) < 15 and not text.startswith("%PDF") and not text.startswith("PK"):
-                # Clean text excerpts (preserve full text for handwriting without 200-char truncation)
+                # Clean text excerpts (preserve full text for handwriting & diagrams without 200-char truncation)
                 is_hw = (el_type == "handwriting" or bool(el.get("metadata", {}).get("is_handwriting")))
-                max_len = 5000 if is_hw else 200
+                is_diag = (el_type == "diagram" or bool(el.get("metadata", {}).get("is_diagram")))
+                max_len = 5000 if (is_hw or is_diag) else 200
                 text_snippets.append({
                     "id": el.get("id"),
                     "page": el.get("page"),
@@ -754,6 +766,9 @@ class DocumentTool(BaseTool):
 
         hw_el = next((el for el in elements if el.get("type") == "handwriting" or el.get("metadata", {}).get("is_handwriting")), None)
         handwriting_transcription = hw_el.get("text") if hw_el else None
+
+        diag_el = next((el for el in elements if el.get("type") == "diagram" or el.get("metadata", {}).get("is_diagram")), None)
+        diagram_analysis = (diag_el.get("metadata", {}).get("diagram_analysis") or diag_el.get("text")) if diag_el else None
 
         return {
             "status": "success",
@@ -795,6 +810,9 @@ class DocumentTool(BaseTool):
             "total_formulas": len(formulas_summary),
             "formulas_found": formulas_summary[:5],
             "handwriting_transcription": handwriting_transcription,
+            "total_diagrams": len(diagrams_summary),
+            "diagrams_found": diagrams_summary[:5],
+            "diagram_analysis": diagram_analysis,
             "key_content_excerpts": text_snippets[:12],
             "provenance_summary": {
                 "engine": "Sanctum Multimodal Evidence Engine",

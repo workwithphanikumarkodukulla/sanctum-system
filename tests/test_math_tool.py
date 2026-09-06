@@ -489,3 +489,25 @@ def test_12_ordinary_question_no_math_tool(math_workspace):
     assert actual_tool_sequence == []
     assert not any(a["tool"] in ("calculate", "math", "sympy") for a in result["tool_actions"])
     assert "Sanctum" in result["reply"]
+
+
+# ==============================================================================
+# 13. Automatic LLM Fallback when SymPy Fails
+# ==============================================================================
+def test_13_math_failure_automatic_llm_fallback(math_workspace):
+    """Scenario 13: When SymPy calculation fails or returns None, LLM automatically solves the problem."""
+    agent, mock_llm_with_tools = _create_mock_agent(math_workspace)
+
+    mock_llm_with_tools.invoke.return_value = AIMessage(
+        content="",
+        tool_calls=[{"name": "calculate", "args": {"expression": "2 + * 3"}, "id": "call_bad_math"}],
+    )
+    agent.llm_manager._llm.invoke.return_value = AIMessage(
+        content="Step 1: Correct the syntax. Step 2: Evaluate. Final Result: 42.",
+        tool_calls=[],
+    )
+
+    result = agent.chat("Solve this problem: 2 + * 3")
+
+    assert "Final Result: 42" in result["reply"] or "Step 1" in result["reply"]
+    assert "None" not in result["reply"]
