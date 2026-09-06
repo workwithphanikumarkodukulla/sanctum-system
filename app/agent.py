@@ -681,7 +681,9 @@ class CodingAgent:
         emit("routing", "Evaluating local model capabilities")
         if self.fluid_router:
             selected_model = self.fluid_router.route(message)
-            emit("routing", f"Selected model: {self.llm_manager.model_name}")
+            category = self.fluid_router.classify(message)
+            cat_label = getattr(self.fluid_router, "get_category_label", lambda c: c.title())(category)
+            emit("routing", f"Fluid router: routed to {self.llm_manager.model_name} ({cat_label})")
         else:
             self.llm_manager.select_for_task(message)
             selected_model = self.llm_manager.model_name
@@ -741,6 +743,32 @@ class CodingAgent:
             self.workspace_history.add_message("user", raw_user_message)
 
         self.memory_manager.add_user_message(raw_user_message)
+
+        if not is_code_creation and not has_file_in_msg and re.search(
+            r"\b(which\s+model|what\s+model|current\s+model|active\s+model|what\s+is\s+your\s+model|model\s+(?:are\s+you|is\s+this|being\s+used)|switch(?:ed)?\s+models?)\b",
+            message.strip(),
+            re.IGNORECASE,
+        ):
+            model_info_reply = f"I am currently running on **{self.llm_manager.model_name}** via Sanctum's Fluid Model Router. The router dynamically switches between specialized local models based on your task type (Code Generation → `qwen2.5-coder:7b`, Document Analysis → `mistral:7b`, Reasoning & General → `gemma4:latest`)."
+            dur_ms = workflow_trace.total_duration_ms or round((time.perf_counter() - start_t) * 1000, 1)
+            dur_s = round(dur_ms / 1000.0, 1)
+            self.memory_manager.add_ai_message(model_info_reply, model=self.llm_manager.model_name, duration_s=dur_s)
+            if self.workspace_history:
+                self.workspace_history.add_message("assistant", model_info_reply, metadata={"model": self.llm_manager.model_name, "duration_s": dur_s})
+            workflow_trace.finish(final_answer=model_info_reply)
+            workflow_trace_store.save(workflow_trace)
+            self._last_workflow_trace = workflow_trace
+            return {
+                "reply": model_info_reply,
+                "response": model_info_reply,
+                "model_used": self.llm_manager.model_name,
+                "duration_ms": dur_ms,
+                "duration_s": dur_s,
+                "tool_actions": [],
+                "workflow_trace": workflow_trace.to_dict(),
+                "debug_trace": workflow_trace.to_human_readable(),
+            }
+
         if re.search(r"^\s*(who\s+are\s+u|who\s+are\s+you|what\s+is\s+your\s+name|what\s+are\s+you)\s*\??\s*$", message, re.IGNORECASE):
             ident = "I am Sanctum, an autonomous AI Coding Assistant with access to workspace tools, local document intelligence, deterministic symbolic mathematics (SymPy), and safe code execution."
             dur_ms = workflow_trace.total_duration_ms or round((time.perf_counter() - start_t) * 1000, 1)

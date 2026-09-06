@@ -16,36 +16,38 @@ from app.fluid.model_registry import ModelRegistry
 from app.fluid.model_profiler import ModelProfiler
 
 _ROUTING_RULES: list[tuple[str, list[str]]] = [
-    ("docs", [
-        r"\b(summary|summarize|tldr|recap|synopsis|overview|outline|abstract)\b",
-        r"\b(doc(s|ument)?|report|readme|guide|manual|tutorial|note|essay|article|letter|memo|speech|paper|wiki|specification|spec)\b",
-        r"\b(write|create|generate)\s+(?:a\s+)?(?:report|doc|docs|guide|manual|tutorial|note|paper|letter|essay|pdf|docx?|dox|excel|xlsx|csv|spreadsheet|presentation|pptx)\b",
-        r"\b(pdf|docx?|dox|excel|xlsx|csv|spreadsheet|presentation|powerpoint|pptx|deck|slides?)\b",
-        r"\b(big\s+pdf|the\s+pdf|in\s+the\s+pdf|query.*pdf|read.*pdf|inspect.*pdf)\b",
-        r"\b(handnotes|handwriting|handwritten)\b",
-    ]),
     ("code", [
-        r"\b(write|create|make|generate|save|debug|fix|refactor|implement)\s+(?:a\s+)?(?:python|py|javascript|js|typescript|ts|java|html|css|script|program|function|endpoint|api)\b",
-        r"\b(python|javascript|typescript|golang|rust|cpp|html|css|bash|shell|sql|regex|syntax|algorithm|recursion|pointer)\b",
-        r"\b(def|class\s+[A-Za-z0-9_]+|function|import|return|cout|printf|console\.log)\b",
-        r"\b(unit\s*test|pytest|refactor|compile|stack\s*trace)\b",
+        r"\b(write|create|make|generate|save|debug|fix|refactor|implement|code|build|develop)\s+(?:a\s+)?(?:code|program|script|function|endpoint|api|class|algorithm|solution|snippet|file|app|service)\b",
+        r"\b(write|create|make|generate|save|debug|fix|refactor|implement)\s+(?:a\s+)?(?:python|py|javascript|js|typescript|ts|java|golang|go|rust|cpp|c\+\+|html|css|bash|shell|sh|sql)\b",
+        r"\b(code|coding|script|scripts|scripting|program|programs|programmer|programming)\b",
+        r"\b(python|javascript|typescript|golang|rust|cpp|html|css|bash|shell|sql|regex|syntax|algorithm|recursion|pointer|decorator|async|await)\b",
+        r"\b(def|class\s+[A-Za-z0-9_]+|function|import|return|cout|printf|console\.log|print\(|public\s+class)\b",
+        r"\b(unit\s*test|pytest|refactor|compile|stack\s*trace|traceback|syntax\s*error|bug\s*fix)\b",
         r"\.(py|js|ts|java|cpp|c|go|rs|rb|cs|php|html|css|sql|sh|bash)\b",
         r"```",
     ]),
+    ("docs", [
+        r"\b(summary|summarize|summarization|tldr|recap|synopsis|overview|outline|abstract)\b",
+        r"\b(doc(s|ument)?|report|readme|guide|manual|tutorial|note|notes|essay|article|letter|memo|speech|paper|wiki|specification|spec)\b",
+        r"\b(write|create|generate)\s+(?:a\s+)?(?:report|doc|docs|guide|manual|tutorial|note|paper|letter|essay|pdf|docx?|dox|excel|xlsx|csv|spreadsheet|presentation|pptx)\b",
+        r"\b(pdf|docx?|dox|excel|xlsx|csv|spreadsheet|presentation|powerpoint|pptx|deck|slides?)\b",
+        r"\b(big\s+pdf|the\s+pdf|in\s+the\s+pdf|query.*pdf|read.*pdf|inspect.*pdf)\b",
+        r"\b(handnotes|handwriting|handwritten|transcribe|transcription|ocr)\b",
+    ]),
     ("reasoning", [
-        r"\b(reason|explain\s+why|analyze|evaluate|compare|pros\s+and\s+cons|decision|tradeoff|logic|deduce|infer|hypothesis|proof|argument|calculate|math|equation|formula|step\s+by\s+step|solve|solvee|root|roots|derivative|differentiate|diff|integral|integrate|limit)\b",
+        r"\b(reason|reasoning|explain\s+why|analyze|analysis|evaluate|compare|pros\s+and\s+cons|decision|tradeoff|logic|logical|deduce|infer|hypothesis|proof|prove|argument|calculate|calculation|math|maths|equation|formula|step\s+by\s+step|solve|solvee|root|roots|derivative|differentiate|diff|integral|integrate|integration|limit|calculus|algebra|arithmetic|sympy)\b",
     ]),
     ("vision", [
-        r"\b(image|photo|picture|screenshot|diagram|chart|graph|visual|look\s+at|analyze\s+this\s+image|describe\s+the\s+image)\b",
+        r"\b(image|photo|picture|screenshot|diagram|chart|graph|visual|look\s+at|analyze\s+this\s+image|describe\s+the\s+image|flowchart|p&id|sketch)\b",
     ]),
 ]
 
 _CATEGORY_LABELS = {
     "code": "Code Generation",
-    "docs": "Documentation",
-    "reasoning": "Analytical Reasoning",
-    "vision": "Vision/Multimodal",
-    "general": "General Purpose",
+    "docs": "Documentation & Analysis",
+    "reasoning": "Analytical Reasoning & Math",
+    "vision": "Vision & Multimodal",
+    "general": "General Intelligence",
 }
 
 
@@ -57,6 +59,10 @@ class FluidRouter:
         self._profiler = profiler
         self._llm_manager = llm_manager
         self._known_models: set[str] = set()
+
+    def get_category_label(self, category: str) -> str:
+        """Return human-friendly display label for category."""
+        return _CATEGORY_LABELS.get(category, category.title())
 
     # ------------------------------------------------------------------
     # Public API

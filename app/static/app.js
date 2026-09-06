@@ -442,6 +442,10 @@ async function sendMessage(text) {
                             finalReply = eventData.reply || "";
                             if (eventData.model_used) {
                                 resultModel = eventData.model_used;
+                                state.activeModel = resultModel;
+                                if ($("topbarModel")) $("topbarModel").textContent = resultModel;
+                                if ($("agentModelLabel")) $("agentModelLabel").textContent = `${resultModel} · Isolated`;
+                                if ($("statusModel")) $("statusModel").textContent = resultModel.toUpperCase();
                             }
                             if (eventData.duration_s !== undefined && eventData.duration_s !== null) {
                                 resultDuration = `${eventData.duration_s}s`;
@@ -466,6 +470,12 @@ async function sendMessage(text) {
         }
         if (!resultModel && state.activeModel) {
             resultModel = state.activeModel;
+        }
+        if (resultModel) {
+            state.activeModel = resultModel;
+            if ($("topbarModel")) $("topbarModel").textContent = resultModel;
+            if ($("agentModelLabel")) $("agentModelLabel").textContent = `${resultModel} · Isolated`;
+            if ($("statusModel")) $("statusModel").textContent = resultModel.toUpperCase();
         }
 
         // Replace thinking bubble with final response
