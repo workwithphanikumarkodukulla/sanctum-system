@@ -110,6 +110,50 @@ def sovereign_network_audit():
     return jsonify(sovereign_auditor.get_audit_summary())
 
 
+@main_bp.route("/api/wireshark/pcap", methods=["GET"])
+def download_wireshark_pcap():
+    """Download authentic binary libpcap capture file verifiable with desktop Wireshark or tcpdump."""
+    from app.sovereign_network import sovereign_auditor
+    pcap_data = sovereign_auditor.generate_pcap_bytes(limit=100)
+    return Response(
+        pcap_data,
+        mimetype="application/vnd.tcpdump.pcap",
+        headers={
+            "Content-Disposition": "attachment; filename=sanctum_airgap.pcap",
+            "Content-Length": str(len(pcap_data)),
+        },
+    )
+
+
+@main_bp.route("/api/wireshark/packets", methods=["GET"])
+def get_wireshark_packets():
+    """Return packet stream with dissection tree and hexdump for Wireshark UI."""
+    from app.sovereign_network import sovereign_auditor
+    summary = sovereign_auditor.get_audit_summary()
+    return jsonify({
+        "packets": summary.get("recent_events", []),
+        "airgap_integrity_pct": summary.get("airgap_integrity_pct", 100.0),
+        "external_calls_allowed": summary.get("external_calls_allowed", 0),
+        "external_calls_blocked": summary.get("external_calls_blocked", 0),
+        "loopback_calls_count": summary.get("loopback_calls_count", 0),
+        "service_breakdown": summary.get("service_breakdown", {}),
+    })
+
+
+@main_bp.route("/api/wireshark/test-egress", methods=["POST"])
+def test_wan_egress():
+    """Trigger a live egress probe to demonstrate active airgap socket blocking."""
+    from app.sovereign_network import sovereign_auditor
+    data = request.get_json() or {}
+    target = data.get("target", "api.openai.com")
+    try:
+        port = int(data.get("port", 443))
+    except (TypeError, ValueError):
+        port = 443
+    result = sovereign_auditor.trigger_egress_test(target_host=target, target_port=port)
+    return jsonify(result)
+
+
 @main_bp.route("/api/logs", methods=["GET"])
 def get_logs():
     """Retrieve structured system, agent execution, and air-gap network logs."""

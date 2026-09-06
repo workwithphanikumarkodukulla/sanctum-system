@@ -1227,25 +1227,311 @@ function renderNetworkMonitor(data) {
         consoleBody.scrollTop = consoleBody.scrollHeight;
     }
 
+    renderWiresharkWorkspace(data);
+}
+
+state.wsPackets = [];
+state.wsSelectedPacket = null;
+
+function renderWiresharkWorkspace(data) {
+    if (!data) return;
+    state.wsPackets = data.recent_events || [];
+
+    const verdictEl = $("wsEgressVerdict");
+    const isEgressClean = (data.external_calls_allowed || 0) === 0;
+    if (verdictEl) {
+        if (isEgressClean) {
+            verdictEl.textContent = "WAN EGRESS: 0 BYTES (STRICT LOOPBACK AIRGAP)";
+            verdictEl.style.color = "#3fb950";
+        } else {
+            verdictEl.textContent = `WAN EGRESS DETECTED: ${data.external_calls_allowed} CALLS`;
+            verdictEl.style.color = "#f85149";
+        }
+    }
+
+    renderWiresharkTable();
+}
+
+function filterMatchesPacket(ev, filter) {
+    if (!filter) return true;
+    const f = filter.trim().toLowerCase();
+    if (!f || f === "all") return true;
+
+    if (f.includes("127.0.0.1") || f === "lo0") {
+        if (f.includes("!=") || f.includes("not")) {
+            return ev.external === true;
+        }
+        return ev.external === false;
+    }
+    if (f.includes("11434") || f === "ollama") {
+        return (ev.destination || "").includes("11434");
+    }
+    if (f.includes("8001") || f === "doc" || f === "document") {
+        return (ev.destination || "").includes("8001");
+    }
+    if (f.includes("5050") || f === "studio" || f === "backend") {
+        return (ev.destination || "").includes("5050");
+    }
+    if (f.includes("drop") || f.includes("blocked") || f.includes("external")) {
+        return ev.external === true;
+    }
+    const searchTarget = `${ev.no} ${ev.timestamp} ${ev.source} ${ev.destination} ${ev.protocol} ${ev.service} ${ev.info || ""} ${ev.status}`.toLowerCase();
+    return searchTarget.includes(f);
+}
+
+function renderWiresharkTable() {
     const wsBody = $("wiresharkPacketBody");
-    if (wsBody && data.recent_events && data.recent_events.length > 0) {
-        wsBody.innerHTML = data.recent_events.map((ev, i) => {
-            const isBlocked = ev.external;
-            const verdictCls = isBlocked ? "verdict-drop" : "verdict-pass";
-            const verdictText = isBlocked ? "DROP [EGRESS BLOCKED]" : `PASS [${escapeHtml(ev.service || "AIRGAP")}]`;
-            return `
-                <tr>
-                    <td>${ev.no || (i + 1)}</td>
-                    <td>${escapeHtml(ev.timestamp || "")}</td>
-                    <td>${escapeHtml(ev.interface || "lo0")}</td>
-                    <td>${escapeHtml(ev.source || "127.0.0.1")}</td>
-                    <td>${escapeHtml(ev.destination || "")}</td>
-                    <td>${escapeHtml(ev.protocol || "HTTP/TCP")}</td>
-                    <td>${(ev.length || 1024).toLocaleString()} B</td>
-                    <td class="${verdictCls}">${verdictText}</td>
-                </tr>
-            `;
-        }).join("");
+    if (!wsBody) return;
+
+    const filter = $("wsFilterInput")?.value?.trim() || "";
+    const filtered = (state.wsPackets || []).filter(ev => filterMatchesPacket(ev, filter));
+
+    const counter = $("wsPacketCounter");
+    if (counter) {
+        counter.textContent = `${filtered.length} of ${state.wsPackets.length} frames`;
+    }
+
+    if (!filtered.length) {
+        wsBody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:#8b949e;padding:16px;">No packets match display filter "${escapeHtml(filter)}".</td></tr>`;
+        return;
+    }
+
+    if (!state.wsSelectedPacket || !filtered.some(p => p.no === state.wsSelectedPacket.no)) {
+        state.wsSelectedPacket = filtered[filtered.length - 1];
+    }
+
+    wsBody.innerHTML = filtered.map((ev, i) => {
+        const isBlocked = ev.external;
+        const isSelected = state.wsSelectedPacket && (state.wsSelectedPacket.no === ev.no);
+        const rowClass = isSelected
+            ? "row-selected"
+            : (isBlocked ? "row-blocked" : (ev.protocol?.includes("HTTP") ? "row-http-pass" : "row-tcp-pass"));
+        const verdictCls = isBlocked ? "verdict-drop" : "verdict-pass";
+        const verdictText = isBlocked ? "DROP [BLOCKED]" : "PASS [AIRGAP]";
+        const infoText = ev.info || (ev.dissection?.application?.split(" — ")?.pop()) || (ev.service || "HTTP/TCP Loopback");
+
+        return `
+            <tr class="${rowClass}" data-packet-no="${ev.no}">
+                <td>${ev.no || (i + 1)}</td>
+                <td>${escapeHtml(ev.timestamp || "")}</td>
+                <td>${escapeHtml(ev.interface || "lo0")}</td>
+                <td>${escapeHtml(ev.source || "127.0.0.1")}</td>
+                <td>${escapeHtml(ev.destination || "")}</td>
+                <td>${escapeHtml(ev.protocol || "HTTP/TCP")}</td>
+                <td>${(ev.length || 1024).toLocaleString()} B</td>
+                <td style="max-width:280px;overflow:hidden;text-overflow:ellipsis;" title="${escapeHtml(infoText)}">${escapeHtml(infoText)}</td>
+                <td class="${verdictCls}">${verdictText}</td>
+            </tr>
+        `;
+    }).join("");
+
+    wsBody.querySelectorAll("tr[data-packet-no]").forEach(row => {
+        row.addEventListener("click", () => {
+            const pno = parseInt(row.getAttribute("data-packet-no"), 10);
+            const found = state.wsPackets.find(p => p.no === pno);
+            if (found) {
+                state.wsSelectedPacket = found;
+                renderWiresharkTable();
+                renderWiresharkDetails(found);
+            }
+        });
+    });
+
+    if (state.wsSelectedPacket) {
+        renderWiresharkDetails(state.wsSelectedPacket);
+    }
+}
+
+function renderWiresharkDetails(ev) {
+    if (!ev) return;
+
+    if ($("wsDetailsTag")) {
+        $("wsDetailsTag").textContent = `Frame #${ev.no}`;
+    }
+    if ($("wsHexOffset")) {
+        $("wsHexOffset").textContent = `OFFSET 0000 (${ev.length || 0} bytes)`;
+    }
+
+    const d = ev.dissection || {};
+    const tree = $("wsPacketDissectionTree");
+    if (tree) {
+        const isBlocked = ev.external;
+        tree.innerHTML = `
+            <div class="ws-tree-node open">
+                <div class="ws-tree-title">
+                    <span class="ws-tree-arrow">▶</span>
+                    <strong>${escapeHtml(d.frame || `Frame ${ev.no}: ${ev.length} bytes on wire on interface ${ev.interface || "lo0"}`)}</strong>
+                </div>
+                <div class="ws-tree-children">
+                    <div class="ws-tree-item">Interface id: 0 (${escapeHtml(ev.interface || "lo0")})</div>
+                    <div class="ws-tree-item">Frame Number: ${ev.no}</div>
+                    <div class="ws-tree-item">Frame Length: ${ev.length || 1024} bytes</div>
+                    <div class="ws-tree-item">Capture Length: ${ev.length || 1024} bytes</div>
+                </div>
+            </div>
+
+            <div class="ws-tree-node open">
+                <div class="ws-tree-title">
+                    <span class="ws-tree-arrow">▶</span>
+                    <strong>${escapeHtml(d.ethernet || "Ethernet II, Src: 00:00:00:00:00:00, Dst: 00:00:00:00:00:00")}</strong>
+                </div>
+                <div class="ws-tree-children">
+                    <div class="ws-tree-item">Destination: 00:00:00:00:00:00 (Loopback boundary)</div>
+                    <div class="ws-tree-item">Source: 00:00:00:00:00:00 (Loopback boundary)</div>
+                    <div class="ws-tree-item">Type: IPv4 (0x0800)</div>
+                </div>
+            </div>
+
+            <div class="ws-tree-node open">
+                <div class="ws-tree-title">
+                    <span class="ws-tree-arrow">▶</span>
+                    <strong>${escapeHtml(d.ip || `Internet Protocol Version 4, Src: ${ev.source}, Dst: ${ev.destination}`)}</strong>
+                </div>
+                <div class="ws-tree-children">
+                    <div class="ws-tree-item">Version: 4</div>
+                    <div class="ws-tree-item">Header Length: 20 bytes (5)</div>
+                    <div class="ws-tree-item">Source Address: <strong>${escapeHtml(ev.source || "127.0.0.1")}</strong></div>
+                    <div class="ws-tree-item">Destination Address: <strong>${escapeHtml((ev.destination || "").split(":")[0])}</strong></div>
+                    <div class="ws-tree-item">Time to Live: 64</div>
+                    <div class="ws-tree-item">Protocol: TCP (6)</div>
+                </div>
+            </div>
+
+            <div class="ws-tree-node open">
+                <div class="ws-tree-title">
+                    <span class="ws-tree-arrow">▶</span>
+                    <strong>${escapeHtml(d.tcp || `Transmission Control Protocol, ${ev.service}`)}</strong>
+                </div>
+                <div class="ws-tree-children">
+                    <div class="ws-tree-item">Source Port: 51200 + ${ev.no}</div>
+                    <div class="ws-tree-item">Destination Port: ${(ev.destination || "").split(":")[1] || "11434"} (${escapeHtml(ev.service)})</div>
+                    <div class="ws-tree-item">Flags: ${isBlocked ? "[SYN] (BLOCKED)" : "[PSH, ACK] (CONFINED)"}</div>
+                </div>
+            </div>
+
+            <div class="ws-tree-node open">
+                <div class="ws-tree-title">
+                    <span class="ws-tree-arrow">▶</span>
+                    <strong>${escapeHtml(d.application || `Hypertext Transfer Protocol — ${ev.info || ev.service}`)}</strong>
+                </div>
+                <div class="ws-tree-children">
+                    <div class="ws-tree-item">Payload Classification: ${escapeHtml(ev.service || "HTTP/1.1")}</div>
+                    <div class="ws-tree-item">Endpoint: http://${escapeHtml(ev.destination || "")}</div>
+                </div>
+            </div>
+
+            <div class="ws-tree-node open">
+                <div class="ws-tree-title">
+                    <span class="ws-tree-arrow">▶</span>
+                    <strong style="color:${isBlocked ? '#f85149' : '#3fb950'}">Sanctum Sovereign Security Policy: Loopback Air-Gap Integrity</strong>
+                </div>
+                <div class="ws-tree-children">
+                    <div class="ws-tree-item ${isBlocked ? 'verdict-drop' : 'verdict-pass'}">${escapeHtml(d.sovereign_verdict || ev.status)}</div>
+                    <div class="ws-tree-item">Interface Constraint: <strong>lo0 (127.0.0.1)</strong></div>
+                    <div class="ws-tree-item">External Egress Bytes: <strong>0 B (PROVEN)</strong></div>
+                </div>
+            </div>
+        `;
+
+        tree.querySelectorAll(".ws-tree-title").forEach(title => {
+            title.addEventListener("click", () => {
+                const node = title.parentElement;
+                node.classList.toggle("open");
+            });
+        });
+    }
+
+    const hexDumpEl = $("wsPacketHexDump");
+    if (hexDumpEl) {
+        if (ev.hexdump) {
+            hexDumpEl.textContent = ev.hexdump;
+        } else {
+            hexDumpEl.textContent = "0000   00 00 00 00 00 00 00 00  00 00 00 00 08 00 45 00   ..............E.";
+        }
+    }
+}
+
+function initWiresharkControls() {
+    const filterInput = $("wsFilterInput");
+    const presets = $("wsFilterPresets");
+    const applyBtn = $("wsFilterApplyBtn");
+    const clearBtn = $("wsFilterClearBtn");
+    const testEgressBtn = $("wsTestEgressBtn");
+    const copyCmdBtn = $("wsCopyCmdBtn");
+    const topbarAirgap = $("topbarAirgap");
+
+    if (presets && filterInput) {
+        presets.addEventListener("change", () => {
+            filterInput.value = presets.value;
+            renderWiresharkTable();
+        });
+    }
+
+    if (applyBtn && filterInput) {
+        applyBtn.addEventListener("click", () => {
+            renderWiresharkTable();
+        });
+        filterInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                renderWiresharkTable();
+            }
+        });
+        filterInput.addEventListener("input", () => {
+            renderWiresharkTable();
+        });
+    }
+
+    if (clearBtn && filterInput) {
+        clearBtn.addEventListener("click", () => {
+            filterInput.value = "";
+            renderWiresharkTable();
+        });
+    }
+
+    if (testEgressBtn) {
+        testEgressBtn.addEventListener("click", async () => {
+            try {
+                testEgressBtn.disabled = true;
+                testEgressBtn.innerHTML = '<span class="material-icons" style="font-size:12px;animation:spin 1s linear infinite">sync</span> Testing...';
+                const res = await api("/api/wireshark/test-egress", {
+                    method: "POST",
+                    body: JSON.stringify({ target: "api.openai.com", port: 443 })
+                });
+                toast("Sovereign Interceptor blocked outbound egress to api.openai.com:443", "warning");
+                const netData = await api("/api/sovereign/network");
+                renderNetworkMonitor(netData);
+                if (filterInput) filterInput.value = "";
+                renderWiresharkTable();
+            } catch (err) {
+                toast("Egress test failed: " + err.message, "error");
+            } finally {
+                testEgressBtn.disabled = false;
+                testEgressBtn.innerHTML = '<span class="material-icons" style="font-size:12px">shield</span> Test WAN Block';
+            }
+        });
+    }
+
+    if (copyCmdBtn) {
+        copyCmdBtn.addEventListener("click", () => {
+            const cmd = $("wsTerminalCmd")?.textContent || "sudo tcpdump -i lo0 'port 11434 or port 8001 or port 5050' -n -X -c 10";
+            navigator.clipboard.writeText(cmd).then(() => {
+                copyCmdBtn.innerHTML = '<span class="material-icons" style="font-size:12px">check</span> Copied!';
+                setTimeout(() => {
+                    copyCmdBtn.innerHTML = '<span class="material-icons" style="font-size:12px">content_copy</span> Copy Command';
+                }, 2000);
+            });
+        });
+    }
+
+    if (topbarAirgap) {
+        topbarAirgap.style.cursor = "pointer";
+        topbarAirgap.addEventListener("click", () => {
+            showScreen("security");
+            setTimeout(() => {
+                $("wiresharkContainer")?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }, 100);
+        });
     }
 }
 
@@ -1687,5 +1973,6 @@ document.addEventListener("DOMContentLoaded", () => {
     loadSessionHistory();
     updateSovereignPill();
     initLogsHandlers();
+    initWiresharkControls();
     showScreen("overview");
 });

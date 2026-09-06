@@ -4961,29 +4961,226 @@ button {
     margin-top: 4px;
 }
 
-/* ═══════════════════ WIRESHARK LIVE PACKET TABLE ═══════════════════ */
+/* ═══════════════════ WIRESHARK SOVEREIGN ANALYZER WORKSPACE ═══════════════════ */
 .wireshark-container {
-    background: #0d1117;
-    border: 1px solid #21262d;
-    border-radius: 8px;
+    background: #0b0f14;
+    border: 1px solid #1f2937;
+    border-radius: 10px;
     overflow: hidden;
-    margin: 16px 0;
-    font-family: var(--font-mono, monospace);
+    margin: 18px 0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
     font-size: 11px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
 }
 
 .wireshark-header {
-    background: #161b22;
-    padding: 8px 14px;
+    background: #111827;
+    padding: 10px 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid #30363d;
+    border-bottom: 1px solid #21262d;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.ws-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ws-fin-icon {
+    font-size: 18px;
+    color: #58a6ff;
+    background: rgba(88, 166, 255, 0.12);
+    padding: 4px;
+    border-radius: 6px;
+}
+
+.ws-title-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.ws-app-name {
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+.ws-badge-iface {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: rgba(56, 139, 253, 0.15);
+    border: 1px solid rgba(56, 139, 253, 0.35);
+    color: #79c0ff;
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.ws-header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.ws-verdict-banner {
+    color: #3fb950;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    background: rgba(63, 185, 80, 0.1);
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(63, 185, 80, 0.25);
+}
+
+/* Wireshark Filter Bar */
+.ws-filter-bar {
+    background: #161b22;
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #21262d;
+    flex-wrap: wrap;
+}
+
+.ws-filter-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #8b949e;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.ws-filter-input {
+    flex: 1;
+    min-width: 220px;
+    background: #0d1117;
+    border: 1px solid #3fb950;
+    border-radius: 4px;
+    padding: 4px 10px;
+    color: #e6edf3;
+    font-family: inherit;
+    font-size: 11px;
+    outline: none;
+    transition: all 0.15s ease;
+}
+
+.ws-filter-input:focus {
+    border-color: #58a6ff;
+    box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2);
+}
+
+.ws-filter-presets {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    color: #8b949e;
+    font-family: inherit;
+    font-size: 10px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+}
+
+.ws-filter-presets:hover {
+    border-color: #58a6ff;
+    color: #c9d1d9;
+}
+
+.ws-filter-btn {
+    padding: 3px 10px;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.ws-filter-btn.apply {
+    background: #238636;
+    color: #ffffff;
+}
+
+.ws-filter-btn.apply:hover {
+    background: #2ea043;
+}
+
+.ws-filter-btn.clear {
+    background: #21262d;
+    color: #8b949e;
+    border-color: #30363d;
+}
+
+.ws-filter-btn.clear:hover {
+    color: #f85149;
+    border-color: #f85149;
+}
+
+/* 3-Pane Grid */
+.ws-panes-grid {
+    display: flex;
+    flex-direction: column;
+}
+
+.ws-pane {
+    display: flex;
+    flex-direction: column;
+}
+
+.ws-pane-header {
+    background: #111827;
+    padding: 5px 12px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #8b949e;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-bottom: 1px solid #21262d;
+    border-top: 1px solid #21262d;
+}
+
+.ws-pane-icon {
+    font-size: 13px;
+    color: #58a6ff;
+}
+
+.ws-packet-counter,
+.ws-details-tag,
+.ws-hex-status {
+    margin-left: auto;
+    font-size: 9px;
+    color: #79c0ff;
+    background: rgba(56, 139, 253, 0.1);
+    padding: 1px 6px;
+    border-radius: 3px;
+}
+
+/* Pane 1 Table */
+.ws-table-scroll {
+    max-height: 220px;
+    overflow-y: auto;
+    background: #090d13;
 }
 
 .wireshark-table {
     width: 100%;
     border-collapse: collapse;
+    white-space: nowrap;
 }
 
 .wireshark-table th {
@@ -4995,28 +5192,207 @@ button {
     font-size: 10px;
     letter-spacing: 0.05em;
     border-bottom: 1px solid #21262d;
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 .wireshark-table td {
-    padding: 5px 10px;
+    padding: 4px 10px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.03);
     color: #c9d1d9;
+    font-size: 11px;
 }
 
-.wireshark-table tr:nth-child(even) {
-    background: rgba(255, 255, 255, 0.015);
+.wireshark-table tr {
+    cursor: pointer;
+    transition: background 0.1s ease;
+}
+
+/* Wireshark Row Color Coding */
+.wireshark-table tr.row-http-pass {
+    background: rgba(46, 160, 67, 0.06);
+}
+.wireshark-table tr.row-http-pass td {
+    color: #7ee787;
+}
+
+.wireshark-table tr.row-tcp-pass {
+    background: rgba(56, 139, 253, 0.06);
+}
+.wireshark-table tr.row-tcp-pass td {
+    color: #a5d6ff;
+}
+
+.wireshark-table tr.row-blocked {
+    background: rgba(248, 81, 73, 0.16);
+}
+.wireshark-table tr.row-blocked td {
+    color: #ff7b72;
+    font-weight: 600;
 }
 
 .wireshark-table tr:hover {
-    background: rgba(118, 185, 0, 0.08);
+    background: rgba(88, 166, 255, 0.14) !important;
+}
+
+/* Wireshark Selection State */
+.wireshark-table tr.row-selected,
+.wireshark-table tr.row-selected td {
+    background: #1f6feb !important;
+    color: #ffffff !important;
+    font-weight: 600;
+}
+.wireshark-table tr.row-selected .verdict-pass,
+.wireshark-table tr.row-selected .verdict-drop {
+    color: #ffffff !important;
 }
 
 .wireshark-table .verdict-pass {
-    color: #76b900;
+    color: #3fb950;
     font-weight: 700;
 }
 
 .wireshark-table .verdict-drop {
-    color: #ff5f56;
+    color: #f85149;
     font-weight: 700;
+}
+
+/* Bottom Split: Panes 2 & 3 */
+.ws-bottom-split {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    border-top: 1px solid #21262d;
+    background: #090d13;
+}
+
+@media (max-width: 960px) {
+    .ws-bottom-split {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Pane 2 Dissection Tree */
+.ws-pane-details {
+    border-right: 1px solid #21262d;
+}
+
+.ws-tree-container {
+    max-height: 220px;
+    overflow-y: auto;
+    padding: 8px 12px;
+    font-size: 11px;
+    line-height: 1.6;
+    background: #090d13;
+}
+
+.ws-tree-node {
+    margin-bottom: 4px;
+}
+
+.ws-tree-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #c9d1d9;
+    cursor: pointer;
+    user-select: none;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.ws-tree-title:hover {
+    background: rgba(88, 166, 255, 0.1);
+    color: #ffffff;
+}
+
+.ws-tree-arrow {
+    font-size: 9px;
+    color: #8b949e;
+    transition: transform 0.15s ease;
+    display: inline-block;
+    width: 10px;
+}
+
+.ws-tree-node.open > .ws-tree-title > .ws-tree-arrow {
+    transform: rotate(90deg);
+}
+
+.ws-tree-children {
+    display: none;
+    margin-left: 18px;
+    padding-left: 8px;
+    border-left: 1px dashed #21262d;
+    margin-top: 2px;
+}
+
+.ws-tree-node.open > .ws-tree-children {
+    display: block;
+}
+
+.ws-tree-item {
+    padding: 1px 0;
+    color: #8b949e;
+    word-break: break-all;
+}
+
+.ws-tree-item strong {
+    color: #79c0ff;
+    font-weight: 500;
+}
+
+.ws-tree-item.verdict-pass {
+    color: #3fb950;
+    font-weight: 600;
+}
+
+.ws-tree-item.verdict-drop {
+    color: #f85149;
+    font-weight: 600;
+}
+
+/* Pane 3 Hex Dump */
+.ws-hex-container {
+    max-height: 220px;
+    overflow-y: auto;
+    padding: 8px 12px;
+    background: #06090e;
+}
+
+.ws-hexdump {
+    margin: 0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+    font-size: 10.5px;
+    line-height: 1.45;
+    color: #79c0ff;
+    white-space: pre;
+}
+
+/* Footer Helper Bar */
+.ws-footer-helper {
+    background: #111827;
+    padding: 6px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid #21262d;
+    font-size: 10px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.ws-helper-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.ws-footer-helper code {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: #79c0ff;
+    font-size: 10px;
 }

@@ -609,48 +609,125 @@
                         </div>
                     </div>
 
-                    <!-- Live Wireshark Sovereign Packet Sniffer -->
-                    <div class="wireshark-container">
+                    <!-- Live Wireshark Sovereign Packet Sniffer & Air-Gap Inspector -->
+                    <div class="wireshark-container" id="wiresharkContainer">
+                        <!-- Wireshark Top Titlebar / Controls -->
                         <div class="wireshark-header">
-                            <div style="display:flex;align-items:center;gap:8px">
-                                <span class="material-icons" style="font-size:16px;color:#58a6ff">wifi_tethering</span>
-                                <strong style="color:#ffffff;font-size:11px;letter-spacing:0.04em">WIRESHARK SOVEREIGN PACKET INSPECTOR (LIVE CAPTURE)</strong>
-                                <span class="title-badge isolation-badge" style="font-size:9px"><span class="dot-live"></span>lo0 (127.0.0.1)</span>
+                            <div class="ws-header-left">
+                                <span class="ws-fin-icon material-icons">filter_drama</span>
+                                <div class="ws-title-group">
+                                    <strong class="ws-app-name">WIRESHARK 4.2 SOVEREIGN ANALYZER</strong>
+                                    <span class="ws-badge-iface"><span class="dot-live"></span>INTERFACE: lo0 (127.0.0.1)</span>
+                                </div>
                             </div>
-                            <div style="display:flex;align-items:center;gap:12px">
-                                <span style="color:#76b900;font-weight:700;font-size:10px" id="wsEgressVerdict">WAN EGRESS: 0 BYTES (AIRGAP RIGIDLY ENFORCED)</span>
-                                <a href="/api/logs/download?source=network" class="btn-secondary small" style="padding:2px 8px;font-size:10px" download="sanctum_airgap_stream.txt">
-                                    <span class="material-icons" style="font-size:12px">download</span> Export Capture
+                            <div class="ws-header-right">
+                                <span class="ws-verdict-banner" id="wsEgressVerdict">WAN EGRESS: 0 BYTES (STRICT LOOPBACK AIRGAP)</span>
+                                <button class="btn-warning small" id="wsTestEgressBtn" title="Simulate an outbound network call to verify active socket block">
+                                    <span class="material-icons" style="font-size:12px">shield</span> Test WAN Block
+                                </button>
+                                <a href="/api/wireshark/pcap" class="btn-primary small" id="wsDownloadPcapBtn" title="Download raw libpcap binary stream for native Wireshark / tcpdump">
+                                    <span class="material-icons" style="font-size:12px">download</span> Download .PCAP
+                                </a>
+                                <a href="/api/logs/download?source=network" class="btn-secondary small" style="padding:3px 8px;font-size:10px" download="sanctum_airgap_stream.txt" title="Download raw text log">
+                                    <span class="material-icons" style="font-size:12px">description</span> Log
                                 </a>
                             </div>
                         </div>
-                        <div style="max-height:220px;overflow-y:auto">
-                            <table class="wireshark-table" id="wiresharkPacketTable">
-                                <thead>
-                                    <tr>
-                                        <th>NO.</th>
-                                        <th>TIME</th>
-                                        <th>IFACE</th>
-                                        <th>SOURCE</th>
-                                        <th>DESTINATION</th>
-                                        <th>PROTOCOL</th>
-                                        <th>LENGTH</th>
-                                        <th>SOVEREIGN VERDICT</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="wiresharkPacketBody">
-                                    <tr>
-                                        <td>1</td>
-                                        <td>04:49:50</td>
-                                        <td>lo0</td>
-                                        <td>127.0.0.1</td>
-                                        <td>127.0.0.1:11434</td>
-                                        <td>HTTP/TCP</td>
-                                        <td>1,024 B</td>
-                                        <td class="verdict-pass">PASS [AIRGAP VERIFIED]</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+
+                        <!-- Wireshark Display Filter Bar -->
+                        <div class="ws-filter-bar">
+                            <div class="ws-filter-badge">
+                                <span class="material-icons" style="font-size:13px;color:#3fb950">bookmark</span>
+                                <span>Filter:</span>
+                            </div>
+                            <input type="text" class="ws-filter-input" id="wsFilterInput" value="ip.addr == 127.0.0.1" placeholder="Apply a display filter ... e.g. ip.addr == 127.0.0.1 or tcp.port == 11434" spellcheck="false" />
+                            <select class="ws-filter-presets" id="wsFilterPresets" title="Preset Wireshark Filters">
+                                <option value="ip.addr == 127.0.0.1">Preset: 100% Local Loopback (lo0)</option>
+                                <option value="tcp.port == 11434">Preset: Ollama LLM Inference (Port 11434)</option>
+                                <option value="tcp.port == 8001">Preset: Document Intelligence OCR (Port 8001)</option>
+                                <option value="tcp.port == 5050">Preset: Sanctum Agent Studio (Port 5050)</option>
+                                <option value="ip.dst != 127.0.0.1">Preset: Dropped WAN Probes (Egress Tests)</option>
+                            </select>
+                            <button class="ws-filter-btn apply" id="wsFilterApplyBtn" title="Apply filter">Apply</button>
+                            <button class="ws-filter-btn clear" id="wsFilterClearBtn" title="Clear filter">Clear</button>
+                        </div>
+
+                        <!-- 3-PANE WIRESHARK WORKSPACE -->
+                        <div class="ws-panes-grid">
+                            <!-- PANE 1: Packet List -->
+                            <div class="ws-pane ws-pane-list">
+                                <div class="ws-pane-header">
+                                    <span class="material-icons ws-pane-icon">list</span>
+                                    <span>FRAME LIST (PACKET TELEMETRY)</span>
+                                    <span class="ws-packet-counter" id="wsPacketCounter">3 packets</span>
+                                </div>
+                                <div class="ws-table-scroll">
+                                    <table class="wireshark-table" id="wiresharkPacketTable">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:45px">NO.</th>
+                                                <th style="width:75px">TIME</th>
+                                                <th style="width:50px">IFACE</th>
+                                                <th style="width:90px">SOURCE</th>
+                                                <th style="width:130px">DESTINATION</th>
+                                                <th style="width:85px">PROTOCOL</th>
+                                                <th style="width:65px">LENGTH</th>
+                                                <th>INFO</th>
+                                                <th style="width:130px">VERDICT</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="wiresharkPacketBody">
+                                            <!-- Dynamically populated by JS -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- BOTTOM SPLIT: Pane 2 (Dissection Tree) & Pane 3 (Hex Dump) -->
+                            <div class="ws-bottom-split">
+                                <!-- PANE 2: Packet Details (Protocol Dissection Tree) -->
+                                <div class="ws-pane ws-pane-details">
+                                    <div class="ws-pane-header">
+                                        <span class="material-icons ws-pane-icon">account_tree</span>
+                                        <span id="wsDetailsHeader">PACKET DETAILS (DISSECTION)</span>
+                                        <span class="ws-details-tag" id="wsDetailsTag">Frame #1</span>
+                                    </div>
+                                    <div class="ws-tree-container" id="wsPacketDissectionTree">
+                                        <div class="ws-tree-node open">
+                                            <span class="ws-tree-arrow">▼</span>
+                                            <span class="ws-tree-text">Select a frame above to view protocol dissection layers.</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- PANE 3: Packet Bytes (Hex & ASCII Dump) -->
+                                <div class="ws-pane ws-pane-hex">
+                                    <div class="ws-pane-header">
+                                        <span class="material-icons ws-pane-icon">data_object</span>
+                                        <span>PACKET BYTES (HEX / ASCII DUMP)</span>
+                                        <span class="ws-hex-status" id="wsHexOffset">OFFSET 0000</span>
+                                    </div>
+                                    <div class="ws-hex-container">
+                                        <pre class="ws-hexdump" id="wsPacketHexDump">0000   00 00 00 00 00 00 00 00  00 00 00 00 08 00 45 00   ..............E.
+0010   00 c4 12 01 40 00 40 06  00 00 7f 00 00 01 7f 00   ....@.@.........
+0020   00 01 cb 21 2c aa 00 00  00 64 00 00 00 c8 50 18   ...!,....d....P.
+0030   ff ff 00 00 00 00 50 4f  53 54 20 2f 61 70 69 2f   ......POST /api/
+0040   63 68 61 74 20 48 54 54  50 2f 31 2e 31 0d 0a 48   chat HTTP/1.1..H</pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Host Terminal Sniffer Helper Bar -->
+                        <div class="ws-footer-helper">
+                            <div class="ws-helper-left">
+                                <span class="material-icons" style="font-size:14px;color:#79c0ff">terminal</span>
+                                <span style="color:#8b949e">Live Terminal Sniffer:</span>
+                                <code id="wsTerminalCmd">sudo tcpdump -i lo0 'port 11434 or port 8001 or port 5050' -n -X -c 10</code>
+                            </div>
+                            <button class="btn-ghost small" id="wsCopyCmdBtn" style="padding:2px 8px;font-size:10px" title="Copy terminal command">
+                                <span class="material-icons" style="font-size:12px">content_copy</span> Copy Command
+                            </button>
                         </div>
                     </div>
                 </div>

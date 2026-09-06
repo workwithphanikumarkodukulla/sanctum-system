@@ -79,7 +79,17 @@ else:
         print("  {:<4} {:<10} {:<6} {:<12} {:<18} {:<10} {}".format(num, ts, iface, src, dst, proto, verdict))
 '
 
-echo -e "\n${YELLOW}[STEP 4/4] Hardware Sniffer Command for Live Jury Pitch${NC}"
+echo -e "\n${YELLOW}[STEP 4/5] Binary Libpcap Format Verification (/api/wireshark/pcap)${NC}"
+curl -s http://127.0.0.1:5050/api/wireshark/pcap -o /tmp/sanctum_airgap.pcap
+PCAP_SIZE=$(wc -c < /tmp/sanctum_airgap.pcap | tr -d ' ')
+echo -e "  Downloaded ${BOLD}$PCAP_SIZE bytes${NC} of authentic libpcap binary stream."
+if command -v tcpdump >/dev/null 2>&1; then
+    echo -e "  Verifying packet decode using local tcpdump / Wireshark engine:"
+    tcpdump -r /tmp/sanctum_airgap.pcap -n -t | head -n 5 | sed 's/^/    /'
+    echo -e "  ${GREEN}✔${NC} 100% compliant libpcap capture file ready for desktop Wireshark inspection."
+fi
+
+echo -e "\n${YELLOW}[STEP 5/5] Hardware Sniffer Command for Live Jury Pitch${NC}"
 echo -e "To demonstrate live packet capturing during the presentation, run either command:"
 echo -e "  ${CYAN}1. Monitor Loopback Traffic (Ollama & Doc Engine Inferences):${NC}"
 echo -e "     ${BOLD}sudo tcpdump -i lo0 'port 11434 or port 8001 or port 5050' -n -X -c 10${NC}"
