@@ -110,6 +110,121 @@ def sovereign_network_audit():
     return jsonify(sovereign_auditor.get_audit_summary())
 
 
+@main_bp.route("/api/logs", methods=["GET"])
+def get_logs():
+    """Retrieve structured system, agent execution, and air-gap network logs."""
+    source = request.args.get("source", "all").lower()
+    level_filter = request.args.get("level", "ALL").upper()
+    search = request.args.get("search", "").lower()
+    try:
+        limit = int(request.args.get("limit", 250))
+    except (TypeError, ValueError):
+        limit = 250
+
+    parsed_logs = []
+
+    # Read sovereign air-gap network log
+    if source in ("all", "network"):
+        net_log_path = Path("logs/sovereign_network.log")
+        if net_log_path.exists():
+            try:
+                with open(net_log_path, "r", encoding="utf-8", errors="replace") as f:
+                    for line in f:
+                        line_str = line.strip()
+                        if not line_str:
+                            continue
+                        if search and search not in line_str.lower():
+                            continue
+                        ts = line_str[1:20] if line_str.startswith("[") else ""
+                        parsed_logs.append({
+                            "timestamp": ts,
+                            "level": "SOVEREIGN",
+                            "source": "network",
+                            "component": "airgap_auditor",
+                            "message": line_str,
+                            "raw": line_str
+                        })
+            except Exception as e:
+                parsed_logs.append({"timestamp": "", "level": "ERROR", "source": "network", "component": "logs", "message": f"Error reading network log: {e}", "raw": str(e)})
+
+    # Read system application / agent log
+    if source in ("all", "system"):
+        sys_log_path = Path("logs/sanctum.log")
+        if sys_log_path.exists():
+            try:
+                with open(sys_log_path, "r", encoding="utf-8", errors="replace") as f:
+                    for line in f:
+                        line_str = line.strip()
+                        if not line_str:
+                            continue
+                        if search and search not in line_str.lower():
+                            continue
+                        parts = line_str.split(" | ", 3)
+                        ts = parts[0] if len(parts) > 0 else ""
+                        lvl = parts[1].strip() if len(parts) > 1 else "INFO"
+                        comp = parts[2].strip() if len(parts) > 2 else "system"
+                        msg = parts[3] if len(parts) > 3 else line_str
+                        if level_filter != "ALL" and lvl != level_filter:
+                            continue
+                        parsed_logs.append({
+                            "timestamp": ts,
+                            "level": lvl,
+                            "source": "system",
+                            "component": comp,
+                            "message": msg,
+                            "raw": line_str
+                        })
+            except Exception as e:
+                parsed_logs.append({"timestamp": "", "level": "ERROR", "source": "system", "component": "logs", "message": f"Error reading system log: {e}", "raw": str(e)})
+
+    # Sort logs chronologically
+    parsed_logs.sort(key=lambda x: x.get("timestamp", ""))
+    if len(parsed_logs) > limit:
+        parsed_logs = parsed_logs[-limit:]
+
+    from app.sovereign_network import sovereign_auditor
+    net_summary = sovereign_auditor.get_audit_summary()
+
+    return jsonify({
+        "status": "ok",
+        "source": source,
+        "count": len(parsed_logs),
+        "logs": parsed_logs,
+        "airgap_integrity": net_summary.get("airgap_integrity_pct", 100.0),
+        "external_calls": net_summary.get("external_calls_allowed", 0),
+        "loopback_calls": net_summary.get("loopback_calls_count", 0)
+    })
+
+
+@main_bp.route("/api/logs/clear", methods=["POST"])
+def clear_logs():
+    """Clear logs if requested."""
+    try:
+        Path("logs/sanctum.log").write_text("", encoding="utf-8")
+        Path("logs/sovereign_network.log").write_text("", encoding="utf-8")
+        return jsonify({"status": "cleared", "message": "System and network logs successfully cleared."})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@main_bp.route("/api/logs/download", methods=["GET"])
+def download_logs():
+    """Download consolidated audit and system logs."""
+    source = request.args.get("source", "all")
+    content = []
+    if source in ("all", "system") and Path("logs/sanctum.log").exists():
+        content.append("=== SANCTUM SYSTEM & AGENT LOGS ===\n")
+        content.append(Path("logs/sanctum.log").read_text(encoding="utf-8", errors="replace"))
+    if source in ("all", "network") and Path("logs/sovereign_network.log").exists():
+        content.append("\n=== SOVEREIGN AIR-GAP NETWORK AUDIT LOGS ===\n")
+        content.append(Path("logs/sovereign_network.log").read_text(encoding="utf-8", errors="replace"))
+    return Response(
+        "".join(content),
+        mimetype="text/plain",
+        headers={"Content-Disposition": f"attachment; filename=sanctum_{source}_logs.txt"}
+    )
+
+
 @main_bp.route("/api/models", methods=["GET"])
 @main_bp.route("/models", methods=["GET"])
 def models():

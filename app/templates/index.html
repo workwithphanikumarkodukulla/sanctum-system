@@ -69,6 +69,9 @@
             <button class="rail-btn" data-screen="security" title="Security Posture" aria-label="Security">
                 <span class="material-icons">shield</span>
             </button>
+            <button class="rail-btn" data-screen="logs" title="System & Network Logs" aria-label="Logs">
+                <span class="material-icons">receipt_long</span>
+            </button>
         </div>
     </nav>
 
@@ -670,6 +673,99 @@
                         <div class="evidence-row"><span>Workspace isolation</span><strong>Per-workspace .sanctum/</strong></div>
                         <div class="evidence-row"><span>Model isolation</span><strong>No cross-model data</strong></div>
                         <button class="btn-secondary" id="securityRefresh"><span class="material-icons">refresh</span> Recheck boundary</button>
+                    </div>
+                </div>
+            </section>
+ 
+            <!-- ── SYSTEM & SOVEREIGN LOGS ── -->
+            <section class="screen" id="screen-logs">
+                <div class="logs-screen-shell">
+                    <div class="logs-header-row">
+                        <div>
+                            <span class="kicker">SANCTUM / TELEMETRY &amp; AUDIT</span>
+                            <h2>System &amp; Sovereign Logs</h2>
+                            <p class="section-subtitle">Live execution traces, local model routing decisions, tool actions, and socket-level air-gap audit records.</p>
+                        </div>
+                        <div class="logs-header-actions">
+                            <button class="btn-secondary small" id="refreshLogsBtn">
+                                <span class="material-icons" style="font-size:14px">refresh</span> Refresh
+                            </button>
+                            <button class="btn-secondary small" id="clearLogsBtn">
+                                <span class="material-icons" style="font-size:14px">delete_sweep</span> Clear Logs
+                            </button>
+                            <a href="/api/logs/download?source=all" class="btn-secondary small" id="downloadLogsBtn" download="sanctum_logs.txt">
+                                <span class="material-icons" style="font-size:14px">download</span> Export Logs
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Telemetry Metric Summary Cards -->
+                    <div class="logs-metrics-grid">
+                        <div class="stat-card">
+                            <span class="stat-label">TOTAL LOG ENTRIES</span>
+                            <strong class="stat-val" id="logStatTotal">0</strong>
+                            <small class="stat-hint">Active runtime buffer</small>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">AIR-GAP INTEGRITY</span>
+                            <strong class="stat-val accent-green" id="logStatAirgap">100.0%</strong>
+                            <small class="stat-hint">Zero egress leaks</small>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">LOOPBACK CALLS</span>
+                            <strong class="stat-val accent-blue" id="logStatLoopback">0</strong>
+                            <small class="stat-hint">127.0.0.1 Ollama &amp; Docs</small>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">EXTERNAL CALLS</span>
+                            <strong class="stat-val accent-cyan" id="logStatExternal">0</strong>
+                            <small class="stat-hint">Strictly prohibited</small>
+                        </div>
+                    </div>
+
+                    <!-- Toolbar & Filters -->
+                    <div class="logs-toolbar">
+                        <div class="logs-filter-group" role="tablist">
+                            <button class="log-filter-btn active" data-source="all">All Logs</button>
+                            <button class="log-filter-btn" data-source="system">System &amp; Agent</button>
+                            <button class="log-filter-btn" data-source="network">Sovereign Air-Gap</button>
+                            <button class="log-filter-btn" data-source="error">Errors Only</button>
+                        </div>
+                        <div class="logs-search-box">
+                            <span class="material-icons" style="font-size:14px;color:var(--text-muted)">search</span>
+                            <input type="text" id="logSearchInput" placeholder="Filter logs by keyword, model, or socket..." aria-label="Filter logs">
+                        </div>
+                        <div class="logs-stream-toggle">
+                            <label class="toggle-label">
+                                <input type="checkbox" id="logAutoScroll" checked>
+                                <span>Auto-scroll</span>
+                            </label>
+                            <label class="toggle-label">
+                                <input type="checkbox" id="logLiveStream" checked>
+                                <span class="live-pulse-dot"></span>
+                                <span>Live Stream</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Monospace Terminal Log Viewer -->
+                    <div class="logs-terminal-card">
+                        <div class="logs-terminal-header">
+                            <div class="terminal-dots">
+                                <span class="dot red"></span>
+                                <span class="dot amber"></span>
+                                <span class="dot green"></span>
+                            </div>
+                            <span class="terminal-title">SANCTUM RUNTIME &amp; AUDIT LOG TERMINAL</span>
+                            <span class="terminal-status" id="logTerminalStatus">STREAMING ACTIVE</span>
+                        </div>
+                        <div class="logs-terminal-body" id="logsTerminalBody">
+                            <div class="log-line info">
+                                <span class="log-ts">[INITIALIZE]</span>
+                                <span class="log-badge badge-sys">SYSTEM</span>
+                                <span class="log-msg">Loading Sanctum telemetry and air-gap logs...</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>

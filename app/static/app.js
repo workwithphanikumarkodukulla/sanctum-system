@@ -11,7 +11,9 @@ const state = {
     history: [],
     activityEvents: [],
     isSending: false,
-    tools: []
+    tools: [],
+    logSource: "all",
+    logLevel: "ALL"
 };
 
 // Utility DOM selector
@@ -61,7 +63,7 @@ function showScreen(screenName) {
     // Update topbar breadcrumb
     const screenTitle = $("screenTitle");
     if (screenTitle) {
-        screenTitle.textContent = screenName.charAt(0).toUpperCase() + screenName.slice(1);
+        screenTitle.textContent = screenName === "lkb" ? "Knowledge Base" : (screenName.charAt(0).toUpperCase() + screenName.slice(1));
     }
 
     // Trigger data loading for specific screens
@@ -71,6 +73,7 @@ function showScreen(screenName) {
     if (screenName === "lkb") loadLkb();
     if (screenName === "tools") loadTools();
     if (screenName === "security") loadSecurity();
+    if (screenName === "logs") loadLogs();
 }
 
 function setLockerMode(mode) {
@@ -1233,6 +1236,94 @@ async function updateSovereignPill() {
 }
 
 /**
+ * System & Sovereign Logs Management
+ */
+async function loadLogs() {
+    const source = state.logSource || "all";
+    const search = $("logSearchInput")?.value?.trim() || "";
+    const level = state.logLevel || "ALL";
+
+    try {
+        const data = await api(`/api/logs?source=${encodeURIComponent(source)}&level=${encodeURIComponent(level)}&search=${encodeURIComponent(search)}&limit=300`);
+        const logs = data.logs || [];
+
+        if ($("logStatTotal")) $("logStatTotal").textContent = logs.length;
+        if ($("logStatAirgap")) $("logStatAirgap").textContent = `${(data.airgap_integrity ?? 100).toFixed(1)}%`;
+        if ($("logStatLoopback")) $("logStatLoopback").textContent = data.loopback_calls ?? 0;
+        if ($("logStatExternal")) $("logStatExternal").textContent = data.external_calls ?? 0;
+
+        const body = $("logsTerminalBody");
+        if (!body) return;
+
+        if (!logs.length) {
+            body.innerHTML = `<div class="log-entry-row"><span class="log-ts">[EMPTY]</span><span class="log-level-pill info">INFO</span><span class="log-msg-text" style="color:var(--text-muted)">No log entries matched filter.</span></div>`;
+            return;
+        }
+
+        body.innerHTML = logs.map((entry) => {
+            const lvl = (entry.level || "INFO").toLowerCase();
+            const comp = entry.component || "system";
+            const ts = entry.timestamp || "";
+            const msg = escapeHtml(entry.message || entry.raw || "");
+            return `
+                <div class="log-entry-row">
+                    <span class="log-ts">${escapeHtml(ts)}</span>
+                    <span class="log-level-pill ${lvl}">${escapeHtml(entry.level || "INFO")}</span>
+                    <span class="log-comp-tag">[${escapeHtml(comp)}]</span>
+                    <span class="log-msg-text">${msg}</span>
+                </div>
+            `;
+        }).join("");
+
+        if ($("logAutoScroll")?.checked) {
+            body.scrollTop = body.scrollHeight;
+        }
+    } catch (err) {
+        console.warn("Failed to load logs:", err);
+    }
+}
+
+function initLogsHandlers() {
+    document.querySelectorAll(".log-filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".log-filter-btn").forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+            const src = btn.dataset.source;
+            if (src === "error") {
+                state.logSource = "all";
+                state.logLevel = "ERROR";
+            } else {
+                state.logSource = src;
+                state.logLevel = "ALL";
+            }
+            loadLogs();
+        });
+    });
+
+    if ($("logSearchInput")) {
+        $("logSearchInput").addEventListener("input", () => loadLogs());
+    }
+
+    if ($("refreshLogsBtn")) {
+        $("refreshLogsBtn").addEventListener("click", loadLogs);
+    }
+    if ($("clearLogsBtn")) {
+        $("clearLogsBtn").addEventListener("click", async () => {
+            if (confirm("Are you sure you want to clear system and network logs?")) {
+                await api("/api/logs/clear", { method: "POST" });
+                loadLogs();
+            }
+        });
+    }
+
+    setInterval(() => {
+        if (state.screen === "logs" && $("logLiveStream")?.checked) {
+            loadLogs();
+        }
+    }, 2000);
+}
+
+/**
  * Command Palette Commands list
  */
 const availableCommands = [
@@ -1243,7 +1334,8 @@ const availableCommands = [
     { title: "Search Local Knowledge Base (LKB)", icon: "library_books", screen: "lkb" },
     { title: "View Approved MCP Tools", icon: "construction", screen: "tools" },
     { title: "Open Sanctum Locker", icon: "lock", screen: "locker" },
-    { title: "Inspect Security & Loopback Isolation", icon: "shield", screen: "security" }
+    { title: "Inspect Security & Loopback Isolation", icon: "shield", screen: "security" },
+    { title: "View System & Sovereign Logs", icon: "receipt_long", screen: "logs" }
 ];
 
 function renderCommandResults(query = "") {
@@ -1559,5 +1651,6 @@ document.addEventListener("DOMContentLoaded", () => {
     loadTools();
     loadSessionHistory();
     updateSovereignPill();
+    initLogsHandlers();
     showScreen("overview");
 });
