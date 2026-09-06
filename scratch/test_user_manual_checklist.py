@@ -69,10 +69,10 @@ def run_tests():
     passed4 = bool(any(ext in r4 for ext in [".png", ".pdf", ".py", "diff", "CSR"]))
     results.append(("4. List Files 'list all files'", passed4, f"Found files in listing: {passed4}"))
 
-    # 5. write a program in py file (verify model switches to qwen2.5-coder)
+    # 5. write a program in py file(see if model switches)
     print("\n=======================================================")
-    print("TEST 5: 'write a program in py file'")
-    d5 = send_chat("write a program in py file")
+    print("TEST 5: 'write a program in py file(see if model switches)'")
+    d5 = send_chat("write a program in py file(see if model switches)")
     r5 = d5.get("reply", "")
     m5 = d5.get("model_used")
     print(f"Model: {m5} | Reply preview: {r5[:200]}")
@@ -136,9 +136,20 @@ def run_tests():
     passed9 = bool(has_pdf and has_docx and has_xlsx and has_csv)
     results.append(("9. Generate & Verify PDF, DOCX, XLSX, CSV", passed9, f"PDF: {has_pdf}, DOCX: {has_docx}, XLSX: {has_xlsx}, CSV: {has_csv}"))
 
-    # 10. Verify /api/history has model badges and durations for every message
+    # 10. Direct Model Inquiry
     print("\n=======================================================")
-    print("TEST 10: /api/history Badges & Metadata")
+    print("TEST 10: 'which model are you using?'")
+    d10 = send_chat("which model are you using?")
+    r10 = d10.get("reply", "")
+    m10 = d10.get("model_used")
+    print(f"Model: {m10} | Reply preview: {r10[:300]}")
+    has_router_mention = "fluid model router" in r10.lower() or "fluid" in r10.lower()
+    passed10 = bool(has_router_mention and m10)
+    results.append(("10. Direct Model Inquiry", passed10, f"Model: {m10}, Explains Fluid Router: {has_router_mention}"))
+
+    # 11. Verify /api/history has model badges and durations for every message
+    print("\n=======================================================")
+    print("TEST 11: /api/history Badges & Metadata")
     h_resp = requests.get(f"{BASE_URL}/api/history")
     hist = h_resp.json().get("history", [])
     assistant_msgs = [m for m in hist if m.get("role") == "assistant"]
@@ -150,7 +161,7 @@ def run_tests():
         print(f"Turn {i+1}: Model='{m.get('model')}', Duration='{m.get('duration')}' -> Badges OK: {has_m and has_d}")
         if not (has_m and has_d):
             all_have_badges = False
-    results.append(("10. History Model & Duration Badges", all_have_badges, f"All {len(assistant_msgs)} assistant turns have badges: {all_have_badges}"))
+    results.append(("11. History Model & Duration Badges", all_have_badges, f"All {len(assistant_msgs)} assistant turns have badges: {all_have_badges}"))
 
     # Final Report
     print("\n=======================================================")
