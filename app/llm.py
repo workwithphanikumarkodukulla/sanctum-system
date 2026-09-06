@@ -24,6 +24,7 @@ class LLMManager:
             api_key=Config.LOCAL_LLM_API_KEY,
             base_url=self.base_url,
             timeout=Config.LOCAL_LLM_TIMEOUT,
+            max_tokens=2048,
         )
         logger.info("Local LLM initialized: {} ({})", self.model_name, self.base_url)
     def invoke(self, prompt):
@@ -56,18 +57,22 @@ class LLMManager:
         models = self.list_models()
         if not models:
             return self.model_name
+        # Models like deepseek-coder:6.7b and vision models (qwen3-vl) do not support function calling in Ollama
+        incompatible = ("deepseek-coder", "vl", "vision", "llava")
         lowered = task.lower()
-        hints = ([("vision", ("vision", "vl", "llava")),
-                  ("coding", ("code", "coder", "deepseek")),
-                  ("reasoning", ("reason", "qwq", "thinking"))])
+        hints = ([("coding", ("qwen2.5-coder",)),
+                  ("reasoning", ("qwq", "thinking"))])
         for role, words in hints:
             if any(word in lowered for word in words):
-                match = next((model for model in models if any(word in model.lower() for word in words)), None)
-                if match:
+                match = next((model for model in models if any(word in model.lower() for word in words) and not any(inc in model.lower() for inc in incompatible)), None)
+                if match and match != self.model_name:
                     self.change_model(match)
                     return match
-        if self.model_name not in models:
-            self.change_model(models[0])
+        if self.model_name not in models or any(inc in self.model_name.lower() for inc in incompatible):
+            default_candidate = next((m for m in models if "gemma" in m.lower()), None)
+            if not default_candidate:
+                default_candidate = next((m for m in models if not any(inc in m.lower() for inc in incompatible)), models[0])
+            self.change_model(default_candidate)
         return self.model_name
 
     def change_model(self, model_name):
@@ -78,6 +83,7 @@ class LLMManager:
             api_key=Config.LOCAL_LLM_API_KEY,
             base_url=self.base_url,
             timeout=Config.LOCAL_LLM_TIMEOUT,
+            max_tokens=2048,
         )
         logger.info("Local model changed to '{}'.", self.model_name)
 

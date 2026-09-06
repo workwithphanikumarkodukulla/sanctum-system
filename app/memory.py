@@ -12,10 +12,9 @@ from app.config import Config
 class MemoryManager:
     """Manages in-session conversation history for LangChain context building."""
 
-    def __init__(self):
+    def __init__(self, workspace_dir: str | Path | None = None):
         self._history = []
-        # Legacy: still maintain a global history.json for backward compat
-        workspace = Path(Config.WORKSPACE)
+        workspace = Path(workspace_dir) if workspace_dir else Path(Config.WORKSPACE)
         workspace.mkdir(exist_ok=True)
         self._history_file = workspace / "history.json"
         self._load_history()

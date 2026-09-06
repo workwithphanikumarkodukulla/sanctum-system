@@ -57,6 +57,10 @@ class PythonTool(BaseTool):
             logger.exception("Python execution failed.")
             raise
     def _resolve_path(self, path):
+        if path is None or not str(path).strip():
+            return self.root_dir
+        if "\x00" in str(path):
+            raise ValueError("Path contains invalid null byte.")
         candidate = (self.root_dir / path).expanduser().resolve()
         try:
             candidate.relative_to(self.root_dir)

@@ -1,10 +1,20 @@
 """Terminal execution tool."""
+import re
 import shlex
 import subprocess
 from pathlib import Path
 from app.config import Config
 from app.logger import logger
 from app.tools.base import BaseTool
+
+PROHIBITED_COMMAND_PATTERNS = [
+    re.compile(r"\brm\s+-[a-zA-Z]*r[a-zA-Z]*f\s+(?:/|~|\*)(?:\s|$)"), # rm -rf /, rm -rf ~, rm -rf *
+    re.compile(r"\b(mkfs|fdisk)\b|\bdd\s+if="),                       # disk wiping
+    re.compile(r"\b(sudo|su)\b"),                                     # privilege escalation
+    re.compile(r"\b(shutdown|reboot|poweroff)\b"),                   # system shutdown
+    re.compile(r":\(\)\s*\{\s*:\|:&\s*\};:"),                         # fork bomb
+]
+
 class TerminalTool(BaseTool):
     name = "terminal"
     description = "Run shell commands in the workspace."
@@ -19,8 +29,17 @@ class TerminalTool(BaseTool):
         timeout = kwargs.pop("timeout", 30)
         if command is None and args:
             command = args[0]
-        if command is None:
+        if command is None or not str(command).strip():
             raise ValueError("Command is required.")
+
+        cmd_str = command if isinstance(command, str) else " ".join(str(c) for c in command)
+        if "\x00" in cmd_str:
+            raise ValueError("Command contains invalid null byte.")
+
+        for pat in PROHIBITED_COMMAND_PATTERNS:
+            if pat.search(cmd_str):
+                raise ValueError("Command rejected by security policy: destructive or disallowed system command.")
+
         cwd = self._resolve_path(cwd)
         if isinstance(command, str):
             command = shlex.split(command)
@@ -49,9 +68,14 @@ class TerminalTool(BaseTool):
             logger.exception("Terminal execution failed.")
             raise
     def _resolve_path(self, path):
-        candidate = (self.root_dir / path).expanduser().resolve()
+        if path is None or not str(path).strip():
+            return self.root_dir
+        if "\x00" in str(path):
+            raise ValueError("Path contains invalid null byte.")
         try:
+            candidate = (self.root_dir / path).expanduser().resolve()
             candidate.relative_to(self.root_dir)
         except ValueError:
             raise ValueError("Path escapes workspace.")
         return candidate
+

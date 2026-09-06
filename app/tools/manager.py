@@ -3,8 +3,10 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Iterable
 from app.tools.base import BaseTool
+from app.tools.document_tool import DocumentTool
 from app.tools.file_tool import FileTool
 from app.tools.python_tool import PythonTool
+from app.tools.sympy_tool import MathTool, SymPyTool
 from app.tools.terminal_tool import TerminalTool
 from app.tools.workspace import WorkspaceTool
 class ToolManager:
@@ -27,6 +29,9 @@ class ToolManager:
                 PythonTool(root_dir=root_dir),
                 TerminalTool(root_dir=root_dir),
                 WorkspaceTool(root_dir=root_dir),
+                DocumentTool(root_dir=root_dir),
+                MathTool(),
+                SymPyTool(),
             ]
         )
     def unregister(self, name: str) -> None:

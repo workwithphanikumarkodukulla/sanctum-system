@@ -14,9 +14,10 @@ class Config:
     # server (LM Studio, llama.cpp, vLLM) can be selected with an environment variable.
     LOCAL_LLM_BASE_URL = os.getenv("LOCAL_LLM_BASE_URL", "http://127.0.0.1:11434/v1")
     LOCAL_LLM_API_KEY = os.getenv("LOCAL_LLM_API_KEY", "local-only")
-    LOCAL_LLM_MODEL = os.getenv("LOCAL_LLM_MODEL", "")
-    LOCAL_LLM_TIMEOUT = float(os.getenv("LOCAL_LLM_TIMEOUT", "120"))
+    LOCAL_LLM_MODEL = os.getenv("LOCAL_LLM_MODEL", "gemma4:latest")
+    LOCAL_LLM_TIMEOUT = float(os.getenv("LOCAL_LLM_TIMEOUT", "180"))
     OFFLINE_MODE = os.getenv("OFFLINE_MODE", "true").lower() == "true"
+    DOCUMENT_ENGINE_URL = os.getenv("DOCUMENT_ENGINE_URL", "http://127.0.0.1:8001")
 
     # Sanctum Fluid Architecture — global config directory
     SANCTUM_GLOBAL_DIR = Path.home() / ".sanctum"

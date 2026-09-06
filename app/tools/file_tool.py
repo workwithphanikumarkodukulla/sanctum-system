@@ -48,10 +48,26 @@ class FileTool(BaseTool):
 			raise FileNotFoundError(f"File not found: {file_path}")
 		if not file_path.is_file():
 			raise IsADirectoryError(f"Path is not a file: {file_path}")
-		text = file_path.read_text(encoding="utf-8")
-		if start_line is None and end_line is None:
-			return {"action": "read_file", "path": str(file_path), "content": text}
+		try:
+			text = file_path.read_text(encoding="utf-8")
+		except UnicodeDecodeError:
+			raise ValueError(f"File '{path}' appears to be a binary file, not valid UTF-8 text. Use 'read_document' for documents or images.")
+
 		lines = text.splitlines()
+		max_lines_limit = 2000
+		if start_line is None and end_line is None:
+			if len(lines) > max_lines_limit:
+				truncated_lines = lines[:max_lines_limit]
+				return {
+					"action": "read_file",
+					"path": str(file_path),
+					"total_lines": len(lines),
+					"lines_shown": max_lines_limit,
+					"truncated": True,
+					"notice": f"File exceeds {max_lines_limit} lines. Truncated to avoid context overflow.",
+					"content": "\n".join(truncated_lines) + f"\n\n[... Truncated: showing first {max_lines_limit} of {len(lines)} lines to protect LLM context ...]",
+				}
+			return {"action": "read_file", "path": str(file_path), "content": text}
 		start_index = 1 if start_line is None else max(start_line, 1)
 		end_index = len(lines) if end_line is None else max(end_line, 0)
 		if end_index < start_index:
@@ -93,9 +109,14 @@ class FileTool(BaseTool):
 			"renamed": True,
 		}
 	def _resolve_path(self, path: str) -> Path:
-		candidate = (self.root_dir / path).expanduser().resolve()
+		if path is None or not str(path).strip():
+			raise ValueError("Path cannot be empty or whitespace.")
+		if "\x00" in str(path):
+			raise ValueError("Path contains invalid null byte.")
 		try:
+			candidate = (self.root_dir / path).expanduser().resolve()
 			candidate.relative_to(self.root_dir)
 		except ValueError as exc:
 			raise ValueError("Path escapes the configured workspace root.") from exc
 		return candidate
+

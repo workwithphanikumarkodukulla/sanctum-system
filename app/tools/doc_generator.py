@@ -15,12 +15,20 @@ class DocumentGenerator:
         self.root_dir = Path(root_dir).expanduser().resolve()
         self.root_dir.mkdir(parents=True, exist_ok=True)
 
-    def _resolve_path(self, filepath: str) -> Path:
-        target = (self.root_dir / filepath).expanduser().resolve()
+    def _resolve_path(self, filepath: str, allowed_extensions: tuple[str, ...] | None = None) -> Path:
+        if filepath is None or not str(filepath).strip():
+            raise ValueError("Output path cannot be empty or whitespace.")
+        if "\x00" in str(filepath):
+            raise ValueError("Output path contains invalid null byte.")
         try:
+            target = (self.root_dir / filepath).expanduser().resolve()
             target.relative_to(self.root_dir)
         except ValueError as exc:
             raise ValueError("Output path escapes the configured workspace root.") from exc
+        if allowed_extensions and target.suffix.lower() not in allowed_extensions:
+            raise ValueError(
+                f"Invalid file extension '{target.suffix}'. Allowed extensions: {', '.join(allowed_extensions)}"
+            )
         target.parent.mkdir(parents=True, exist_ok=True)
         return target
 
@@ -31,7 +39,8 @@ class DocumentGenerator:
         from openpyxl import Workbook
         from openpyxl.styles import Alignment, Font, PatternFill
 
-        output = self._resolve_path(filepath)
+        output = self._resolve_path(filepath, allowed_extensions=(".xlsx", ".xlsm"))
+
         workbook = Workbook()
         workbook.remove(workbook.active)
         header_fill = PatternFill("solid", fgColor="163B52")
@@ -67,7 +76,7 @@ class DocumentGenerator:
         from pptx.dml.color import RGBColor
         from pptx.util import Inches, Pt
 
-        output = self._resolve_path(filepath)
+        output = self._resolve_path(filepath, allowed_extensions=(".pptx",))
         presentation = Presentation()
         presentation.slide_width = Inches(13.333)
         presentation.slide_height = Inches(7.5)
@@ -91,7 +100,8 @@ class DocumentGenerator:
         for slide_data in slides_data or []:
             slide = presentation.slides.add_slide(blank)
             heading = slide.shapes.add_textbox(Inches(0.7), Inches(0.45), Inches(12), Inches(0.7))
-            heading.text_frame.text = str(slide_data.get("title") or "Untitled")
+            slide_title = slide_data.get("title") or slide_data.get("heading") or "Untitled"
+            heading.text_frame.text = str(slide_title)
             heading.text_frame.paragraphs[0].font.size = Pt(25)
             heading.text_frame.paragraphs[0].font.bold = True
             heading.text_frame.paragraphs[0].font.color.rgb = RGBColor(24, 55, 72)
@@ -113,10 +123,26 @@ class DocumentGenerator:
             else:
                 body = slide.shapes.add_textbox(Inches(1.0), Inches(1.7), Inches(11), Inches(4.8))
                 frame = body.text_frame
-                for index, point in enumerate(slide_data.get("bullet_points") or [""]):
+                bullets = slide_data.get("bullet_points")
+                if bullets is None:
+                    content_val = slide_data.get("content")
+                    if isinstance(content_val, list):
+                        bullets = []
+                        for item in content_val:
+                            if isinstance(item, dict) and "headers" in item and "rows" in item:
+                                bullets.append(" | ".join(str(h) for h in item["headers"]))
+                                for r in item.get("rows", []):
+                                    bullets.append(" | ".join(str(c) for c in r))
+                            else:
+                                bullets.append(str(item))
+                    elif content_val:
+                        bullets = [str(content_val)]
+                    else:
+                        bullets = [""]
+                for index, point in enumerate(bullets):
                     paragraph = frame.paragraphs[0] if index == 0 else frame.add_paragraph()
                     paragraph.text = str(point)
-                    paragraph.font.size = Pt(20)
+                    paragraph.font.size = Pt(18 if len(bullets) > 4 else 20)
                     paragraph.level = 0
         presentation.save(output)
         return self._relative(output)
@@ -126,7 +152,7 @@ class DocumentGenerator:
         from docx.enum.text import WD_ALIGN_PARAGRAPH
         from docx.shared import Inches, Pt
 
-        output = self._resolve_path(filepath)
+        output = self._resolve_path(filepath, allowed_extensions=(".docx",))
         document = Document()
         section = document.sections[0]
         section.top_margin = Inches(0.65)
@@ -167,7 +193,7 @@ class DocumentGenerator:
         from reportlab.lib.units import inch
         from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
-        output = self._resolve_path(filepath)
+        output = self._resolve_path(filepath, allowed_extensions=(".pdf",))
         styles = getSampleStyleSheet()
         styles.add(ParagraphStyle(name="ReportTitle", parent=styles["Title"], alignment=TA_CENTER, textColor=colors.HexColor("#163B52")))
         styles.add(ParagraphStyle(name="ReportSubtitle", parent=styles["Normal"], alignment=TA_CENTER, textColor=colors.HexColor("#57727D")))
@@ -200,7 +226,7 @@ class DocumentGenerator:
         return self._relative(output)
 
     def generate_note(self, filepath: str, title: str, tags: list[str], summary: str, sections: list[dict[str, Any]]) -> str:
-        output = self._resolve_path(filepath)
+        output = self._resolve_path(filepath, allowed_extensions=(".md", ".txt", ".markdown"))
         lines = ["---", f"title: {title}", f"tags: [{', '.join(tags)}]", "---", "", f"> {summary}", ""]
         for section_data in sections or []:
             lines.extend([f"## {section_data.get('heading', 'Section')}", ""])
@@ -211,3 +237,4 @@ class DocumentGenerator:
             lines.append("")
         output.write_text("\n".join(lines), encoding="utf-8")
         return self._relative(output)
+

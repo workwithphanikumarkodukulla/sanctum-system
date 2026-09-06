@@ -44,6 +44,8 @@ def chat():
             "reply": result["reply"],
             "tool_actions": result.get("tool_actions", []),
             "activity_events": result.get("activity_events", []),
+            "workflow_trace": result.get("workflow_trace"),
+            "debug_trace": result.get("debug_trace"),
         })
     except Exception:
         logger.exception("Error while processing chat request.")
@@ -288,13 +290,22 @@ def select_workspace():
 def pick_workspace():
     """Open a native folder picker when Sanctum is running on the local desktop."""
     try:
-        import tkinter as tk
-        from tkinter import filedialog
-        root = tk.Tk()
-        root.withdraw()
-        root.attributes("-topmost", True)
-        selected = filedialog.askdirectory(title="Choose Sanctum workspace")
-        root.destroy()
+        import sys
+        if sys.platform == "darwin":
+            import subprocess
+            cmd = ["osascript", "-e", 'POSIX path of (choose folder with prompt "Choose Sanctum workspace")']
+            res = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+            if res.returncode != 0 or not res.stdout.strip():
+                return jsonify({"cancelled": True}), 200
+            selected = res.stdout.strip()
+        else:
+            import tkinter as tk
+            from tkinter import filedialog
+            root = tk.Tk()
+            root.withdraw()
+            root.attributes("-topmost", True)
+            selected = filedialog.askdirectory(title="Choose Sanctum workspace")
+            root.destroy()
         if not selected:
             return jsonify({"cancelled": True}), 200
         active = current_app.agent.set_workspace(selected)
@@ -507,3 +518,48 @@ def health():
         "fluid": bool(getattr(current_app, "fluid_router", None)),
         "lkb": bool(getattr(current_app, "lkb_manager", None)),
     })
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Observability & Trace Endpoints
+# ─────────────────────────────────────────────────────────────────────────────
+
+@main_bp.route("/api/traces/latest", methods=["GET"])
+def get_latest_trace():
+    """Return latest workflow trace in JSON format."""
+    from app.observability import workflow_trace_store
+    trace = workflow_trace_store.get_latest()
+    if not trace:
+        return jsonify({"error": "No workflow traces available."}), 404
+    return jsonify(trace.to_dict())
+
+
+@main_bp.route("/api/traces/latest/text", methods=["GET"])
+def get_latest_trace_text():
+    """Return latest workflow debug trace in human-readable ASCII format."""
+    from app.observability import workflow_trace_store
+    trace = workflow_trace_store.get_latest()
+    if not trace:
+        return Response("No workflow traces available.", mimetype="text/plain", status=404)
+    return Response(trace.to_human_readable(), mimetype="text/plain")
+
+
+@main_bp.route("/api/traces/<trace_id>", methods=["GET"])
+def get_trace_by_id(trace_id: str):
+    """Return specific workflow trace in JSON format."""
+    from app.observability import workflow_trace_store
+    trace = workflow_trace_store.get(trace_id)
+    if not trace:
+        return jsonify({"error": f"Workflow trace '{trace_id}' not found."}), 404
+    return jsonify(trace.to_dict())
+
+
+@main_bp.route("/api/traces/<trace_id>/text", methods=["GET"])
+def get_trace_by_id_text(trace_id: str):
+    """Return specific workflow trace in human-readable ASCII format."""
+    from app.observability import workflow_trace_store
+    trace = workflow_trace_store.get(trace_id)
+    if not trace:
+        return Response(f"Workflow trace '{trace_id}' not found.", mimetype="text/plain", status=404)
+    return Response(trace.to_human_readable(), mimetype="text/plain")
+
