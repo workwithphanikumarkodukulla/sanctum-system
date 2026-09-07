@@ -175,6 +175,8 @@ class DocumentTool(BaseTool):
                     logger.debug("Archive validation notice: %s", e)
 
             # Transmit file to Document Engine for canonical ingestion
+            resp = None
+            evidence = None
             try:
                 with open(target_path, "rb") as f:
                     files = {"file": (target_path.name, f)}
@@ -204,24 +206,38 @@ class DocumentTool(BaseTool):
                     "error": f"Document processing request failed: {exc}",
                 }
 
-            if resp.status_code not in (200, 202):
-                try:
-                    err_detail = resp.json().get("detail", resp.text)
-                except Exception:
-                    err_detail = resp.text
-                return {
-                    "status": "error",
-                    "http_status": resp.status_code,
-                    "error": f"Document Engine returned error: {err_detail}",
-                }
+            if evidence is None:
+                if resp is None:
+                    return {
+                        "status": "error",
+                        "error": "No response or evidence produced during document processing.",
+                    }
+                if resp.status_code not in (200, 202):
+                    logger.warning("Document Engine returned status %s; attempting local fallback ingestion", resp.status_code)
+                    try:
+                        evidence = self._local_fallback_ingest(target_path)
+                    except Exception:
+                        evidence = None
 
-            try:
-                evidence = resp.json()
-            except Exception as exc:
-                return {
-                    "status": "error",
-                    "error": f"Failed to decode response from Document Engine: {exc}",
-                }
+                    if evidence is None:
+                        try:
+                            err_detail = resp.json().get("detail", resp.text)
+                        except Exception:
+                            err_detail = resp.text
+                        return {
+                            "status": "error",
+                            "http_status": resp.status_code,
+                            "error": f"Document Engine returned error: {err_detail}",
+                        }
+
+                if evidence is None:
+                    try:
+                        evidence = resp.json()
+                    except Exception as exc:
+                        return {
+                            "status": "error",
+                            "error": f"Failed to decode response from Document Engine: {exc}",
+                        }
 
             # Cache successful canonical evidence with bounded LRU eviction
             proc_status = evidence.get("processing_status") or evidence.get("status")
