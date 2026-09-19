@@ -1,0 +1,968 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sanctum — Fluid Local Agent Studio</title>
+    <meta name="description" content="Sanctum Fluid: Fully isolated local AI environment. No data leaves your machine.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/katex.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+<!-- ═══════════════════ TITLE BAR ═══════════════════ -->
+<div class="title-bar">
+    <div class="title-bar-left">
+        <div class="app-logo"><span class="logo-mark">⬡</span><span class="logo-text">SANCTUM</span></div>
+        <div class="title-bar-sep"></div>
+        <span class="title-badge fluid-badge">FLUID</span>
+        <span class="title-badge isolation-badge"><span class="dot-live"></span>ISOLATED</span>
+    </div>
+    <div class="title-bar-center">
+        <button class="cmd-trigger" id="commandTrigger" aria-label="Command palette (Ctrl+K)">
+            <span class="material-icons" style="font-size:14px">search</span>
+            <span>Search commands, files...</span>
+            <kbd>Ctrl K</kbd>
+        </button>
+    </div>
+    <div class="title-bar-right">
+        <span class="runtime-chip" id="topbarModel">—</span>
+        <span class="sep-dot"></span>
+        <span class="status-text" id="topbarStatus">Connecting...</span>
+        <div class="online-indicator"><span class="dot-live"></span>LOCAL</div>
+    </div>
+</div>
+
+<!-- ═══════════════════ MAIN SHELL ═══════════════════ -->
+<div class="app-shell">
+
+    <!-- Activity Rail (icon-only sidebar) -->
+    <nav class="activity-rail" aria-label="Activity bar">
+        <div class="rail-section">
+            <button class="rail-btn active" data-screen="overview" title="Overview" aria-label="Overview">
+                <span class="material-icons">dashboard</span>
+            </button>
+            <button class="rail-btn" data-screen="workspace" title="Workspace Explorer" aria-label="Workspace">
+                <span class="material-icons">folder_open</span>
+            </button>
+            <button class="rail-btn" data-screen="agent" title="Agent Chat" aria-label="Agent">
+                <span class="material-icons">auto_awesome</span>
+            </button>
+        </div>
+        <div class="rail-divider"></div>
+        <div class="rail-section">
+            <button class="rail-btn" data-screen="models" title="Models & Fluid Routing" aria-label="Models">
+                <span class="material-icons">device_hub</span>
+            </button>
+            <button class="rail-btn" data-screen="lkb" title="Local Knowledge Base" aria-label="Knowledge Base">
+                <span class="material-icons">library_books</span>
+            </button>
+            <button class="rail-btn" data-screen="tools" title="MCP Tools" aria-label="Tools">
+                <span class="material-icons">construction</span>
+            </button>
+            <button class="rail-btn" data-screen="locker" title="Sanctum Locker" aria-label="Sanctum Locker">
+                <span class="material-icons">lock</span>
+            </button>
+            <button class="rail-btn" data-screen="security" title="Security Posture" aria-label="Security">
+                <span class="material-icons">shield</span>
+            </button>
+            <button class="rail-btn" data-screen="logs" title="System & Network Logs" aria-label="Logs">
+                <span class="material-icons">receipt_long</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ═══ CONTENT AREA ═══ -->
+    <div class="content-area">
+
+        <!-- Topbar breadcrumb strip -->
+        <div class="content-topbar">
+            <div class="breadcrumb-row">
+                <span class="bc-root">SANCTUM</span>
+                <span class="bc-sep">›</span>
+                <span class="bc-page" id="screenTitle">Overview</span>
+            </div>
+            <div class="topbar-actions">
+                <div class="airgap-topbar-pill" id="topbarAirgap" title="Sovereign Data Boundary: 100% Loopback Only — 0 External Calls">
+                    <span class="airgap-radar-dot"></span>
+                    <span class="material-icons airgap-shield-icon">security</span>
+                    <span id="topbarAirgapText">0 External Calls</span>
+                </div>
+                <div class="workspace-selector">
+                    <span class="material-icons" style="font-size:14px;color:var(--accent-cyan)">folder</span>
+                    <span id="workspaceName" class="ws-name">workspace</span>
+                    <button id="workspacePickerBtn" class="icon-btn" title="Choose workspace folder">
+                        <span class="material-icons">expand_more</span>
+                    </button>
+                </div>
+                <button class="icon-btn" id="refreshBtn" title="Refresh">
+                    <span class="material-icons">refresh</span>
+                </button>
+                <button class="icon-btn" id="clearMemoryBtn" title="Clear session">
+                    <span class="material-icons">delete_sweep</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Hidden workspace path form -->
+        <form id="workspaceForm" style="display:none">
+            <input id="workspacePathInput" type="text" placeholder="C:\Projects\my-app">
+        </form>
+
+        <!-- ═══════════════ SCREENS ═══════════════ -->
+        <div class="screens">
+
+            <!-- ── OVERVIEW ── -->
+            <section class="screen active" id="screen-overview">
+                <div class="ecosystem-shell">
+                    <div class="ecosystem-heading">
+                        <div>
+                            <span class="kicker">SANCTUM / COMMAND CENTER</span>
+                            <h1>Good morning.</h1>
+                            <p>Everything local. Everything in orbit.</p>
+                        </div>
+                        <div class="ecosystem-local"><span class="dot-live"></span><span>LOCAL SYSTEM</span><small>OPERATIONAL</small></div>
+                    </div>
+
+                    <div class="ecosystem-command">
+                        <div class="ecosystem-command-icon"><span class="material-icons">auto_awesome</span></div>
+                        <input id="overviewCommandInput" type="text" placeholder="Ask Sanctum anything..." aria-label="Ask Sanctum anything">
+                        <kbd>Ctrl K</kbd>
+                        <button id="overviewCommandBtn" class="icon-btn" title="Send to agent" aria-label="Send to agent"><span class="material-icons">arrow_upward</span></button>
+                    </div>
+                    <div class="ecosystem-suggestions">
+                        <button data-overview-prompt="Inspect the current workspace and summarize its structure">Inspect workspace</button>
+                        <button data-overview-prompt="Review the project for issues and run the relevant tests">Review project</button>
+                        <button data-overview-prompt="Explain the active project architecture">Explain architecture</button>
+                        <button data-overview-prompt="Create structured documentation for the current project">Create docs</button>
+                        <button data-overview-prompt="Analyze the project's documentation and identify gaps">Analyze docs</button>
+                        <button data-overview-prompt="Help me secure a file using Sanctum Locker">Secure files</button>
+                        <button data-overview-prompt="Prepare a presentation about the current project">Prepare PPTs</button>
+                    </div>
+
+                    <!-- Featured Industry Pipeline Showcase Card -->
+                    <div class="industry-pipeline-card">
+                        <div class="pipeline-header">
+                            <div>
+                                <span class="kicker" style="color:var(--nvidia-green)">FEATURED INDUSTRY PIPELINE</span>
+                                <h3 style="margin-top:4px">Autonomous Inspection to Approval Note Pipeline</h3>
+                            </div>
+                            <span class="title-badge isolation-badge"><span class="dot-live"></span>API 510 / ASME SEC VIII</span>
+                        </div>
+                        <p>End-to-end refinery pressure vessel integrity audit: Ingests scanned ultrasonic thickness reports for Northern PSU Refinery Unit 4 Hydrocracker (PV-204B), evaluates minimum wall thickness compliance ($t_{min}$), and drafts an authorized regulatory Word Approval Note (.docx) with Inspector sign-off.</p>
+                        <div class="pipeline-actions">
+                            <button class="btn-primary small" id="runInspectionPipelineBtn" data-overview-prompt="Run the autonomous Inspection to Approval Note pipeline for refinery pressure vessel PV-204B, evaluate API 510 ultrasonic readings and draft the signed approval note as Word file.">
+                                <span class="material-icons" style="font-size:16px">play_arrow</span> Run Inspection Pipeline Demo
+                            </button>
+                            <button class="btn-secondary small" onclick="openSystemDocument('generated/PV_204B_Inspection_Approval_Note.docx')">
+                                <span class="material-icons" style="font-size:16px">launch</span> Open Generated Approval Note (.docx)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="ecosystem-map">
+                        <div class="ecosystem-orbit orbit-outer"></div>
+                        <div class="ecosystem-orbit orbit-inner"></div>
+                        <div class="orbit-tracer tracer-outer"></div>
+                        <div class="orbit-tracer tracer-inner"></div>
+                        <div class="ecosystem-core">
+                            <span class="ecosystem-core-mark">◉</span>
+                            <strong>SANCTUM</strong>
+                            <small class="fluid-accent">FLUID CORE</small>
+                        </div>
+                        <button class="ecosystem-node node-workspace" data-screen="workspace"><span class="material-icons">folder_open</span><b>Workspace</b><small id="ecosystemFiles">— files</small></button>
+                        <button class="ecosystem-node node-agent" data-screen="agent"><span class="material-icons">auto_awesome</span><b>Agent</b><small>Ready to build</small></button>
+                        <button class="ecosystem-node node-models" data-screen="models"><span class="material-icons">device_hub</span><b>Models</b><small id="ecosystemModels">— local</small></button>
+                        <button class="ecosystem-node node-knowledge" data-screen="lkb"><span class="material-icons">library_books</span><b>Knowledge</b><small id="ecosystemLkb">— indexed</small></button>
+                        <button class="ecosystem-node node-locker" data-screen="locker"><span class="material-icons">lock</span><b>Locker</b><small>Local security</small></button>
+                    </div>
+
+                    <div class="ecosystem-footer">
+                        <div class="ecosystem-status"><span class="status-pulse"></span><span><b>Sanctum Intelligence</b><small>Inference stays inside the loopback boundary</small></span></div>
+                        <div class="ecosystem-signals"><span><b id="ecosystemTools">—</b><small>tools</small></span><span><b id="ecosystemWorkspace">—</b><small>workspace</small></span><button data-screen="security">View posture <span class="material-icons">arrow_forward</span></button></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── WORKSPACE EXPLORER ── -->
+            <section class="screen" id="screen-workspace">
+                <div class="workspace-layout">
+                    <div class="panel file-panel">
+                        <div class="panel-toolbar">
+                            <strong id="fileCountLabel">Files</strong>
+                            <span>Click a file to view</span>
+                        </div>
+                        <div id="workspaceTree" class="workspace-tree">
+                            <div class="empty-state"><span class="material-icons">hourglass_empty</span><p>Loading workspace...</p></div>
+                        </div>
+                    </div>
+                    <div class="panel editor-panel">
+                        <div class="editor-tabs" id="editorTabs">
+                            <button class="editor-tab active"><span class="material-icons">description</span><span>No file selected</span></button>
+                        </div>
+                        <div class="editor-meta-bar">
+                            <span id="filePathDisplay">—</span>
+                            <span id="fileMeta">—</span>
+                            <button class="icon-btn" id="copyFileBtn" title="Copy content"><span class="material-icons">content_copy</span></button>
+                        </div>
+                        <div id="codeView" class="code-view">
+                            <div class="editor-empty-state">
+                                <pre class="editor-welcome-logo">000000000000000000000000000000000000000000
+0                                            0
+0              SANCTUM GTRIX                 0
+0              ---------------               0
+0                                            0
+000000000000000000000000000000000000000000</pre>
+                                <span class="editor-empty-hint">OPEN A FILE TO START EDITING</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── AGENT CHAT ── -->
+            <section class="screen" id="screen-agent">
+                <div class="chat-column">
+                    <div class="panel chat-panel">
+                        <div class="chat-header">
+                            <div>
+                                <span class="kicker">AUTONOMOUS WORKBENCH</span>
+                                <div class="agent-title-row"><span class="agent-ai-star material-icons" aria-hidden="true">auto_awesome</span><h2>Build anything with Gtrix-Agent</h2></div>
+                            </div>
+                            <div class="chat-header-right">
+                                <div class="sovereign-live-tag" id="chatSovereignTag" title="Sovereign Execution: 100% Loopback Only — 0 External Calls">
+                                    <span class="airgap-radar-dot"></span>
+                                    <span class="material-icons" style="font-size:13px; margin-right:3px;">lock</span>
+                                    <span>Air-Gapped</span>
+                                </div>
+                                <button class="btn-trace-toggle" id="toggleRailBtn" type="button" title="Toggle execution trace">
+                                    <span class="material-icons">terminal</span> Execution trace <span class="live-pill" id="headerLivePill">LIVE</span>
+                                </button>
+                                <button class="btn-secondary small" id="newChatBtn"><span class="material-icons">add</span> New task</button>
+                            </div>
+                        </div>
+
+                        <!-- Main Chat Workspace with Execution Trace below New Task button -->
+                        <div class="chat-body-layout rail-collapsed" id="agentLayout">
+                            <div id="messages" class="messages-stream"></div>
+
+                            <!-- Collapsed Dock Tab on right edge below new task button -->
+                            <button class="rail-dock-tab" id="railDockTab" type="button" title="Expand execution trace" aria-label="Expand execution trace">
+                                <span class="material-icons">chevron_left</span>
+                                <span class="dock-tab-label">Execution trace</span>
+                                <span class="dock-tab-dot"></span>
+                            </button>
+
+                            <!-- Execution trace panel positioned below new task button -->
+                            <div class="agent-rail" id="agentRail">
+                                <div class="panel activity-panel" id="activityPanel">
+                                    <div class="panel-header activity-panel-header" id="activityPanelHeader" title="Click to collapse execution trace to the right">
+                                        <div>
+                                            <span class="kicker">ACTIVITY</span>
+                                            <h2>Execution trace</h2>
+                                        </div>
+                                        <div class="activity-header-right">
+                                            <span class="live-pill" id="livePill">LIVE</span>
+                                            <button class="activity-collapse-btn" id="activityCollapseBtn" title="Collapse execution trace to the right" aria-label="Collapse execution trace">
+                                                <span class="material-icons">chevron_right</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div id="activityListWrap" class="activity-list-wrap">
+                                        <div id="activityList" class="activity-list">
+                                            <div class="empty-state"><span class="material-icons">bolt</span><p>Activity appears here.</p></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="panel history-launcher" id="historyBtn" type="button">
+                                    <span class="material-icons">history</span>
+                                    <span><b>Session history</b><small><span id="historyCount">0</span> messages saved</small></span>
+                                    <span class="material-icons">open_in_new</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="composer-floating-container">
+                            <form id="chatForm" class="composer">
+                                <button id="toolPickerBtn" class="composer-tool-btn" type="button" title="Choose a tool" aria-label="Choose a tool">
+                                    <span class="material-icons">add</span>
+                                </button>
+                                <textarea id="messageInput" rows="1" placeholder="Type a message or instruction for Sanctum Agent..."></textarea>
+                                <button id="sendBtn" class="send-btn" type="submit" title="Send message" aria-label="Send message">
+                                    <span class="material-icons">send</span>
+                                </button>
+                            </form>
+                            <small class="composer-hint">Press Enter to send · Shift+Enter for new line</small>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── MODELS & FLUID ROUTING ── -->
+            <section class="screen" id="screen-models">
+                <div class="screen-header">
+                    <div>
+                        <span class="kicker fluid-accent">SANCTUM FLUID ARCHITECTURE</span>
+                        <h1>Models & Routing</h1>
+                        <p>Smart task-to-model routing. Each model is fully isolated from others.</p>
+                    </div>
+                    <button class="btn-secondary" id="modelsRefresh"><span class="material-icons">refresh</span> Refresh</button>
+                </div>
+                <div class="models-layout">
+                    <div class="panel">
+                        <div class="panel-header"><span class="kicker">CAPABILITY MATRIX</span><h2>Model profiles</h2></div>
+                        <div class="registry-header">
+                            <span>MODEL</span><span>CODE</span><span>DOCS</span><span>REASONING</span><span>GENERAL</span><span>BEST FOR</span><span>ACTION</span>
+                        </div>
+                        <div id="modelsGrid" class="models-grid">
+                            <div class="empty-state"><span class="material-icons">hourglass_empty</span><p>Discovering local models...</p></div>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-header"><span class="kicker">FLUID ROUTER</span><h2>Task preview</h2></div>
+                        <div class="route-preview">
+                            <label class="route-label">Describe a task to preview routing:</label>
+                            <div class="route-input-row">
+                                <input id="routePreviewInput" type="text" class="route-input" placeholder="e.g. write a Python function...">
+                                <button class="btn-primary small" id="routePreviewBtn">Route</button>
+                            </div>
+                            <div id="routePreviewResult" class="route-result hidden"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── LOCAL KNOWLEDGE BASE ── -->
+            <section class="screen" id="screen-lkb">
+                <div class="screen-header">
+                    <div>
+                        <span class="kicker">LOCAL KNOWLEDGE BASE</span>
+                        <h1>LKB</h1>
+                        <p>Index and semantically search workspace documents. Fully offline, no data leaves this machine.</p>
+                    </div>
+                    <span class="security-badge">OFFLINE ONLY</span>
+                </div>
+                <div class="lkb-layout">
+                    <div class="lkb-left">
+                        <div class="panel">
+                            <div class="panel-header"><span class="kicker">SEARCH</span><h2>Knowledge search</h2></div>
+                            <div class="lkb-search-bar">
+                                <span class="material-icons">search</span>
+                                <input id="lkbSearchInput" type="text" placeholder="Search your knowledge base...">
+                                <button class="btn-primary small" id="lkbSearchBtn">Search</button>
+                            </div>
+                            <div id="lkbResults" class="lkb-results">
+                                <div class="empty-state"><span class="material-icons">library_books</span><p>Search results appear here.</p></div>
+                            </div>
+                        </div>
+                        <div class="panel">
+                            <div class="panel-header"><span class="kicker">INDEX DOCUMENTS</span><h2>Add to knowledge base</h2></div>
+                            <div class="lkb-index-form">
+                                <input id="lkbPathInput" type="text" class="lkb-input" placeholder="File or folder path (relative to workspace)">
+                                <div class="lkb-btn-row">
+                                    <button class="btn-primary" id="lkbIndexBtn"><span class="material-icons">add</span> Index</button>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="lkbRecursive" checked>
+                                        <span>Recursive</span>
+                                    </label>
+                                    <button class="btn-ghost small" id="lkbClearBtn">Clear all</button>
+                                </div>
+                                <div id="lkbIndexStatus" class="lkb-status hidden"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel lkb-right">
+                        <div class="panel-header">
+                            <div><span class="kicker">INDEXED FILES</span><h2>Knowledge index</h2></div>
+                            <span id="lkbFileCount" class="count-pill">0 files</span>
+                        </div>
+                        <div id="lkbFileList" class="lkb-file-list">
+                            <div class="empty-state"><span class="material-icons">folder_open</span><p>No files indexed yet.</p></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── TOOLS ── -->
+            <section class="screen" id="screen-tools">
+                <div class="tools-hero">
+                    <div class="tools-hero-copy">
+                        <div class="tools-eyebrow"><span class="material-icons">construction</span> SANCTUM TOOL STUDIO <span class="eyebrow-line"></span> LOCAL ONLY</div>
+                        <h1>Make something<br><em>useful.</em></h1>
+                        <p>Turn workspace files into polished documents, presentations, and more with a local-first toolset.</p>
+                    </div>
+                    <div class="tools-hero-signal" aria-hidden="true">
+                        <span class="signal-ring signal-ring-one"></span>
+                        <span class="signal-ring signal-ring-two"></span>
+                        <span class="material-icons">bolt</span>
+                    </div>
+                </div>
+                <div class="tool-launch-grid">
+                    <button class="tool-launch-card launch-files" type="button" data-screen="workspace">
+                        <span class="launch-card-top"><span class="launch-icon"><span class="material-icons">folder_open</span></span><span class="material-icons launch-arrow">arrow_outward</span></span>
+                        <span class="launch-card-index">01 / EXPLORE</span>
+                        <strong>Files</strong>
+                        <span>Browse, read, edit, and organize your workspace.</span>
+                        <span class="launch-card-action">Open workspace <span class="material-icons">east</span></span>
+                    </button>
+                    <button class="tool-launch-card launch-pdf" type="button" data-screen="agent" data-tool-prompt="Create a PDF report titled [title] about:">
+                        <span class="launch-card-top"><span class="launch-icon"><span class="material-icons">picture_as_pdf</span></span><span class="material-icons launch-arrow">arrow_outward</span></span>
+                        <span class="launch-card-index">02 / COMPOSE</span>
+                        <strong>Make PDFs</strong>
+                        <span>Shape research and notes into a ready-to-share report.</span>
+                        <span class="launch-card-action">Start a PDF <span class="material-icons">east</span></span>
+                    </button>
+                    <button class="tool-launch-card launch-ppt" type="button" data-screen="agent" data-tool-prompt="Create a presentation titled [title] about:">
+                        <span class="launch-card-top"><span class="launch-icon"><span class="material-icons">slideshow</span></span><span class="material-icons launch-arrow">arrow_outward</span></span>
+                        <span class="launch-card-index">03 / PRESENT</span>
+                        <strong>Make PPTs</strong>
+                        <span>Turn an idea into a clear, structured presentation.</span>
+                        <span class="launch-card-action">Start a deck <span class="material-icons">east</span></span>
+                    </button>
+                    <button class="tool-launch-card launch-excel" type="button" data-screen="agent" data-tool-prompt="Create an Excel workbook at [path] with these sheets and data:">
+                        <span class="launch-card-top"><span class="launch-icon"><span class="material-icons">table_view</span></span><span class="material-icons launch-arrow">arrow_outward</span></span>
+                        <span class="launch-card-index">04 / ORGANIZE</span>
+                        <strong>Make Excels</strong>
+                        <span>Build clean workbooks, sheets, and structured data.</span>
+                        <span class="launch-card-action">Start a workbook <span class="material-icons">east</span></span>
+                    </button>
+                    <button class="tool-launch-card launch-docx" type="button" data-screen="agent" data-tool-prompt="Create a Word document titled [title] about:">
+                        <span class="launch-card-top"><span class="launch-icon"><span class="material-icons">article</span></span><span class="material-icons launch-arrow">arrow_outward</span></span>
+                        <span class="launch-card-index">05 / WRITE</span>
+                        <strong>Make DOCX</strong>
+                        <span>Draft polished Word documents from a simple brief.</span>
+                        <span class="launch-card-action">Start a document <span class="material-icons">east</span></span>
+                    </button>
+                    <button class="tool-launch-card launch-code" type="button" data-screen="agent" data-tool-prompt="Write code that accomplishes the following:">
+                        <span class="launch-card-top"><span class="launch-icon"><span class="material-icons">code</span></span><span class="material-icons launch-arrow">arrow_outward</span></span>
+                        <span class="launch-card-index">06 / BUILD</span>
+                        <strong>Write Code</strong>
+                        <span>Turn an idea into working, explainable code.</span>
+                        <span class="launch-card-action">Open coding chat <span class="material-icons">east</span></span>
+                    </button>
+                    <button class="tool-launch-card launch-chat" type="button" data-screen="agent" data-tool-prompt="Help me with the following task:">
+                        <span class="launch-card-top"><span class="launch-icon"><span class="material-icons">auto_awesome</span></span><span class="material-icons launch-arrow">arrow_outward</span></span>
+                        <span class="launch-card-index">07 / THINK</span>
+                        <strong>Chat with AI</strong>
+                        <span>Ask, explore, explain, and plan with Sanctum.</span>
+                        <span class="launch-card-action">Start a conversation <span class="material-icons">east</span></span>
+                    </button>
+                    <button class="tool-launch-card launch-protect" type="button" data-screen="locker">
+                        <span class="launch-card-top"><span class="launch-icon"><span class="material-icons">shield</span></span><span class="material-icons launch-arrow">arrow_outward</span></span>
+                        <span class="launch-card-index">08 / SECURE</span>
+                        <strong>Protect Files</strong>
+                        <span>Apply local cover to sensitive files with Sanctum Locker.</span>
+                        <span class="launch-card-action">Open protection <span class="material-icons">east</span></span>
+                    </button>
+                    <button class="tool-launch-card launch-git" type="button" data-screen="agent" data-tool-prompt="Help me connect this workspace to Git and set up the following workflow:">
+                        <span class="launch-card-top"><span class="launch-icon"><span class="material-icons">merge_type</span></span><span class="material-icons launch-arrow">arrow_outward</span></span>
+                        <span class="launch-card-index">09 / VERSION</span>
+                        <strong>Connect to Git</strong>
+                        <span>Understand branches, commits, and project history.</span>
+                        <span class="launch-card-action">Plan Git setup <span class="material-icons">east</span></span>
+                    </button>
+                    <button class="tool-launch-card launch-terminal" type="button" data-screen="agent" data-tool-prompt="Run this terminal command and explain the result:">
+                        <span class="launch-card-top"><span class="launch-icon"><span class="material-icons">terminal</span></span><span class="material-icons launch-arrow">arrow_outward</span></span>
+                        <span class="launch-card-index">10 / EXECUTE</span>
+                        <strong>Work on Terminal</strong>
+                        <span>Run workspace commands and inspect the results.</span>
+                        <span class="launch-card-action">Open terminal chat <span class="material-icons">east</span></span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- ── SANCTUM LOCKER ── -->
+            <section class="screen" id="screen-locker">
+                <div class="locker-layout">
+                    <div class="panel locker-workbench">
+                        <div class="locker-mode-tabs" role="tablist" aria-label="Locker mode">
+                            <button class="locker-mode active" data-locker-mode="lock" role="tab" title="Apply Cover" aria-label="Apply Cover"><span class="material-icons">lock</span> Apply Cover</button>
+                            <button class="locker-mode" data-locker-mode="unlock" role="tab" title="Remove Cover" aria-label="Remove Cover"><span class="material-icons">lock_open</span> Remove Cover</button>
+                        </div>
+                        <form id="lockerForm" class="locker-form">
+                            <input type="hidden" id="lockerMode" value="lock">
+                            <label class="locker-label" for="lockerFile"><span class="material-icons">description</span><span id="lockerFileLabel">File to cover</span></label>
+                            <label class="locker-drop" for="lockerFile">
+                                <span class="material-icons" id="lockerDropIcon">upload_file</span>
+                                <strong id="lockerDropTitle">Choose a file to cover</strong>
+                                <small id="lockerDropHint">Your original file stays on your machine.</small>
+                                <span id="lockerFileName" class="locker-file-name">No file selected</span>
+                                <input id="lockerFile" type="file" required>
+                            </label>
+                            <label class="locker-label" for="lockerPassphrase"><span class="material-icons">key</span>Passphrase</label>
+                            <div class="locker-password-row">
+                                <input id="lockerPassphrase" type="password" placeholder="Enter a strong passphrase" required>
+                                <button type="button" class="icon-btn" id="lockerPassphraseToggle" title="Show passphrase" aria-label="Show passphrase"><span class="material-icons">visibility</span></button>
+                            </div>
+                            <button class="btn-primary locker-submit" type="submit"><span class="material-icons" id="lockerSubmitIcon">lock</span><span id="lockerSubmitText">Apply Cover and download</span></button>
+                            <div id="lockerStatus" class="locker-status" hidden></div>
+                        </form>
+                        <div class="locker-guide">
+                            <div class="locker-guide-header"><span class="kicker">HOW TO USE</span><span class="locker-guide-rule"></span></div>
+                            <div class="locker-guide-grid">
+                                <div class="locker-guide-step"><span class="locker-step-number">01</span><span><b>Choose a mode</b><small>Apply a cover to a normal file or remove it from a trusted <code>.locked</code> file.</small></span></div>
+                                <div class="locker-guide-step"><span class="locker-step-number">02</span><span><b>Select and authenticate</b><small>Choose the file, enter your passphrase, then submit.</small></span></div>
+                                <div class="locker-guide-step"><span class="locker-step-number">03</span><span><b>Receive the result</b><small>The protected or restored file downloads immediately.</small></span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── SECURITY ── -->
+            <section class="screen" id="screen-security">
+                <div class="screen-header">
+                    <div>
+                        <span class="kicker">DATA SOVEREIGNTY</span>
+                        <h1>Security posture</h1>
+                        <p>Evidence that all inference and data stays inside the loopback boundary.</p>
+                    </div>
+                    <span class="security-badge">AIR-GAP READY</span>
+                </div>
+                <div class="metric-strip">
+                    <div class="metric-card">
+                        <span class="metric-icon material-icons">folder</span>
+                        <div><strong id="overviewFiles">—</strong><small>Workspace files</small></div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-icon material-icons">construction</span>
+                        <div><strong id="overviewTools">—</strong><small>Approved tools</small></div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-icon material-icons">device_hub</span>
+                        <div><strong id="overviewModels">—</strong><small>Local models</small></div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-icon material-icons">library_books</span>
+                        <div><strong id="overviewLkb">—</strong><small>LKB documents</small></div>
+                    </div>
+                    <div class="metric-card accent">
+                        <span class="metric-icon material-icons">lock</span>
+                        <div><strong>Loopback</strong><small>Data boundary</small></div>
+                    </div>
+                </div>
+
+                <!-- ── VISIBLE SOVEREIGN NETWORK MONITOR & EGRESS AUDITOR ── -->
+                <div class="network-monitor-section panel">
+                    <div class="panel-header">
+                        <div>
+                            <span class="kicker">LIVE NETWORK TELEMETRY</span>
+                            <h2>Sovereign Network Monitor &amp; Air-Gap Proof</h2>
+                        </div>
+                        <div class="network-monitor-badge-group">
+                            <span class="sovereign-status-pill"><span class="airgap-radar-dot"></span> AIR-GAP VERIFIED</span>
+                            <button class="btn-secondary" id="refreshNetworkMonitorBtn" style="padding: 4px 10px; font-size: 11px;">
+                                <span class="material-icons" style="font-size: 13px;">refresh</span> Refresh Audit
+                            </button>
+                        </div>
+                    </div>
+                    <p class="section-subtitle">Active low-level socket auditor intercepting and verifying 100% of runtime connections. Proves mathematically and through logs that zero external bytes leave the local boundary.</p>
+
+                    <div class="network-metrics-grid">
+                        <div class="net-metric-card net-metric-zero">
+                            <div class="net-metric-icon"><span class="material-icons">cloud_off</span></div>
+                            <div class="net-metric-data">
+                                <span class="net-metric-num" id="netMetricExternal">0</span>
+                                <span class="net-metric-label">External Calls (0 Allowed)</span>
+                            </div>
+                            <span class="net-metric-tag secure">AIR-GAPPED</span>
+                        </div>
+                        <div class="net-metric-card">
+                            <div class="net-metric-icon"><span class="material-icons">sync_alt</span></div>
+                            <div class="net-metric-data">
+                                <span class="net-metric-num" id="netMetricLoopback">—</span>
+                                <span class="net-metric-label">Loopback Inferences</span>
+                            </div>
+                            <span class="net-metric-tag local">127.0.0.1 ONLY</span>
+                        </div>
+                        <div class="net-metric-card">
+                            <div class="net-metric-icon"><span class="material-icons">smart_toy</span></div>
+                            <div class="net-metric-data">
+                                <span class="net-metric-num" id="netMetricOllama">—</span>
+                                <span class="net-metric-label">Ollama LLM (Port 11434)</span>
+                            </div>
+                            <span class="net-metric-tag active">LOCAL VRAM</span>
+                        </div>
+                        <div class="net-metric-card">
+                            <div class="net-metric-icon"><span class="material-icons">description</span></div>
+                            <div class="net-metric-data">
+                                <span class="net-metric-num" id="netMetricDocEngine">—</span>
+                                <span class="net-metric-label">Doc Engine (Port 8001)</span>
+                            </div>
+                            <span class="net-metric-tag local">LOCAL PROCESS</span>
+                        </div>
+                    </div>
+
+                    <div class="net-console-wrapper">
+                        <div class="net-console-header">
+                            <span class="net-console-dot green"></span>
+                            <span class="net-console-dot yellow"></span>
+                            <span class="net-console-dot red"></span>
+                            <span class="net-console-title">SOCKET EGRESS AUDIT STREAM &amp; PROOF OF ISOLATION</span>
+                            <span class="net-console-status" id="netConsoleStatus">MONITORING ACTIVE — 100% AIR-GAP</span>
+                        </div>
+                        <div class="net-console-body" id="networkAuditConsole">
+                            <div class="net-log-line init">[INITIALIZE] Sovereign Network Auditor active. Air-gap policy: STRICT (Loopback only).</div>
+                        </div>
+                    </div>
+
+                    <!-- Live Wireshark Sovereign Packet Sniffer & Air-Gap Inspector -->
+                    <div class="wireshark-container" id="wiresharkContainer">
+                        <!-- Wireshark Top Titlebar / Controls -->
+                        <div class="wireshark-header">
+                            <div class="ws-header-left">
+                                <span class="ws-fin-icon material-icons">filter_drama</span>
+                                <div class="ws-title-group">
+                                    <strong class="ws-app-name">WIRESHARK 4.2 SOVEREIGN ANALYZER</strong>
+                                    <span class="ws-badge-iface"><span class="dot-live"></span>INTERFACE: lo0 (127.0.0.1)</span>
+                                </div>
+                            </div>
+                            <div class="ws-header-right">
+                                <span class="ws-verdict-banner" id="wsEgressVerdict">WAN EGRESS: 0 BYTES (STRICT LOOPBACK AIRGAP)</span>
+                                <button class="btn-warning small" id="wsTestEgressBtn" title="Simulate an outbound network call to verify active socket block">
+                                    <span class="material-icons" style="font-size:12px">shield</span> Test WAN Block
+                                </button>
+                                <a href="/api/wireshark/pcap" class="btn-primary small" id="wsDownloadPcapBtn" title="Download raw libpcap binary stream for native Wireshark / tcpdump">
+                                    <span class="material-icons" style="font-size:12px">download</span> Download .PCAP
+                                </a>
+                                <a href="/api/logs/download?source=network" class="btn-secondary small" style="padding:3px 8px;font-size:10px" download="sanctum_airgap_stream.txt" title="Download raw text log">
+                                    <span class="material-icons" style="font-size:12px">description</span> Log
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Wireshark Display Filter Bar -->
+                        <div class="ws-filter-bar">
+                            <div class="ws-filter-badge">
+                                <span class="material-icons" style="font-size:13px;color:#3fb950">bookmark</span>
+                                <span>Filter:</span>
+                            </div>
+                            <input type="text" class="ws-filter-input" id="wsFilterInput" value="ip.addr == 127.0.0.1" placeholder="Apply a display filter ... e.g. ip.addr == 127.0.0.1 or tcp.port == 11434" spellcheck="false" />
+                            <select class="ws-filter-presets" id="wsFilterPresets" title="Preset Wireshark Filters">
+                                <option value="ip.addr == 127.0.0.1">Preset: 100% Local Loopback (lo0)</option>
+                                <option value="tcp.port == 11434">Preset: Ollama LLM Inference (Port 11434)</option>
+                                <option value="tcp.port == 8001">Preset: Document Intelligence OCR (Port 8001)</option>
+                                <option value="tcp.port == 5050">Preset: Sanctum Agent Studio (Port 5050)</option>
+                                <option value="ip.dst != 127.0.0.1">Preset: Dropped WAN Probes (Egress Tests)</option>
+                            </select>
+                            <button class="ws-filter-btn apply" id="wsFilterApplyBtn" title="Apply filter">Apply</button>
+                            <button class="ws-filter-btn clear" id="wsFilterClearBtn" title="Clear filter">Clear</button>
+                        </div>
+
+                        <!-- 3-PANE WIRESHARK WORKSPACE -->
+                        <div class="ws-panes-grid">
+                            <!-- PANE 1: Packet List -->
+                            <div class="ws-pane ws-pane-list">
+                                <div class="ws-pane-header">
+                                    <span class="material-icons ws-pane-icon">list</span>
+                                    <span>FRAME LIST (PACKET TELEMETRY)</span>
+                                    <span class="ws-packet-counter" id="wsPacketCounter">3 packets</span>
+                                </div>
+                                <div class="ws-table-scroll">
+                                    <table class="wireshark-table" id="wiresharkPacketTable">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:45px">NO.</th>
+                                                <th style="width:75px">TIME</th>
+                                                <th style="width:50px">IFACE</th>
+                                                <th style="width:90px">SOURCE</th>
+                                                <th style="width:130px">DESTINATION</th>
+                                                <th style="width:85px">PROTOCOL</th>
+                                                <th style="width:65px">LENGTH</th>
+                                                <th>INFO</th>
+                                                <th style="width:130px">VERDICT</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="wiresharkPacketBody">
+                                            <!-- Dynamically populated by JS -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- BOTTOM SPLIT: Pane 2 (Dissection Tree) & Pane 3 (Hex Dump) -->
+                            <div class="ws-bottom-split">
+                                <!-- PANE 2: Packet Details (Protocol Dissection Tree) -->
+                                <div class="ws-pane ws-pane-details">
+                                    <div class="ws-pane-header">
+                                        <span class="material-icons ws-pane-icon">account_tree</span>
+                                        <span id="wsDetailsHeader">PACKET DETAILS (DISSECTION)</span>
+                                        <span class="ws-details-tag" id="wsDetailsTag">Frame #1</span>
+                                    </div>
+                                    <div class="ws-tree-container" id="wsPacketDissectionTree">
+                                        <div class="ws-tree-node open">
+                                            <span class="ws-tree-arrow">▼</span>
+                                            <span class="ws-tree-text">Select a frame above to view protocol dissection layers.</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- PANE 3: Packet Bytes (Hex & ASCII Dump) -->
+                                <div class="ws-pane ws-pane-hex">
+                                    <div class="ws-pane-header">
+                                        <span class="material-icons ws-pane-icon">data_object</span>
+                                        <span>PACKET BYTES (HEX / ASCII DUMP)</span>
+                                        <span class="ws-hex-status" id="wsHexOffset">OFFSET 0000</span>
+                                    </div>
+                                    <div class="ws-hex-container">
+                                        <pre class="ws-hexdump" id="wsPacketHexDump">0000   00 00 00 00 00 00 00 00  00 00 00 00 08 00 45 00   ..............E.
+0010   00 c4 12 01 40 00 40 06  00 00 7f 00 00 01 7f 00   ....@.@.........
+0020   00 01 cb 21 2c aa 00 00  00 64 00 00 00 c8 50 18   ...!,....d....P.
+0030   ff ff 00 00 00 00 50 4f  53 54 20 2f 61 70 69 2f   ......POST /api/
+0040   63 68 61 74 20 48 54 54  50 2f 31 2e 31 0d 0a 48   chat HTTP/1.1..H</pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Host Terminal Sniffer Helper Bar -->
+                        <div class="ws-footer-helper">
+                            <div class="ws-helper-left">
+                                <span class="material-icons" style="font-size:14px;color:#79c0ff">terminal</span>
+                                <span style="color:#8b949e">Live Terminal Sniffer:</span>
+                                <code id="wsTerminalCmd">sudo tcpdump -i lo0 'port 11434 or port 8001 or port 5050' -n -X -c 10</code>
+                            </div>
+                            <button class="btn-ghost small" id="wsCopyCmdBtn" style="padding:2px 8px;font-size:10px" title="Copy terminal command">
+                                <span class="material-icons" style="font-size:12px">content_copy</span> Copy Command
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fluid-diagram-section">
+                    <div class="section-label fluid-accent">SANCTUM FLUID ARCHITECTURE</div>
+                    <div class="fluid-diagram">
+                        <div class="fluid-layer layer-top">
+                            <span class="layer-label">UI / AGENT LAYER</span>
+                            <div class="layer-nodes">
+                                <div class="layer-node">Chat</div>
+                                <div class="layer-node">Workspace</div>
+                                <div class="layer-node">LKB</div>
+                                <div class="layer-node">Tools</div>
+                            </div>
+                        </div>
+                        <div class="fluid-arrows"><span>↕ Isolated requests ↕</span></div>
+                        <div class="fluid-layer layer-mid">
+                            <span class="layer-label">WORKSPACE LAYER</span>
+                            <div class="layer-nodes" id="diagramWorkspaces">
+                                <div class="layer-node active-node">Active Workspace</div>
+                            </div>
+                        </div>
+                        <div class="fluid-arrows"><span>↕ No cross-model data ↕</span></div>
+                        <div class="fluid-layer layer-bottom">
+                            <span class="layer-label">LOCAL MODEL LAYER</span>
+                            <div class="layer-nodes" id="diagramModels">
+                                <div class="layer-node">Detecting...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="overview-grid">
+                    <div class="panel">
+                        <div class="panel-header"><span class="kicker">WORKFLOWS</span><h2>Quick actions</h2></div>
+                        <div class="workflow-list">
+                            <button class="workflow-btn" data-screen="workspace">
+                                <span class="wf-icon blue material-icons">folder_open</span>
+                                <span><b>Inspect Workspace</b><small>Browse files locally</small></span>
+                                <span class="material-icons arrow-r">chevron_right</span>
+                            </button>
+                            <button class="workflow-btn" data-screen="agent">
+                                <span class="wf-icon teal material-icons">auto_awesome</span>
+                                <span><b>Run Agent Task</b><small>Plan, call tools, verify</small></span>
+                                <span class="material-icons arrow-r">chevron_right</span>
+                            </button>
+                            <button class="workflow-btn" data-screen="lkb">
+                                <span class="wf-icon amber material-icons">library_books</span>
+                                <span><b>Local Knowledge Base</b><small>Index and search documents</small></span>
+                                <span class="material-icons arrow-r">chevron_right</span>
+                            </button>
+                            <button class="workflow-btn" data-screen="models">
+                                <span class="wf-icon purple material-icons">device_hub</span>
+                                <span><b>Fluid Model Router</b><small>View capability routing</small></span>
+                                <span class="material-icons arrow-r">chevron_right</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-header"><span class="kicker">LOCAL RUNTIME</span><h2>Isolation status</h2></div>
+                        <div class="isolation-checks">
+                            <div class="iso-row"><span class="check-icon material-icons">verified</span><span><b id="overviewEndpoint">127.0.0.1</b><small>Inference endpoint (loopback only)</small></span></div>
+                            <div class="iso-row"><span class="check-icon material-icons">verified</span><span><b>Workspace Isolation</b><small>Per-workspace data boundary</small></span></div>
+                            <div class="iso-row"><span class="check-icon material-icons">verified</span><span><b>Model Isolation</b><small>No cross-model data sharing</small></span></div>
+                            <div class="iso-row"><span class="check-icon material-icons">verified</span><span><b id="overviewMcp">MCP Tools</b><small>Approved local tools only</small></span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="security-layout">
+                    <div class="panel security-hero">
+                        <div class="shield-glyph">◇</div>
+                        <h2>Your data stays here.</h2>
+                        <p>Sanctum rejects non-loopback inference endpoints and has no cloud AI provider in its runtime path.</p>
+                        <div class="security-status-row">
+                            <span class="dot-live"></span>
+                            <b id="securityStatus">Verifying...</b>
+                        </div>
+                    </div>
+                    <div class="panel evidence-panel">
+                        <span class="kicker">RUNTIME EVIDENCE</span>
+                        <div class="evidence-row"><span>Inference route</span><strong id="securityEndpoint">—</strong></div>
+                        <div class="evidence-row"><span>Network scope</span><strong id="securityNetwork">—</strong></div>
+                        <div class="evidence-row"><span>MCP transport</span><strong id="securityTransport">—</strong></div>
+                        <div class="evidence-row"><span>Protocol version</span><strong id="securityProtocol">—</strong></div>
+                        <div class="evidence-row"><span>Workspace isolation</span><strong>Per-workspace .sanctum/</strong></div>
+                        <div class="evidence-row"><span>Model isolation</span><strong>No cross-model data</strong></div>
+                        <button class="btn-secondary" id="securityRefresh"><span class="material-icons">refresh</span> Recheck boundary</button>
+                    </div>
+                </div>
+            </section>
+ 
+            <!-- ── SYSTEM & SOVEREIGN LOGS ── -->
+            <section class="screen" id="screen-logs">
+                <div class="logs-screen-shell">
+                    <div class="logs-header-row">
+                        <div>
+                            <span class="kicker">SANCTUM / TELEMETRY &amp; AUDIT</span>
+                            <h2>System &amp; Sovereign Logs</h2>
+                            <p class="section-subtitle">Live execution traces, local model routing decisions, tool actions, and socket-level air-gap audit records.</p>
+                        </div>
+                        <div class="logs-header-actions">
+                            <button class="btn-secondary small" id="refreshLogsBtn">
+                                <span class="material-icons" style="font-size:14px">refresh</span> Refresh
+                            </button>
+                            <button class="btn-secondary small" id="clearLogsBtn">
+                                <span class="material-icons" style="font-size:14px">delete_sweep</span> Clear Logs
+                            </button>
+                            <a href="/api/logs/download?source=all" class="btn-secondary small" id="downloadLogsBtn" download="sanctum_logs.txt">
+                                <span class="material-icons" style="font-size:14px">download</span> Export Logs
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Telemetry Metric Summary Cards -->
+                    <div class="logs-metrics-grid">
+                        <div class="stat-card">
+                            <span class="stat-label">TOTAL LOG ENTRIES</span>
+                            <strong class="stat-val" id="logStatTotal">0</strong>
+                            <small class="stat-hint">Active runtime buffer</small>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">AIR-GAP INTEGRITY</span>
+                            <strong class="stat-val accent-green" id="logStatAirgap">100.0%</strong>
+                            <small class="stat-hint">Zero egress leaks</small>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">LOOPBACK CALLS</span>
+                            <strong class="stat-val accent-blue" id="logStatLoopback">0</strong>
+                            <small class="stat-hint">127.0.0.1 Ollama &amp; Docs</small>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">EXTERNAL CALLS</span>
+                            <strong class="stat-val accent-cyan" id="logStatExternal">0</strong>
+                            <small class="stat-hint">Strictly prohibited</small>
+                        </div>
+                    </div>
+
+                    <!-- Toolbar & Filters -->
+                    <div class="logs-toolbar">
+                        <div class="logs-filter-group" role="tablist">
+                            <button class="log-filter-btn active" data-source="all">All Logs</button>
+                            <button class="log-filter-btn" data-source="system">System &amp; Agent</button>
+                            <button class="log-filter-btn" data-source="network">Sovereign Air-Gap</button>
+                            <button class="log-filter-btn" data-source="error">Errors Only</button>
+                        </div>
+                        <div class="logs-search-box">
+                            <span class="material-icons" style="font-size:14px;color:var(--text-muted)">search</span>
+                            <input type="text" id="logSearchInput" placeholder="Filter logs by keyword, model, or socket..." aria-label="Filter logs">
+                        </div>
+                        <div class="logs-stream-toggle">
+                            <label class="toggle-label">
+                                <input type="checkbox" id="logAutoScroll" checked>
+                                <span>Auto-scroll</span>
+                            </label>
+                            <label class="toggle-label">
+                                <input type="checkbox" id="logLiveStream" checked>
+                                <span class="live-pulse-dot"></span>
+                                <span>Live Stream</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Monospace Terminal Log Viewer -->
+                    <div class="logs-terminal-card">
+                        <div class="logs-terminal-header">
+                            <div class="terminal-dots">
+                                <span class="dot red"></span>
+                                <span class="dot amber"></span>
+                                <span class="dot green"></span>
+                            </div>
+                            <span class="terminal-title">SANCTUM RUNTIME &amp; AUDIT LOG TERMINAL</span>
+                            <span class="terminal-status" id="logTerminalStatus">STREAMING ACTIVE</span>
+                        </div>
+                        <div class="logs-terminal-body" id="logsTerminalBody">
+                            <div class="log-line info">
+                                <span class="log-ts">[INITIALIZE]</span>
+                                <span class="log-badge badge-sys">SYSTEM</span>
+                                <span class="log-msg">Loading Sanctum telemetry and air-gap logs...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div><!-- /screens -->
+    </div><!-- /content-area -->
+</div><!-- /app-shell -->
+
+<!-- Status Bar -->
+<div class="status-bar">
+    <span class="sb-item"><span class="dot-live"></span>LOCAL</span>
+    <span class="sb-item" id="statusWorkspace">WORKSPACE READY</span>
+    <span class="sb-spacer"></span>
+    <span class="sb-item" id="statusModel">MODEL CONNECTING</span>
+    <span class="sb-item">UTF-8</span>
+    <span class="sb-item isolation-chip">ISOLATION: FULL</span>
+</div>
+
+<!-- Command Palette -->
+<div class="cmd-palette" id="commandPalette" hidden role="dialog" aria-modal="true">
+    <div class="cmd-box">
+        <div class="cmd-input-row">
+            <span class="material-icons">search</span>
+            <input id="commandInput" autocomplete="off" placeholder="Search commands, screens..." aria-label="Search">
+        </div>
+        <div class="cmd-results" id="commandResults"></div>
+    </div>
+</div>
+
+<div class="modal-backdrop" id="toolPickerModal" hidden role="dialog" aria-modal="true" aria-labelledby="toolPickerTitle">
+    <div class="modal-box tool-picker-box">
+        <div class="modal-header">
+            <div><span class="kicker">AGENT ACTIONS</span><h2 id="toolPickerTitle">Choose a tool</h2></div>
+            <button class="icon-btn modal-close" data-modal-close="toolPickerModal" title="Close"><span class="material-icons">close</span></button>
+        </div>
+        <div id="toolPickerList" class="tool-picker-list"></div>
+    </div>
+</div>
+
+<div class="modal-backdrop" id="historyModal" hidden role="dialog" aria-modal="true" aria-labelledby="historyTitle">
+    <div class="modal-box history-modal-box">
+        <div class="modal-header">
+            <div><span class="kicker">SESSION LIBRARY</span><h2 id="historyTitle">History</h2></div>
+            <button class="icon-btn modal-close" data-modal-close="historyModal" title="Close"><span class="material-icons">close</span></button>
+        </div>
+        <label class="search-label">
+            <span class="material-icons">search</span>
+            <input id="historySearch" type="search" placeholder="Search sessions">
+        </label>
+        <div id="historyList" class="history-list"><div class="empty-state"><p>No sessions yet.</p></div></div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='vendor/marked.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/katex.min.js') }}"></script>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

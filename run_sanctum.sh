@@ -21,11 +21,9 @@ trap cleanup SIGINT SIGTERM EXIT
 
 # 1. Start Python Backend
 echo "[1/2] Starting Python Flask backend on port 5050..."
-cd "$ROOT_DIR"
+cd "$ROOT_DIR/sanctum-backend"
 if [ -f "./venv/bin/python" ]; then
     ./venv/bin/python app.py &
-elif [ -f "./sanctum-backend/venv/bin/python" ]; then
-    ./sanctum-backend/venv/bin/python app.py &
 else
     python3 app.py &
 fi
