@@ -288,13 +288,22 @@ def select_workspace():
 def pick_workspace():
     """Open a native folder picker when Sanctum is running on the local desktop."""
     try:
-        import tkinter as tk
-        from tkinter import filedialog
-        root = tk.Tk()
-        root.withdraw()
-        root.attributes("-topmost", True)
-        selected = filedialog.askdirectory(title="Choose Sanctum workspace")
-        root.destroy()
+        import sys
+        if sys.platform == "darwin":
+            import subprocess
+            cmd = ["osascript", "-e", 'POSIX path of (choose folder with prompt "Choose Sanctum workspace")']
+            res = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+            if res.returncode != 0 or not res.stdout.strip():
+                return jsonify({"cancelled": True}), 200
+            selected = res.stdout.strip()
+        else:
+            import tkinter as tk
+            from tkinter import filedialog
+            root = tk.Tk()
+            root.withdraw()
+            root.attributes("-topmost", True)
+            selected = filedialog.askdirectory(title="Choose Sanctum workspace")
+            root.destroy()
         if not selected:
             return jsonify({"cancelled": True}), 200
         active = current_app.agent.set_workspace(selected)
