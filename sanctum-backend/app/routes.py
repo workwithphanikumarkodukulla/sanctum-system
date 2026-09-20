@@ -1,5 +1,8 @@
 """Routes module. Defines all API endpoints for Sanctum Fluid Architecture."""
 
+import base64
+import io
+import mimetypes
 import json
 import queue
 import shutil
@@ -13,6 +16,7 @@ from werkzeug.utils import secure_filename
 from sanctum_locker import restrict_file, unrestrict_file
 
 from app.logger import logger
+from app.document_parser import parse_document, render_pdf_page_image
 
 main_bp = Blueprint("main", __name__)
 
@@ -560,7 +564,7 @@ def read_workspace_file():
 
 @main_bp.route("/api/workspace/preview", methods=["GET"])
 def preview_workspace_file():
-    """Serve a workspace PDF inline for the embedded editor viewer."""
+    """Serve any workspace document, PDF, or image inline for the embedded editor viewer."""
     requested = request.args.get("path", "").strip()
     if not requested:
         return jsonify({"error": "File path parameter 'path' is required."}), 400
@@ -570,9 +574,100 @@ def preview_workspace_file():
         candidate.relative_to(root)
     except ValueError:
         return jsonify({"error": "Preview path escapes the configured workspace root."}), 403
+    if not candidate.is_file():
+        return jsonify({"error": "A file was not found at this path."}), 404
+
+    suffix = candidate.suffix.lower()
+    mime_type, _ = mimetypes.guess_type(candidate.name)
+    if suffix == ".pdf":
+        mime_type = "application/pdf"
+    elif suffix in (".png", ".jpg", ".jpeg", ".webp", ".svg", ".gif", ".ico", ".bmp"):
+        mime_type = mime_type or f"image/{suffix.lstrip('.')}"
+    elif suffix in (".docx", ".doc"):
+        mime_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    elif suffix in (".pptx", ".ppt"):
+        mime_type = "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    elif suffix in (".xlsx", ".xls"):
+        mime_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    elif not mime_type:
+        mime_type = "application/octet-stream"
+
+    return send_file(candidate, mimetype=mime_type, as_attachment=False, download_name=candidate.name)
+
+
+@main_bp.route("/api/workspace/document-data", methods=["GET", "POST"])
+def get_document_data():
+    """Extract structured data for PDF, DOCX, PPTX, XLSX/CSV, and image files."""
+    if request.method == "POST":
+        # Handle file upload or base64 JSON payload
+        filename = "document"
+        file_bytes = None
+        if "file" in request.files:
+            uploaded = request.files["file"]
+            filename = secure_filename(uploaded.filename or "uploaded_file")
+            file_bytes = uploaded.read()
+        else:
+            data = request.get_json() or {}
+            filename = data.get("filename", "document")
+            b64_content = data.get("content_base64", "")
+            if b64_content:
+                if "," in b64_content:
+                    b64_content = b64_content.split(",", 1)[1]
+                file_bytes = base64.b64decode(b64_content)
+
+        if not file_bytes:
+            return jsonify({"error": "No document content provided in request."}), 400
+
+        parsed = parse_document(file_bytes, filename)
+        return jsonify(parsed)
+
+    # GET method - read from active workspace
+    requested = request.args.get("path", "").strip()
+    if not requested:
+        return jsonify({"error": "File path parameter 'path' is required."}), 400
+    root = current_app.agent.tool_manager.get("workspace").root_dir.resolve()
+    candidate = (root / requested).expanduser().resolve()
+    try:
+        candidate.relative_to(root)
+    except ValueError:
+        return jsonify({"error": "Path escapes the configured workspace root."}), 403
+    if not candidate.is_file():
+        return jsonify({"error": "File was not found at this path."}), 404
+
+    parsed = parse_document(candidate, candidate.name)
+    # Include direct preview URL
+    parsed["preview_url"] = f"/api/backend/workspace/preview?path={encode_path_param(requested)}"
+    return jsonify(parsed)
+
+
+@main_bp.route("/api/workspace/pdf-page-image", methods=["GET"])
+def get_pdf_page_image():
+    """Render a specific PDF page to high-res PNG image for the viewer."""
+    requested = request.args.get("path", "").strip()
+    page_num = int(request.args.get("page", 1))
+    dpi = int(request.args.get("dpi", 130))
+    if not requested:
+        return jsonify({"error": "File path parameter 'path' is required."}), 400
+    root = current_app.agent.tool_manager.get("workspace").root_dir.resolve()
+    candidate = (root / requested).expanduser().resolve()
+    try:
+        candidate.relative_to(root)
+    except ValueError:
+        return jsonify({"error": "Path escapes the configured workspace root."}), 403
     if not candidate.is_file() or candidate.suffix.lower() != ".pdf":
-        return jsonify({"error": "A workspace PDF was not found at this path."}), 404
-    return send_file(candidate, mimetype="application/pdf", as_attachment=False, download_name=candidate.name)
+        return jsonify({"error": "PDF file was not found at this path."}), 404
+
+    try:
+        png_bytes = render_pdf_page_image(candidate, page_num=page_num, dpi=dpi)
+        return send_file(io.BytesIO(png_bytes), mimetype="image/png", as_attachment=False)
+    except Exception as e:
+        logger.exception(f"Failed to render PDF page {page_num} of {requested}: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+def encode_path_param(p: str) -> str:
+    import urllib.parse
+    return urllib.parse.quote(p)
 
 
 @main_bp.route("/api/workspace/download", methods=["GET"])

@@ -27,11 +27,16 @@ import {
   Lock,
   X,
   Upload,
+  BookOpen,
+  Presentation,
+  Table as TableIcon,
+  Image as ImageIcon,
 } from "lucide-react";
 import { FileItem } from "@/types";
 import { sampleWorkspaceFiles } from "@/lib/mockData";
 import { AgentChatPanel } from "@/components/agent-chat/AgentChatPanel";
 import { MonacoCodeEditor } from "@/components/editor/MonacoCodeEditor";
+import { DocumentViewer, getDocumentType } from "@/components/editor/DocumentViewer";
 import { InteractiveTerminal } from "@/components/terminal/InteractiveTerminal";
 import { copyToClipboard } from "@/lib/utils";
 import { SanctumLogo } from "@/components/ui/sanctum-logo";
@@ -102,6 +107,31 @@ export const WorkspaceScreen: React.FC<WorkspaceScreenProps> = ({
   const newItemInputRef = useRef<HTMLInputElement>(null);
   const folderInputRef = useRef<HTMLInputElement>(null);
   const fileStoreRef = useRef<Map<string, any>>(new Map());
+  const [activeFileObject, setActiveFileObject] = useState<File | null>(null);
+
+  // Helper to render appropriate file icon based on file extension
+  const renderItemIcon = (filename: string, className = "w-3.5 h-3.5 shrink-0") => {
+    const ext = filename.split(".").pop()?.toLowerCase() || "";
+    if (ext === "pdf") {
+      return <FileText className={`${className} text-rose-400`} />;
+    }
+    if (["docx", "doc"].includes(ext)) {
+      return <BookOpen className={`${className} text-blue-400`} />;
+    }
+    if (["pptx", "ppt"].includes(ext)) {
+      return <Presentation className={`${className} text-amber-400`} />;
+    }
+    if (["xlsx", "xls", "csv"].includes(ext)) {
+      return <TableIcon className={`${className} text-emerald-400`} />;
+    }
+    if (["png", "jpg", "jpeg", "webp", "svg", "gif", "ico", "bmp"].includes(ext)) {
+      return <ImageIcon className={`${className} text-purple-400`} />;
+    }
+    if (["py", "rs", "ts", "tsx", "js", "jsx", "json", "html", "css", "sh", "toml", "yaml", "yml"].includes(ext)) {
+      return <FileCode className={`${className} text-[#76B900]`} />;
+    }
+    return <File className={`${className} text-neutral-400`} />;
+  };
 
   // Helper to normalize backend directory tree into FileItem[]
   const normalizeBackendTree = (nodes: any[]): FileItem[] => {
@@ -596,6 +626,26 @@ export const WorkspaceScreen: React.FC<WorkspaceScreenProps> = ({
       setOpenTabs((prev) => [...prev, file]);
     }
 
+    // Resolve local File object if available in fileStoreRef
+    const stored = fileStoreRef.current.get(file.path);
+    if (stored) {
+      if (typeof window !== "undefined" && stored instanceof window.File) {
+        setActiveFileObject(stored as File);
+      } else if (typeof stored.getFile === "function") {
+        try {
+          const f = await stored.getFile();
+          setActiveFileObject(f as File);
+        } catch {}
+      }
+    } else {
+      setActiveFileObject(null);
+    }
+
+    // If file is a visual document (PDF, PPTX, DOCX, Spreadsheet, Image), DocumentViewer handles visual presentation
+    if (getDocumentType(file.name)) {
+      return;
+    }
+
     // 1. If content already present in memory, use it
     if (file.content) {
       setEditorContent(file.content);
@@ -603,7 +653,6 @@ export const WorkspaceScreen: React.FC<WorkspaceScreenProps> = ({
     }
 
     // 2. If browser File object or FileSystemFileHandle was stored
-    const stored = fileStoreRef.current.get(file.path);
     if (stored) {
       try {
         let text = "";
@@ -645,9 +694,20 @@ export const WorkspaceScreen: React.FC<WorkspaceScreenProps> = ({
       if (filtered.length > 0) {
         const next = filtered[filtered.length - 1];
         setActiveFile(next);
-        setEditorContent(next.content || "");
+        const stored = fileStoreRef.current.get(next.path);
+        if (typeof window !== "undefined" && stored instanceof window.File) {
+          setActiveFileObject(stored as File);
+        } else if (stored && typeof stored.getFile === "function") {
+          stored.getFile().then((f: any) => setActiveFileObject(f as File)).catch(() => {});
+        } else {
+          setActiveFileObject(null);
+        }
+        if (!getDocumentType(next.name)) {
+          setEditorContent(next.content || "");
+        }
       } else {
         setActiveFile(null);
+        setActiveFileObject(null);
         setEditorContent("");
       }
     }
@@ -764,13 +824,7 @@ export const WorkspaceScreen: React.FC<WorkspaceScreenProps> = ({
             ) : (
               <>
                 <span className="w-3.5" />
-                {item.name.endsWith(".py") || item.name.endsWith(".rs") ? (
-                  <FileCode className="w-3.5 h-3.5 text-[#76B900] shrink-0" />
-                ) : item.name.endsWith(".pdf") ? (
-                  <FileText className="w-3.5 h-3.5 text-rose-400 shrink-0" />
-                ) : (
-                  <File className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
-                )}
+                {renderItemIcon(item.name)}
               </>
             )}
             <span className="truncate">{item.name}</span>
@@ -970,7 +1024,17 @@ export const WorkspaceScreen: React.FC<WorkspaceScreenProps> = ({
                     key={tab.path}
                     onClick={() => {
                       setActiveFile(tab);
-                      setEditorContent(tab.content || "");
+                      const stored = fileStoreRef.current.get(tab.path);
+                      if (typeof window !== "undefined" && stored instanceof window.File) {
+                        setActiveFileObject(stored as File);
+                      } else if (stored && typeof stored.getFile === "function") {
+                        stored.getFile().then((f: any) => setActiveFileObject(f as File)).catch(() => {});
+                      } else {
+                        setActiveFileObject(null);
+                      }
+                      if (!getDocumentType(tab.name)) {
+                        setEditorContent(tab.content || "");
+                      }
                     }}
                     className={`h-7 px-3 rounded-t text-xs font-mono flex items-center gap-2 cursor-pointer transition-colors border-t-2 ${
                       isActive
@@ -978,7 +1042,7 @@ export const WorkspaceScreen: React.FC<WorkspaceScreenProps> = ({
                         : "bg-[#181818] border-transparent text-neutral-400 hover:text-neutral-200"
                     }`}
                   >
-                    <FileCode className="w-3 h-3 text-[#76B900]" />
+                    {renderItemIcon(tab.name, "w-3 h-3")}
                     <span>{tab.name}</span>
                     <span
                       onClick={(e) => handleCloseTab(e, tab.path)}
@@ -1036,14 +1100,22 @@ export const WorkspaceScreen: React.FC<WorkspaceScreenProps> = ({
         </div>
 
 
-        {/* Editor Area: Monaco Editor when files are open, or Sanctum Sovereign Empty State */}
+        {/* Editor Area: DocumentViewer for PDF/DOCX/PPTX/Spreadsheets/Images, Monaco Editor for Code, or Sovereign Empty State */}
         {activeFile && openTabs.length > 0 ? (
           <div className="flex-1 min-h-0 w-full relative">
-            <MonacoCodeEditor
-              value={editorContent}
-              language={activeFile.language || "python"}
-              onChange={(val) => setEditorContent(val)}
-            />
+            {getDocumentType(activeFile.name) ? (
+              <DocumentViewer
+                file={activeFile}
+                fileObject={activeFileObject}
+                onAskAgent={onAskAgentAboutFile}
+              />
+            ) : (
+              <MonacoCodeEditor
+                value={editorContent}
+                language={activeFile.language || "python"}
+                onChange={(val) => setEditorContent(val)}
+              />
+            )}
           </div>
         ) : (
           <div className="flex-1 min-h-0 w-full flex flex-col items-center justify-center p-8 bg-[#0b0b0b] text-center select-none relative overflow-hidden">
@@ -1153,7 +1225,11 @@ export const WorkspaceScreen: React.FC<WorkspaceScreenProps> = ({
           <div className="flex items-center gap-3">
             <span>Ln 1, Col 1</span>
             <span>Spaces: 4</span>
-            <span className="capitalize">{activeFile?.language || "Python"}</span>
+            <span className="capitalize">
+              {getDocumentType(activeFile?.name || "")
+                ? `${getDocumentType(activeFile?.name || "")?.toUpperCase()} Document`
+                : activeFile?.language || "Python"}
+            </span>
           </div>
         </div>
       </div>
