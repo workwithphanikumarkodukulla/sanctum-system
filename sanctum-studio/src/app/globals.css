@@ -165,7 +165,146 @@
   }
 }
 
+/* ═════════════════════════════════════════════════════════════════════
+   EXECUTION TRACE: TIMELINE LINE WITH DOTS (DOWNLOADS/INTEGRATE STYLE)
+   ═════════════════════════════════════════════════════════════════════ */
 
+.activity-list-wrap {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  padding-right: 4px;
+}
+
+.activity-list {
+  position: relative;
+  padding: 12px 0 12px;
+}
+
+.activity-list::before {
+  content: "";
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  left: 7px;
+  width: 1px;
+  background: #2b3a29;
+}
+
+.activity-event {
+  position: relative;
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  gap: 12px;
+  padding: 0 0 16px;
+  background: transparent;
+  line-height: 1.45;
+  animation: activity-in 0.28s ease forwards;
+}
+
+.activity-marker {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  padding-top: 4px;
+}
+
+.activity-dot {
+  width: 9px;
+  height: 9px;
+  display: block;
+  border: 2px solid #4d6d30;
+  border-radius: 50%;
+  background: #0d110d;
+  transition: all 0.2s ease;
+}
+
+.activity-event.active .activity-dot,
+.activity-event.thinking .activity-dot {
+  border-color: #76b900;
+  background: #76b900;
+  box-shadow: 0 0 10px rgba(118, 185, 0, 0.9);
+  animation: activity-pulse 1.4s ease-in-out infinite;
+}
+
+.activity-event.complete .activity-dot {
+  border-color: #9acb42;
+  background: #9acb42;
+  box-shadow: 0 0 4px rgba(154, 203, 66, 0.3);
+}
+
+.activity-event.error .activity-dot {
+  border-color: #ff5f56;
+  background: #d32f2f;
+  box-shadow: 0 0 6px rgba(255, 95, 86, 0.6);
+}
+
+@keyframes activity-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes activity-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(118, 185, 0, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(118, 185, 0, 0);
+  }
+}
+
+.activity-event-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+
+.activity-event-text {
+  font-size: 12px;
+  color: #d8e4d3;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.activity-event-text.active-shimmer {
+  font-family: var(--font-mono, monospace);
+  font-size: 11.5px;
+  font-weight: 600;
+  background: linear-gradient(
+    90deg,
+    #7a8773 0%,
+    #ffffff 25%,
+    #76b900 50%,
+    #a6f12d 56%,
+    #ffffff 75%,
+    #7a8773 100%
+  );
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: text-shimmer-sweep 2.2s linear infinite;
+}
+
+@keyframes text-shimmer-sweep {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+.activity-event-time {
+  font-size: 9.5px;
+  font-family: var(--font-mono, monospace);
+  color: #6d7b68;
+}
 
 /* Word (.docx) Artifact Card */
 .docx-artifact-card {
