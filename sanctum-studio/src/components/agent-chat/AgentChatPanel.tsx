@@ -14,6 +14,7 @@ import {
   MessageSquare,
   Clock,
   Check,
+  ShieldCheck,
 } from "lucide-react";
 import { ChatMessage } from "@/types";
 import {
@@ -769,10 +770,30 @@ export const AgentChatPanel: React.FC<AgentChatPanelProps> = ({
                     : "flex-1 min-w-0 bg-[#151515] border border-[#262626] text-neutral-200 space-y-3"
                 }`}
               >
-                <div className="flex items-center justify-between gap-3 mb-1 text-[10px] font-mono text-neutral-500">
-                  <span className="font-semibold text-[#86e810]">
-                    {isUser ? "YOU" : "AGENT"}
-                  </span>
+                <div className="flex items-center justify-between gap-3 mb-1 text-[10px] font-mono text-neutral-500 flex-wrap">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-semibold text-[#86e810]">
+                      {isUser ? "YOU" : "SANCTUM AGENT"}
+                    </span>
+                    {!isUser && (
+                      <div className="message-meta-tags">
+                        <span className="message-meta-badge model-badge" title={`Model: ${msg.model || "Local model"}`}>
+                          <Cpu className="w-3 h-3 text-[#76B900]" />
+                          {msg.model || "Local model"}
+                        </span>
+                        {msg.durationS !== undefined && (
+                          <span className="message-meta-badge time-badge" title={`Latency: ${msg.durationS}s`}>
+                            <Clock className="w-3 h-3 text-neutral-400" />
+                            {msg.durationS}s
+                          </span>
+                        )}
+                        <span className="message-meta-badge" title="Sovereign Execution: 100% Loopback Only">
+                          <ShieldCheck className="w-3 h-3 text-[#76B900]" />
+                          Air-Gapped
+                        </span>
+                      </div>
+                    )}
+                  </div>
                   <span>{msg.timestamp}</span>
                 </div>
 

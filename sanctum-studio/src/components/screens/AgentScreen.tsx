@@ -22,8 +22,10 @@ import {
   Lock,
   BookOpen,
   ChevronRight,
+  ChevronLeft,
   ExternalLink,
   Code2,
+  Zap,
 } from "lucide-react";
 import { ChatMessage, FileItem } from "@/types";
 import {
@@ -41,6 +43,17 @@ import {
   type TraceNode,
 } from "@/components/ui/ai-agent-response";
 import { MarkdownRenderer } from "@/components/ui/markdown-renderer";
+
+export interface ActivityEvent {
+  id: string;
+  text: string;
+  state: "thinking" | "active" | "complete" | "error" | "info";
+  timestamp: string;
+  tool?: string;
+  toolArgs?: any;
+  toolOutput?: string;
+  duration?: string;
+}
 
 interface ChatSession {
   id: string;
@@ -184,6 +197,7 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
   const [isToolPickerOpen, setIsToolPickerOpen] = useState(false);
   const [showTraceSidebar, setShowTraceSidebar] = useState(true);
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
+  const [activityEvents, setActivityEvents] = useState<ActivityEvent[]>([]);
 
   const historyDropdownRef = useRef<HTMLDivElement>(null);
   const toolPickerModalRef = useRef<HTMLDivElement>(null);
@@ -288,6 +302,39 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
               : s
           )
         );
+
+        // Seed execution trace activity events from the latest assistant message
+        const latestAssistant = [...mapped].reverse().find((m) => m.role === "assistant");
+        if (latestAssistant) {
+          const initEvents: ActivityEvent[] = [];
+          initEvents.push({
+            id: `init-ev-1`,
+            text: `Workspace session loaded (${latestAssistant.model || activeModel}).`,
+            state: "complete",
+            timestamp: latestAssistant.timestamp || new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" }),
+          });
+          if (latestAssistant.toolsExecuted && latestAssistant.toolsExecuted.length > 0) {
+            latestAssistant.toolsExecuted.forEach((t: any, i: number) => {
+              const tName = t.tool || t.name || "workspace_tool";
+              initEvents.push({
+                id: `init-tool-${i}`,
+                text: `Tool call: ${tName}`,
+                tool: tName,
+                toolArgs: t.args || t.arguments,
+                toolOutput: typeof t.result === "string" ? t.result : typeof t.output === "string" ? t.output : JSON.stringify(t.result || t.output || "Completed"),
+                state: "complete",
+                timestamp: latestAssistant.timestamp || new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" }),
+              });
+            });
+          }
+          initEvents.push({
+            id: `init-ev-done`,
+            text: "Mission completed successfully.",
+            state: "complete",
+            timestamp: latestAssistant.timestamp || new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" }),
+          });
+          setActivityEvents(initEvents);
+        }
       } catch (err) {
         console.warn("Failed loading workspace history in AgentScreen:", err);
       }
@@ -455,12 +502,34 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
     setLiveStageText("Evaluating local model capabilities...");
     setLiveSteps(["Evaluating local model capabilities..."]);
 
+    const startEv: ActivityEvent = {
+      id: `ev-${Date.now()}-start`,
+      text: "Processing mission request...",
+      state: "thinking",
+      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" }),
+    };
+    setActivityEvents([startEv]);
+
     try {
       const res = await sendAgentMessage(text, activeModel, (event) => {
         if (event.stage) setLiveStage(event.stage);
         if (event.text) {
           setLiveStageText(event.text);
           setLiveSteps((prev) => (prev.includes(event.text) ? prev : [...prev, event.text]));
+          setActivityEvents((prev) => {
+            const updated = prev.map((ev) =>
+              ev.state === "active" || ev.state === "thinking" ? { ...ev, state: "complete" as const } : ev
+            );
+            return [
+              {
+                id: `ev-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+                text: event.text,
+                state: "active",
+                timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" }),
+              },
+              ...updated,
+            ];
+          });
         }
       });
 
@@ -490,10 +559,11 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
         },
       ];
 
+      const toolEvents: ActivityEvent[] = [];
       // Add real tools executed by the backend
       if (res.toolsExecuted && res.toolsExecuted.length > 0) {
         res.toolsExecuted.forEach((tool, idx) => {
-          const toolName = tool.tool || "tool";
+          const toolName = tool.tool || tool.name || "tool";
           const isTerminal = toolName.includes("run_command") || toolName.includes("run_python") || toolName.includes("terminal");
           const toolArgs = tool.args || tool.input || {};
           const toolCommand =
@@ -517,8 +587,32 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
             output: toolOutput,
             status: "completed",
           });
+
+          toolEvents.push({
+            id: `tool-${Date.now()}-${idx}`,
+            text: `Tool call: ${toolName}`,
+            tool: toolName,
+            toolArgs,
+            toolOutput,
+            state: "complete",
+            timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" }),
+          });
         });
       }
+
+      // Finalize activity events list
+      setActivityEvents((prev) => [
+        {
+          id: `ev-done-${Date.now()}`,
+          text: "Mission completed successfully.",
+          state: "complete",
+          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" }),
+        },
+        ...toolEvents,
+        ...prev.map((ev) =>
+          ev.state === "active" || ev.state === "thinking" ? { ...ev, state: "complete" as const } : ev
+        ),
+      ]);
 
       const needsApproval =
         text.toLowerCase().includes("audit") ||
@@ -557,7 +651,17 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
         )
       );
     } catch (e) {
-      // error fallback
+      setActivityEvents((prev) => [
+        {
+          id: `ev-err-${Date.now()}`,
+          text: `Failed: ${e instanceof Error ? e.message : "Execution failed"}`,
+          state: "error",
+          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" }),
+        },
+        ...prev.map((ev) =>
+          ev.state === "active" || ev.state === "thinking" ? { ...ev, state: "error" as const } : ev
+        ),
+      ]);
     } finally {
       setIsSending(false);
     }
@@ -597,6 +701,44 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
   const activeTraceMessage =
     messages.find((m) => m.id === selectedMessageId && m.role === "assistant") ||
     [...messages].reverse().find((m) => m.role === "assistant" && (m.traceNodes || m.toolsExecuted));
+
+  const displayedActivityEvents = React.useMemo(() => {
+    // If user clicked on a specific assistant message and not currently executing
+    if (selectedMessageId && !isSending) {
+      const msg = messages.find((m) => m.id === selectedMessageId);
+      if (msg && msg.role === "assistant") {
+        const turnEvents: ActivityEvent[] = [];
+        turnEvents.push({
+          id: `turn-init-${msg.id}`,
+          text: `Task routed to local ${msg.model || activeModel}.`,
+          state: "complete",
+          timestamp: msg.timestamp,
+        });
+        if (msg.toolsExecuted && msg.toolsExecuted.length > 0) {
+          msg.toolsExecuted.forEach((t: any, idx: number) => {
+            const tName = t.tool || t.name || "workspace_tool";
+            turnEvents.push({
+              id: `turn-tool-${msg.id}-${idx}`,
+              text: `Tool call: ${tName}`,
+              tool: tName,
+              toolArgs: t.args || t.arguments,
+              toolOutput: typeof t.result === "string" ? t.result : typeof t.output === "string" ? t.output : JSON.stringify(t.result || t.output || "Completed"),
+              state: "complete",
+              timestamp: msg.timestamp,
+            });
+          });
+        }
+        turnEvents.push({
+          id: `turn-done-${msg.id}`,
+          text: "Mission completed successfully.",
+          state: "complete",
+          timestamp: msg.timestamp,
+        });
+        return turnEvents;
+      }
+    }
+    return activityEvents;
+  }, [selectedMessageId, isSending, messages, activityEvents, activeModel]);
 
   const suggestions = [
     "Audit calculator.py and add safe reciprocal math handling",
@@ -832,20 +974,17 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
             </AnimatePresence>
           </div>
 
-          {/* Trace Sidebar Toggle */}
+          {/* Header Execution Trace Toggle Button (matching Downloads/integrate) */}
           <button
             type="button"
+            id="toggleRailBtn"
             onClick={() => setShowTraceSidebar(!showTraceSidebar)}
-            title={showTraceSidebar ? "Hide Execution Trace" : "Show Execution Trace"}
-            className={`p-1.5 rounded-md hover:bg-[#202020] transition-colors flex items-center justify-center cursor-pointer ${
-              showTraceSidebar ? "text-[#76B900] bg-[#1a2512]" : "text-neutral-400 hover:text-white"
-            }`}
+            title="Toggle execution trace"
+            className={`btn-trace-toggle ${showTraceSidebar ? "active" : ""}`}
           >
-            {showTraceSidebar ? (
-              <PanelRightClose className="w-4 h-4" />
-            ) : (
-              <PanelRightOpen className="w-4 h-4" />
-            )}
+            <Terminal className="w-3.5 h-3.5 text-[#76B900]" />
+            <span>Execution trace</span>
+            <span className="live-pill" id="headerLivePill">LIVE</span>
           </button>
 
           <button
@@ -859,9 +998,25 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
       </div>
 
       {/* Main Workspace Area (Chat Timeline + Collapsible Execution Trace Sidebar) */}
-      <div className="flex-1 flex min-h-0 overflow-hidden">
+      <div className="flex-1 flex min-h-0 overflow-hidden relative" id="agentLayout">
         {/* Left/Center: Messages Timeline */}
-        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+          {/* Collapsed Dock Tab on right edge (matching Downloads/integrate) */}
+          {!showTraceSidebar && (
+            <button
+              type="button"
+              id="railDockTab"
+              onClick={() => setShowTraceSidebar(true)}
+              title="Expand execution trace"
+              aria-label="Expand execution trace"
+              className="rail-dock-tab"
+            >
+              <ChevronLeft className="w-4 h-4 text-[#76B900]" />
+              <span className="dock-tab-label">Execution trace</span>
+              <span className="dock-tab-dot" />
+            </button>
+          )}
+
           <div className="flex-1 overflow-y-auto p-6 space-y-6 max-w-4xl w-full mx-auto">
             {messages.length === 0 && (
               <div className="py-16 text-center space-y-4">
@@ -907,11 +1062,31 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
                         : "bg-[#141414] border border-[#262626] hover:border-[#383838] text-neutral-200 shadow-sm space-y-3"
                     }`}
                   >
-                    <div className="flex items-center justify-between gap-4 mb-1 text-[11px] font-mono text-neutral-500">
-                      <span className="font-semibold text-[#86e810]">
-                        {isUser ? "YOU" : "AGENT"}
-                      </span>
-                      <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-between gap-3 mb-1 text-[11px] font-mono text-neutral-500 flex-wrap">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-semibold text-[#86e810]">
+                          {isUser ? "YOU" : "SANCTUM AGENT"}
+                        </span>
+                        {!isUser && (
+                          <div className="message-meta-tags">
+                            <span className="message-meta-badge model-badge" title={`Model: ${msg.model || activeModel}`}>
+                              <Cpu className="w-3 h-3 text-[#76B900]" />
+                              {msg.model || activeModel}
+                            </span>
+                            {msg.durationS !== undefined && (
+                              <span className="message-meta-badge time-badge" title={`Latency: ${msg.durationS}s`}>
+                                <Clock className="w-3 h-3 text-neutral-400" />
+                                {msg.durationS}s
+                              </span>
+                            )}
+                            <span className="message-meta-badge" title="Sovereign Execution: 100% Loopback Only">
+                              <ShieldCheck className="w-3 h-3 text-[#76B900]" />
+                              Air-Gapped
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-3 shrink-0">
                         {msg.tokensUsed && (
                           <span className="text-neutral-500">{msg.tokensUsed} tokens</span>
                         )}
@@ -1014,162 +1189,138 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
           </div>
         </div>
 
-        {/* Right: Collapsible Execution Trace Sidebar */}
+        {/* Right: Collapsible Execution Trace Sidebar (matching Downloads/integrate) */}
         <AnimatePresence>
           {showTraceSidebar && (
             <motion.div
+              id="agentRail"
               initial={{ width: 0, opacity: 0 }}
-              animate={{ width: 340, opacity: 1 }}
+              animate={{ width: 350, opacity: 1 }}
               exit={{ width: 0, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="border-l border-[#202020] bg-[#0e0e11] flex flex-col shrink-0 h-full overflow-hidden"
+              transition={{ duration: 0.24, ease: [0.2, 0.8, 0.2, 1] }}
+              className="agent-rail"
             >
-              {/* Sidebar Header */}
-              <div className="p-3.5 border-b border-[#202020] bg-[#121316] flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Terminal className="w-4 h-4 text-[#76B900]" />
-                  <span className="text-xs font-mono font-semibold uppercase tracking-wider text-white">
-                    Execution Trace
-                  </span>
-                </div>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#1f2c16] text-[#76B900] border border-[#76B900]/30">
-                  LIVE SOCKET
-                </span>
-              </div>
-
-              {/* Sidebar Content */}
-              <div className="flex-1 overflow-y-auto p-3.5 space-y-4 font-mono text-xs">
-                {/* Security Envelope Card */}
-                <div className="p-3 rounded-lg bg-[#14151a] border border-[#26272e] space-y-2">
-                  <div className="flex items-center justify-between text-[11px]">
-                    <span className="text-neutral-400">Boundary Guard</span>
-                    <span className="text-[#76B900] flex items-center gap-1">
-                      <ShieldCheck className="w-3.5 h-3.5" />
-                      STRICT_ISOLATION
-                    </span>
+              <div className="panel activity-panel" id="activityPanel">
+                {/* Activity Panel Header */}
+                <div
+                  className="panel-header activity-panel-header"
+                  id="activityPanelHeader"
+                  onClick={() => setShowTraceSidebar(false)}
+                  title="Click to collapse execution trace to the right"
+                >
+                  <div>
+                    <span className="kicker">ACTIVITY</span>
+                    <h2>Execution trace</h2>
                   </div>
-                  <div className="text-[10px] text-neutral-500 space-y-1 pt-1 border-t border-white/5">
-                    <div className="flex justify-between">
-                      <span>Loopback Target:</span>
-                      <span className="text-neutral-300">127.0.0.1:11434</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>WAN Egress:</span>
-                      <span className="text-[#76B900] font-semibold">0 BYTES BLOCKED</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Active Runtime:</span>
-                      <span className="text-neutral-300 font-mono text-[9px]">{activeTraceMessage?.model || activeModel}</span>
-                    </div>
-                    {activeTraceMessage?.durationS !== undefined && (
-                      <div className="flex justify-between">
-                        <span>Latency:</span>
-                        <span className="text-[#86e810] font-mono">{activeTraceMessage.durationS}s</span>
-                      </div>
-                    )}
+                  <div className="activity-header-right">
+                    <span className="live-pill" id="livePill">LIVE</span>
+                    <button
+                      type="button"
+                      id="activityCollapseBtn"
+                      className="activity-collapse-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowTraceSidebar(false);
+                      }}
+                      title="Collapse execution trace to the right"
+                      aria-label="Collapse execution trace"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
 
-                {/* Tool Invocation Trace */}
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[11px] uppercase tracking-wider text-neutral-400">
-                      Trace Steps
-                    </span>
-                    <span className="text-[10px] text-neutral-500">
-                      {activeTraceMessage?.traceNodes?.length || 0} nodes
+                {/* Model Routing & Sovereign Air-gap Sub-banner */}
+                <div className="my-2 py-2 px-3 rounded-md bg-[#131912] border border-[#233320] text-[11px] font-mono flex flex-col gap-1 shrink-0">
+                  <div className="flex items-center justify-between">
+                    <span className="text-neutral-400">ROUTED MODEL</span>
+                    <span className="text-[#76B900] font-semibold bg-[#161b22] px-2 py-0.5 rounded border border-[#30363d]">
+                      {activeTraceMessage?.model || activeModel}
                     </span>
                   </div>
-
-                  {activeTraceMessage?.traceNodes && activeTraceMessage.traceNodes.length > 0 ? (
-                    <div className="space-y-2">
-                      {activeTraceMessage.traceNodes.map((node, idx) => (
-                        <div
-                          key={node.id || idx}
-                          className="p-2.5 rounded-lg bg-[#14151a] border border-[#22232a] space-y-1.5"
-                        >
-                          <div className="flex items-center justify-between text-[11px]">
-                            <div className="flex items-center gap-1.5 text-neutral-300">
-                              <span className="w-1.5 h-1.5 rounded-full bg-[#76B900]" />
-                              <span className="text-white font-medium uppercase">
-                                {node.type}
-                              </span>
-                            </div>
-                            <span className="text-[10px] text-neutral-500">
-                              {node.durationSeconds ? `${node.durationSeconds}s` : node.durationMs ? `${node.durationMs}ms` : "done"}
-                            </span>
-                          </div>
-
-                          {node.sentences && (
-                            <p className="text-[10px] text-neutral-400 leading-relaxed font-sans">
-                              {node.sentences[0]}
-                            </p>
-                          )}
-
-                          {node.command && (
-                            <div className="p-1.5 rounded bg-[#0b0b0e] text-[10px] text-[#86e810] break-all border border-white/5">
-                              $ {node.command}
-                            </div>
-                          )}
-
-                          {node.output && (
-                            <div className="text-[10px] text-neutral-400 max-h-24 overflow-y-auto bg-black/40 p-1.5 rounded border border-white/5">
-                              <pre className="whitespace-pre-wrap">{node.output}</pre>
-                            </div>
-                          )}
-
-                          {node.diffFile && (
-                            <div className="flex items-center justify-between text-[10px] text-neutral-400 pt-1">
-                              <span>{node.diffFile}</span>
-                              <span className="text-[#76B900]">+{node.add} -{node.del}</span>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="p-6 rounded-lg bg-[#14151a] border border-[#22232a] text-center text-neutral-500 text-[11px]">
-                      No active tool trace for this turn.
+                  <div className="flex items-center justify-between text-[10px] text-neutral-500 pt-1 border-t border-white/5">
+                    <span>SOVEREIGN BOUNDARY</span>
+                    <span className="text-[#76B900] flex items-center gap-1 font-semibold">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#76B900] animate-pulse" />
+                      127.0.0.1 (0 WAN EGRESS)
+                    </span>
+                  </div>
+                  {activeTraceMessage?.durationS !== undefined && (
+                    <div className="flex items-center justify-between text-[10px] text-neutral-500">
+                      <span>LATENCY</span>
+                      <span className="text-[#a4db43] font-mono">{activeTraceMessage.durationS}s</span>
                     </div>
                   )}
                 </div>
 
-                {/* Raw End-to-End Workflow Trace from Backend */}
+                {/* Activity List Timeline */}
+                <div id="activityListWrap" className="activity-list-wrap">
+                  <div id="activityList" className="activity-list">
+                    {displayedActivityEvents.length === 0 ? (
+                      <div className="py-16 text-center text-neutral-500 text-xs flex flex-col items-center gap-2">
+                        <Zap className="w-5 h-5 text-neutral-600" />
+                        <p>Activity appears here.</p>
+                      </div>
+                    ) : (
+                      displayedActivityEvents.map((ev) => {
+                        const isLive = ev.state === "active" || ev.state === "thinking";
+                        return (
+                          <div key={ev.id} className={`activity-event ${ev.state}`}>
+                            <span className="activity-marker" aria-hidden="true">
+                              <span className="activity-dot" />
+                            </span>
+                            <div className="activity-event-content">
+                              <div className={`activity-event-text ${isLive ? "active-shimmer" : ""}`}>
+                                {ev.text}
+                              </div>
+                              {ev.toolArgs && (
+                                <div className="mt-1 p-2 rounded bg-[#0b0e0a] border border-[#233320] text-[10px] font-mono text-[#a8d38d] max-h-24 overflow-y-auto">
+                                  <div className="text-neutral-500 text-[9px] mb-0.5">ARGUMENTS:</div>
+                                  <pre className="whitespace-pre-wrap">{typeof ev.toolArgs === "string" ? ev.toolArgs : JSON.stringify(ev.toolArgs, null, 2)}</pre>
+                                </div>
+                              )}
+                              {ev.toolOutput && (
+                                <div className="mt-1 p-2 rounded bg-black/60 border border-white/5 text-[10px] font-mono text-neutral-400 max-h-24 overflow-y-auto">
+                                  <div className="text-neutral-500 text-[9px] mb-0.5">OUTPUT:</div>
+                                  <pre className="whitespace-pre-wrap">{ev.toolOutput}</pre>
+                                </div>
+                              )}
+                              <small className="activity-event-time">{ev.timestamp}</small>
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+
+                {/* Raw End-to-End Workflow Debug Trace if present */}
                 {activeTraceMessage?.debugTrace && (
-                  <div className="p-3 rounded-lg bg-[#14151a] border border-[#22232a] space-y-2">
-                    <span className="text-[11px] uppercase tracking-wider text-neutral-400 block mb-1">
-                      Raw Sovereign Workflow Trace
+                  <div className="mt-2 p-2 rounded-lg bg-[#0e120d] border border-[#233320] text-[10px] font-mono shrink-0">
+                    <span className="text-[10px] text-neutral-400 font-semibold block mb-1">
+                      RAW WORKFLOW DEBUG TRACE
                     </span>
-                    <div className="text-[10px] text-neutral-300 font-mono max-h-56 overflow-y-auto bg-black/60 p-2.5 rounded border border-white/5 scrollbar-thin scrollbar-thumb-white/20 select-text">
+                    <div className="max-h-32 overflow-y-auto p-2 bg-black/60 rounded border border-white/5 text-neutral-300 scrollbar-thin select-text">
                       <pre className="whitespace-pre-wrap leading-relaxed">{activeTraceMessage.debugTrace}</pre>
                     </div>
                   </div>
                 )}
-
-                {/* Live System Resource Telemetry */}
-                <div className="p-3 rounded-lg bg-[#14151a] border border-[#22232a] space-y-2">
-                  <span className="text-[11px] uppercase tracking-wider text-neutral-400 block mb-1">
-                    Process Budget
-                  </span>
-                  <div className="space-y-1.5 text-[10px]">
-                    <div className="flex justify-between text-neutral-400">
-                      <span>VRAM Allocation:</span>
-                      <span className="text-white">4.8 GB / 16 GB</span>
-                    </div>
-                    <div className="w-full h-1.5 rounded-full bg-[#202127] overflow-hidden">
-                      <div className="w-[30%] h-full bg-[#76B900] rounded-full" />
-                    </div>
-
-                    <div className="flex justify-between text-neutral-400 pt-1">
-                      <span>Context Window:</span>
-                      <span className="text-white">4,096 / 32,768</span>
-                    </div>
-                    <div className="w-full h-1.5 rounded-full bg-[#202127] overflow-hidden">
-                      <div className="w-[12%] h-full bg-[#76B900] rounded-full" />
-                    </div>
-                  </div>
-                </div>
               </div>
+
+              {/* Session History launcher at bottom of rail */}
+              <button
+                type="button"
+                id="historyBtn"
+                onClick={() => setIsHistoryOpen(true)}
+                className="panel history-launcher mt-auto"
+              >
+                <History className="w-4 h-4 text-[#9acb42] shrink-0" />
+                <span>
+                  <b>Session history</b>
+                  <small id="historyCount">{messages.length} messages saved</small>
+                </span>
+                <ExternalLink className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
+              </button>
             </motion.div>
           )}
         </AnimatePresence>
