@@ -1,8 +1,24 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { Check, FileCode } from "lucide-react";
+import { fetchWorkspaceTree } from "@/lib/api";
+import { FileItem } from "@/types";
+
+function extractFilesFromTree(items: FileItem[]): string[] {
+  let list: string[] = [];
+  for (const item of items) {
+    if (!item.isDirectory) {
+      if (item.name !== "history.json" && !item.name.startsWith(".")) {
+        list.push(item.name);
+      }
+    } else if (item.children && !item.name.startsWith(".")) {
+      list = list.concat(extractFilesFromTree(item.children));
+    }
+  }
+  return list;
+}
 
 function AtSignIcon() {
   return (
@@ -75,7 +91,7 @@ export const AgentChatBox: React.FC<AgentChatBoxProps> = ({
   onSend,
   isLoading = false,
   activeFile,
-  availableFiles = ["calculator.py", "greet.py", "to.rs", "sample_inspection.pdf"],
+  availableFiles,
   placeholder = "Build anything...",
 }) => {
   const [text, setText] = useState("");
@@ -85,8 +101,32 @@ export const AgentChatBox: React.FC<AgentChatBoxProps> = ({
   const [isRoutingMenuOpen, setIsRoutingMenuOpen] = useState(false);
   const [isFileMenuOpen, setIsFileMenuOpen] = useState(false);
   const [fileSearchQuery, setFileSearchQuery] = useState("");
+  const [internalFiles, setInternalFiles] = useState<string[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const loadWorkspaceFiles = useCallback(async () => {
+    try {
+      const tree = await fetchWorkspaceTree();
+      if (Array.isArray(tree)) {
+        const extracted = extractFilesFromTree(tree);
+        if (extracted.length > 0) {
+          setInternalFiles(extracted);
+        }
+      }
+    } catch (e) {
+      console.warn("Could not load workspace files in AgentChatBox:", e);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!availableFiles || availableFiles.length === 0) {
+      loadWorkspaceFiles();
+    }
+  }, [availableFiles, loadWorkspaceFiles]);
+
+  const effectiveFiles =
+    availableFiles && availableFiles.length > 0 ? availableFiles : internalFiles;
 
   // Close open menus on outside click
   useEffect(() => {
@@ -139,7 +179,7 @@ export const AgentChatBox: React.FC<AgentChatBoxProps> = ({
   };
 
   // Filter available files based on search
-  const filteredFiles = availableFiles.filter((f) =>
+  const filteredFiles = effectiveFiles.filter((f) =>
     f.toLowerCase().includes(fileSearchQuery.toLowerCase().trim())
   );
 
@@ -178,7 +218,13 @@ export const AgentChatBox: React.FC<AgentChatBoxProps> = ({
               <div
                 data-testid="at-mention-button"
                 onClick={() => {
-                  setIsFileMenuOpen((prev) => !prev);
+                  setIsFileMenuOpen((prev) => {
+                    const next = !prev;
+                    if (next && (!effectiveFiles || effectiveFiles.length === 0)) {
+                      loadWorkspaceFiles();
+                    }
+                    return next;
+                  });
                   setIsAgentMenuOpen(false);
                   setIsRoutingMenuOpen(false);
                 }}
