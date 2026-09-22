@@ -913,30 +913,9 @@ export const WorkspaceScreen: React.FC<WorkspaceScreenProps> = ({
               </>
             )}
             <span className="truncate">{item.name}</span>
-            {!item.isDirectory && item.isLocked && (
-              <span
-                title="Locked at-rest on disk (FRP1 container)"
-                className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded bg-amber-950/60 border border-amber-500/30 text-[9px] font-mono text-amber-400 shrink-0"
-              >
-                <Lock className="w-2.5 h-2.5 text-amber-400" />
-                <span>LOCKED</span>
-              </span>
-            )}
           </div>
 
           <div className="flex items-center gap-1 shrink-0 ml-1">
-            {!item.isDirectory && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleInspectDisk(item.path);
-                }}
-                title="Inspect On-Disk Ciphertext vs Decrypted Memory"
-                className="p-1 hover:text-amber-300 text-neutral-500 hover:bg-amber-950/40 rounded transition-colors opacity-0 group-hover:opacity-100"
-              >
-                <Eye className="w-3 h-3" />
-              </button>
-            )}
             {item.size && (
               <span className="text-[10px] font-mono text-neutral-500 group-hover:hidden">
                 {item.size}
