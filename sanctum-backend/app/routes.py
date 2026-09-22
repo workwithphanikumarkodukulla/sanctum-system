@@ -17,6 +17,12 @@ from sanctum_locker import restrict_file, unrestrict_file
 
 from app.logger import logger
 from app.document_parser import parse_document, render_pdf_page_image
+from app.sovereign_vault import (
+    get_vault_passphrase, format_passphrase, is_file_locked,
+    read_sovereign_bytes, read_sovereign_text, get_raw_disk_preview,
+    lock_file_in_place, unlock_file_in_place, lock_workspace_directory,
+    unlock_workspace_directory, get_workspace_vault_summary
+)
 
 main_bp = Blueprint("main", __name__)
 
@@ -462,6 +468,66 @@ def unlock_workspace_file():
         return jsonify({"error": "Unable to unlock file. Check the passphrase and file integrity."}), 400
 
 
+@main_bp.route("/api/vault/status", methods=["GET"])
+def get_vault_status():
+    """Return status of at-rest encryption and the 16-digit passphrase."""
+    try:
+        root = current_app.agent.tool_manager.get("workspace").root_dir.resolve()
+        summary = get_workspace_vault_summary(root)
+        return jsonify(summary)
+    except Exception as e:
+        logger.exception("Error getting vault status.")
+        return jsonify({"error": str(e)}), 500
+
+
+@main_bp.route("/api/vault/lock-all", methods=["POST"])
+def lock_all_vault():
+    """Lock all files in the workspace with the 16-digit passphrase."""
+    try:
+        root = current_app.agent.tool_manager.get("workspace").root_dir.resolve()
+        res = lock_workspace_directory(root)
+        return jsonify(res)
+    except Exception as e:
+        logger.exception("Error locking workspace vault.")
+        return jsonify({"error": str(e)}), 500
+
+
+@main_bp.route("/api/vault/unlock-all", methods=["POST"])
+def unlock_all_vault():
+    """Unlock all files in the workspace with the 16-digit passphrase."""
+    try:
+        root = current_app.agent.tool_manager.get("workspace").root_dir.resolve()
+        res = unlock_workspace_directory(root)
+        return jsonify(res)
+    except Exception as e:
+        logger.exception("Error unlocking workspace vault.")
+        return jsonify({"error": str(e)}), 500
+
+
+@main_bp.route("/api/vault/disk-inspect", methods=["GET"])
+def disk_inspect():
+    """Inspect raw on-disk bytes for a workspace file to prove at-rest encryption."""
+    requested = request.args.get("path", "").strip()
+    if not requested:
+        return jsonify({"error": "Path parameter required."}), 400
+    try:
+        root = current_app.agent.tool_manager.get("workspace").root_dir.resolve()
+        candidate = (root / requested).expanduser().resolve()
+        try:
+            candidate.relative_to(root)
+        except ValueError:
+            return jsonify({"error": "Path escapes workspace root."}), 403
+        if not candidate.is_file():
+            return jsonify({"error": "File not found."}), 404
+
+        preview = get_raw_disk_preview(candidate)
+        preview["vault_passphrase"] = format_passphrase(get_vault_passphrase())
+        return jsonify(preview)
+    except Exception as e:
+        logger.exception(f"Error inspecting disk bytes for {requested}.")
+        return jsonify({"error": str(e)}), 500
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Workspace Files
 # ─────────────────────────────────────────────────────────────────────────────
@@ -472,10 +538,36 @@ def workspace_tree():
         agent = current_app.agent
         tree_res = agent.execute_tool("workspace", action="tree")
         list_res = agent.execute_tool("workspace", action="list_files", recursive=True)
+        root = agent.tool_manager.get("workspace").root_dir
+
+        def tag_locked_items(nodes):
+            for n in nodes:
+                rel = n.get("path") or n.get("name")
+                if rel:
+                    full_p = root / rel
+                    if full_p.is_file():
+                        n["is_locked"] = is_file_locked(full_p)
+                if n.get("children"):
+                    tag_locked_items(n["children"])
+
+        tree_items = tree_res.get("items", [])
+        tag_locked_items(tree_items)
+
+        files_list = list_res.get("items", [])
+        tagged_files = []
+        for f in files_list:
+            full_p = root / f
+            tagged_files.append({
+                "path": f,
+                "is_locked": is_file_locked(full_p) if full_p.is_file() else False
+            })
+
+        vault_summary = get_workspace_vault_summary(root)
         return jsonify({
-            "tree": tree_res.get("items", []),
-            "files": list_res.get("items", []),
+            "tree": tree_items,
+            "files": tagged_files,
             "path": tree_res.get("path", ""),
+            "vault": vault_summary,
         })
     except Exception as e:
         logger.exception("Error reading workspace tree.")
@@ -545,18 +637,31 @@ def read_workspace_file():
         return jsonify({"error": "File path parameter 'path' is required."}), 400
     try:
         agent = current_app.agent
-        stat_res = agent.execute_tool("workspace", action="stat", path=file_path)
+        root = agent.tool_manager.get("workspace").root_dir.resolve()
+        candidate = (root / file_path).expanduser().resolve()
         try:
-            file_res = agent.execute_tool("file", action="read_file", path=file_path)
-            content = file_res.get("content", "")
-            is_binary = False
-        except ValueError as ve:
-            if "binary file" in str(ve).lower():
-                content = f"[Binary file / Image: {Path(file_path).name}. Use Document Analysis to inspect content.]"
-                is_binary = True
-            else:
-                raise
-        return jsonify({"path": file_path, "content": content, "stat": stat_res, "is_binary": is_binary})
+            candidate.relative_to(root)
+        except ValueError:
+            return jsonify({"error": "File path escapes workspace root."}), 403
+        if not candidate.is_file():
+            return jsonify({"error": "File not found."}), 404
+
+        stat_res = agent.execute_tool("workspace", action="stat", path=file_path)
+        content, was_locked = read_sovereign_text(candidate)
+
+        is_binary = False
+        if "\x00" in content[:1024]:
+            content = f"[Binary file / Image: {candidate.name}. Use Document Analysis to inspect content.]"
+            is_binary = True
+
+        return jsonify({
+            "path": file_path,
+            "content": content,
+            "stat": stat_res,
+            "is_binary": is_binary,
+            "is_locked_on_disk": was_locked,
+            "vault_passphrase": format_passphrase(get_vault_passphrase()),
+        })
     except Exception as e:
         logger.exception(f"Error reading file '{file_path}'.")
         return jsonify({"error": str(e)}), 500
@@ -564,7 +669,7 @@ def read_workspace_file():
 
 @main_bp.route("/api/workspace/preview", methods=["GET"])
 def preview_workspace_file():
-    """Serve any workspace document, PDF, or image inline for the embedded editor viewer."""
+    """Serve any workspace document, PDF, or image inline, decrypting on the fly if locked."""
     requested = request.args.get("path", "").strip()
     if not requested:
         return jsonify({"error": "File path parameter 'path' is required."}), 400
@@ -592,7 +697,13 @@ def preview_workspace_file():
     elif not mime_type:
         mime_type = "application/octet-stream"
 
-    return send_file(candidate, mimetype=mime_type, as_attachment=False, download_name=candidate.name)
+    decrypted_bytes, was_locked = read_sovereign_bytes(candidate)
+    return send_file(
+        io.BytesIO(decrypted_bytes),
+        mimetype=mime_type,
+        as_attachment=False,
+        download_name=candidate.name,
+    )
 
 
 @main_bp.route("/api/workspace/document-data", methods=["GET", "POST"])

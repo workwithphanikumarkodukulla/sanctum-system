@@ -23,6 +23,9 @@ import {
   Maximize2,
   Minimize2,
   RefreshCw,
+  Lock,
+  Key,
+  ShieldCheck,
 } from "lucide-react";
 import { FileItem } from "@/types";
 
@@ -260,10 +263,17 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
         <div className="flex items-center gap-2.5 min-w-0">
           {renderBadge()}
           <span
-            className="text-xs font-medium text-white truncate max-w-[280px]"
+            className="text-xs font-medium text-white truncate max-w-[240px]"
             title={file.name}
           >
             {file.name}
+          </span>
+          <span
+            title="Stored as locked FRP1 container on host disk. Unlocked seamlessly in sovereign RAM using 16-digit key."
+            className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#131e0e] border border-[#76B900]/40 text-[10px] font-mono text-[#86e810]"
+          >
+            <Lock className="w-2.5 h-2.5 text-amber-400" />
+            <span>At-Rest Encrypted · Sovereign Memory</span>
           </span>
           {docData?.stats?.words && (
             <span className="text-[11px] text-neutral-400 hidden sm:inline-block">

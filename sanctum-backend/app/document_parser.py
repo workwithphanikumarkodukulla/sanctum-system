@@ -11,17 +11,12 @@ from pathlib import Path
 from typing import Union, Dict, Any, List
 
 from app.logger import logger
+from app.sovereign_vault import read_sovereign_bytes
 
 def get_file_bytes(source: Union[str, Path, bytes, io.BytesIO]) -> bytes:
-    if isinstance(source, (str, Path)):
-        with open(source, "rb") as f:
-            return f.read()
-    elif isinstance(source, io.BytesIO):
-        return source.getvalue()
-    elif isinstance(source, bytes):
-        return source
-    else:
-        raise ValueError("Unsupported source type for document parser.")
+    """Retrieve raw bytes, transparently decrypting from sovereign vault if locked."""
+    data, _ = read_sovereign_bytes(source)
+    return data
 
 
 def parse_pdf(source: Union[str, Path, bytes, io.BytesIO], filename: str) -> Dict[str, Any]:

@@ -22,11 +22,7 @@ trap cleanup SIGINT SIGTERM EXIT
 # 1. Start Python Backend
 echo "[1/2] Starting Python Flask backend on port 5050..."
 cd "$ROOT_DIR/sanctum-backend"
-if [ -f "./venv/bin/python" ]; then
-    ./venv/bin/python app.py &
-else
-    python3 app.py &
-fi
+./venv/bin/python app.py &
 BACKEND_PID=$!
 
 # 2. Start Next.js Frontend

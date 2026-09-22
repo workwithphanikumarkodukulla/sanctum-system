@@ -46,12 +46,13 @@ class FileTool(BaseTool):
 		file_path = self._resolve_path(path)
 		if not file_path.exists():
 			raise FileNotFoundError(f"File not found: {file_path}")
-		if not file_path.is_file():
-			raise IsADirectoryError(f"Path is not a file: {file_path}")
 		try:
-			text = file_path.read_text(encoding="utf-8")
+			from app.sovereign_vault import read_sovereign_text
+			text, is_locked = read_sovereign_text(file_path)
 		except UnicodeDecodeError:
 			raise ValueError(f"File '{path}' appears to be a binary file, not valid UTF-8 text. Use 'read_document' for documents or images.")
+		except Exception as e:
+			raise ValueError(f"Error reading sovereign file '{path}': {e}")
 
 		lines = text.splitlines()
 		max_lines_limit = 2000

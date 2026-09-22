@@ -188,19 +188,20 @@ class MemoryManager:
             logger.info("New conversation history created.")
             return
         try:
-            with self._history_file.open("r", encoding="utf-8") as file:
-                data = json.load(file)
-                if isinstance(data, list):
-                    self._history = data
-                    for item in self._history:
-                        if item.get("role") == "user":
-                            self.extract_memories(item.get("content", ""))
-                elif isinstance(data, dict):
-                    self._history = data.get("messages", [])
-                    self.user_name = data.get("user_name", "")
-                    self.facts = data.get("facts", [])
-                    self.preferences = data.get("preferences", [])
-                    self.projects = data.get("projects", [])
+            from app.sovereign_vault import read_sovereign_text
+            text, _ = read_sovereign_text(self._history_file)
+            data = json.loads(text)
+            if isinstance(data, list):
+                self._history = data
+                for item in self._history:
+                    if item.get("role") == "user":
+                        self.extract_memories(item.get("content", ""))
+            elif isinstance(data, dict):
+                self._history = data.get("messages", [])
+                self.user_name = data.get("user_name", "")
+                self.facts = data.get("facts", [])
+                self.preferences = data.get("preferences", [])
+                self.projects = data.get("projects", [])
             logger.info("Conversation history loaded successfully.")
         except Exception:
             logger.exception("Failed to load conversation history.")

@@ -77,6 +77,7 @@ export interface FileItem {
   content?: string;
   language?: string;
   children?: FileItem[];
+  isLocked?: boolean;
 }
 
 export interface LogEntry {
