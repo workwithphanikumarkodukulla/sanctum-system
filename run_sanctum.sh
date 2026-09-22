@@ -13,11 +13,19 @@ echo "================================================="
 cleanup() {
     echo ""
     echo "Shutting down servers..."
-    kill $(jobs -p) 2>/dev/null
+    kill "$BACKEND_PID" "$FRONTEND_PID" 2>/dev/null
+    lsof -ti:5050 | xargs kill -9 2>/dev/null || true
+    lsof -ti:3000 | xargs kill -9 2>/dev/null || true
     exit 0
 }
 
 trap cleanup SIGINT SIGTERM EXIT
+
+# 0. Clean any orphaned processes on port 5050 and 3000
+echo "Ensuring ports 5050 and 3000 are free..."
+lsof -ti:5050 | xargs kill -9 2>/dev/null || true
+lsof -ti:3000 | xargs kill -9 2>/dev/null || true
+sleep 1
 
 # 1. Start Python Backend
 echo "[1/2] Starting Python Flask backend on port 5050..."
