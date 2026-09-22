@@ -1060,33 +1060,72 @@ class DocumentTool(BaseTool):
                     "metadata": {"content_type": "formula"},
                 })
             else:
+                ocr_text = ""
+                # 1. Local Tesseract OCR with auto-rotation detection
                 try:
-                    import base64
-                    b64 = base64.b64encode(raw_bytes).decode("utf-8")
-                    vlm_res = requests.post(
-                        "http://127.0.0.1:11434/api/generate",
-                        json={
-                            "model": "gemma4:latest",
-                            "prompt": "Transcribe all text or mathematical formulas in this image accurately.",
-                            "images": [b64],
-                            "stream": False,
-                        },
-                        timeout=25,
-                    )
-                    vlm_text = vlm_res.json().get("response", "").strip()
-                    if vlm_text:
-                        is_form = any(k in vlm_text for k in ("\\frac", "d/d", "dy/dx", "=", "^", "\\int"))
-                        elements.append({
-                            "id": "p1_e1",
-                            "document_id": doc_id,
-                            "page": 1,
-                            "type": "formula" if is_form else "text",
-                            "text": vlm_text,
-                            "formula_latex": vlm_text if is_form else None,
-                            "confidence": 0.85,
-                        })
-                except Exception as e:
-                    logger.debug("Local VLM failed: %s", e)
+                    import pytesseract
+                    from PIL import Image
+                    import io
+                    img = Image.open(io.BytesIO(raw_bytes))
+                    try:
+                        osd = pytesseract.image_to_osd(img)
+                        rot = int([line.split(":")[1].strip() for line in osd.splitlines() if "Rotate:" in line][0])
+                        if rot != 0:
+                            img = img.rotate(360 - rot, expand=True)
+                    except Exception:
+                        pass
+                    
+                    ocr_text = pytesseract.image_to_string(img).strip()
+                except Exception as ocr_err:
+                    logger.debug("Local Tesseract OCR failed: %s", ocr_err)
+
+                if ocr_text:
+                    is_form = any(k in ocr_text for k in ("\\frac", "d/d", "dy/dx", "=", "^", "\\int"))
+                    elements.append({
+                        "id": "p1_e1",
+                        "document_id": doc_id,
+                        "page": 1,
+                        "type": "formula" if is_form else "text",
+                        "text": ocr_text,
+                        "formula_latex": ocr_text if is_form else None,
+                        "confidence": 0.92,
+                        "metadata": {"source": "ocr"},
+                    })
+                else:
+                    # 2. Downscaled VLM fallback
+                    try:
+                        import base64
+                        from PIL import Image
+                        import io
+                        img = Image.open(io.BytesIO(raw_bytes))
+                        img.thumbnail((1200, 1200))
+                        buf = io.BytesIO()
+                        img.save(buf, format="JPEG", quality=85)
+                        b64 = base64.b64encode(buf.getvalue()).decode("utf-8")
+                        vlm_res = requests.post(
+                            "http://127.0.0.1:11434/api/generate",
+                            json={
+                                "model": "gemma4:latest",
+                                "prompt": "Transcribe all text or mathematical formulas in this image accurately.",
+                                "images": [b64],
+                                "stream": False,
+                            },
+                            timeout=10,
+                        )
+                        vlm_text = vlm_res.json().get("response", "").strip()
+                        if vlm_text:
+                            is_form = any(k in vlm_text for k in ("\\frac", "d/d", "dy/dx", "=", "^", "\\int"))
+                            elements.append({
+                                "id": "p1_e1",
+                                "document_id": doc_id,
+                                "page": 1,
+                                "type": "formula" if is_form else "text",
+                                "text": vlm_text,
+                                "formula_latex": vlm_text if is_form else None,
+                                "confidence": 0.85,
+                            })
+                    except Exception as e:
+                        logger.debug("Local VLM failed: %s", e)
 
         # 2. PDF documents using PyMuPDF
         elif ext == ".pdf":
