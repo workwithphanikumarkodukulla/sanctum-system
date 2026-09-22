@@ -34,9 +34,9 @@ class FileTool(BaseTool):
 		file_path = self._resolve_path(path)
 		if file_path.exists():
 			raise FileExistsError(f"File already exists: {file_path}")
-		file_path.parent.mkdir(parents=True, exist_ok=True)
-		file_path.write_text(content, encoding="utf-8")
-		return {"action": "create_file", "path": str(file_path), "created": True}
+		from app.sovereign_vault import save_sovereign_file
+		save_sovereign_file(file_path, content, lock_on_disk=True)
+		return {"action": "create_file", "path": str(file_path), "created": True, "locked_on_disk": True}
 	def read_file(
 		self,
 		path: str,
@@ -83,9 +83,9 @@ class FileTool(BaseTool):
 		}
 	def write_file(self, path: str, content: str) -> dict[str, Any]:
 		file_path = self._resolve_path(path)
-		file_path.parent.mkdir(parents=True, exist_ok=True)
-		file_path.write_text(content, encoding="utf-8")
-		return {"action": "write_file", "path": str(file_path), "written": True}
+		from app.sovereign_vault import save_sovereign_file
+		save_sovereign_file(file_path, content, lock_on_disk=True)
+		return {"action": "write_file", "path": str(file_path), "written": True, "locked_on_disk": True}
 	def delete_file(self, path: str) -> dict[str, Any]:
 		file_path = self._resolve_path(path)
 		if not file_path.exists():

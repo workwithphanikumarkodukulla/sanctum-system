@@ -954,6 +954,8 @@ class CodingAgent:
                             out_p = (ws_dir / code_filename).resolve()
                             out_p.parent.mkdir(parents=True, exist_ok=True)
                             out_p.write_text(code_content, encoding="utf-8")
+                            from app.sovereign_vault import lock_file_in_place
+                            lock_file_in_place(out_p)
                             tool_actions.append({
                                 "tool": "create_file",
                                 "args": {"path": code_filename, "content": code_content},
@@ -1336,6 +1338,8 @@ class CodingAgent:
                                 src = Path("file-engine/sample_documents/sample_inspection.pdf")
                                 if src.exists():
                                     pdf_file.write_bytes(src.read_bytes())
+                                    from app.sovereign_vault import lock_file_in_place
+                                    lock_file_in_place(pdf_file)
 
                             read_res = self.tool_manager.execute("document", path=doc_target, mode="summary")
                             tool_actions.append({

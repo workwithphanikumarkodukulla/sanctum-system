@@ -69,6 +69,8 @@ class DocumentGenerator:
                 if values:
                     sheet.column_dimensions[column[0].column_letter].width = min(max(max(values) + 2, 10), 42)
         workbook.save(output)
+        from app.sovereign_vault import lock_file_in_place
+        lock_file_in_place(output)
         return self._relative(output)
 
     def generate_presentation(self, filepath: str, title: str, subtitle: str, slides_data: list[dict[str, Any]]) -> str:
@@ -145,6 +147,8 @@ class DocumentGenerator:
                     paragraph.font.size = Pt(18 if len(bullets) > 4 else 20)
                     paragraph.level = 0
         presentation.save(output)
+        from app.sovereign_vault import lock_file_in_place
+        lock_file_in_place(output)
         return self._relative(output)
 
     def generate_docx(self, filepath: str, title: str, subtitle: str, sections: list[dict[str, Any]]) -> str:
@@ -183,6 +187,8 @@ class DocumentGenerator:
                     for cell, value in zip(cells, row):
                         cell.text = str(value)
         document.save(output)
+        from app.sovereign_vault import lock_file_in_place
+        lock_file_in_place(output)
         return self._relative(output)
 
     def generate_pdf(self, filepath: str, title: str, subtitle: str, sections: list[dict[str, Any]]) -> str:
@@ -229,6 +235,8 @@ class DocumentGenerator:
             canvas.restoreState()
 
         SimpleDocTemplate(str(output), pagesize=letter, rightMargin=0.7 * inch, leftMargin=0.7 * inch, topMargin=0.65 * inch, bottomMargin=0.7 * inch).build(story, onFirstPage=footer, onLaterPages=footer)
+        from app.sovereign_vault import lock_file_in_place
+        lock_file_in_place(output)
         return self._relative(output)
 
     def generate_note(self, filepath: str, title: str, tags: list[str], summary: str, sections: list[dict[str, Any]]) -> str:
@@ -242,6 +250,8 @@ class DocumentGenerator:
                 lines.append(f"- {bullet}")
             lines.append("")
         output.write_text("\n".join(lines), encoding="utf-8")
+        from app.sovereign_vault import lock_file_in_place
+        lock_file_in_place(output)
         return self._relative(output)
 
     def generate_csv(self, filepath: str, headers: list[str] | None = None, rows: list[list[Any]] | None = None) -> str:
@@ -253,5 +263,7 @@ class DocumentGenerator:
                 writer.writerow(headers)
             for row in rows or []:
                 writer.writerow(row)
+        from app.sovereign_vault import lock_file_in_place
+        lock_file_in_place(output)
         return self._relative(output)
 

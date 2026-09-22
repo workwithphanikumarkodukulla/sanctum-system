@@ -151,6 +151,30 @@ def lock_file_in_place(file_path: Union[str, Path], passphrase: Optional[str] = 
     return True
 
 
+def save_sovereign_file(
+    dest_path: Union[str, Path],
+    data: Union[str, bytes, bytearray],
+    lock_on_disk: bool = True,
+    passphrase: Optional[str] = None,
+) -> Path:
+    """Save content to host disk, ensuring newly generated data is encrypted and locked at rest.
+    In memory, the caller operates on pure plaintext; on disk, the file is an authenticated FRP1 container.
+    """
+    p = Path(dest_path).resolve()
+    p.parent.mkdir(parents=True, exist_ok=True)
+    if isinstance(data, str):
+        p.write_text(data, encoding="utf-8")
+    elif isinstance(data, (bytes, bytearray)):
+        p.write_bytes(data)
+    else:
+        raise ValueError("Data must be str or bytes.")
+
+    if lock_on_disk:
+        lock_file_in_place(p, passphrase)
+
+    return p
+
+
 def unlock_file_in_place(file_path: Union[str, Path], passphrase: Optional[str] = None) -> bool:
     """Unlock/decrypt a file in-place on host disk."""
     p = Path(file_path)

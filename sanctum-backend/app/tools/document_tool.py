@@ -155,11 +155,16 @@ class DocumentTool(BaseTool):
         if cached_evidence is not None:
             evidence = cached_evidence
         else:
+            from app.sovereign_vault import read_sovereign_bytes
+            import io
+            raw_bytes, _ = read_sovereign_bytes(target_path)
+            file_size = len(raw_bytes)
+
             # Check for zip bomb / malicious archive expansion ratios
             if target_path.suffix.lower() in (".docx", ".pptx", ".xlsx", ".zip"):
                 try:
                     import zipfile
-                    with zipfile.ZipFile(target_path, "r") as zf:
+                    with zipfile.ZipFile(io.BytesIO(raw_bytes), "r") as zf:
                         total_uncompressed = sum(info.file_size for info in zf.infolist())
                         decompression_ratio = total_uncompressed / max(1, file_size)
                         if total_uncompressed > 200 * 1024 * 1024 or (total_uncompressed > 1024 * 1024 and decompression_ratio > 50):
@@ -178,13 +183,12 @@ class DocumentTool(BaseTool):
             resp = None
             evidence = None
             try:
-                with open(target_path, "rb") as f:
-                    files = {"file": (target_path.name, f)}
-                    resp = requests.post(
-                        f"{self.engine_url}/api/documents?sync=true",
-                        files=files,
-                        timeout=90,
-                    )
+                files = {"file": (target_path.name, io.BytesIO(raw_bytes))}
+                resp = requests.post(
+                    f"{self.engine_url}/api/documents?sync=true",
+                    files=files,
+                    timeout=90,
+                )
             except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as conn_err:
                 logger.warning("Document Engine unreachable at %s (%s); attempting autonomous local fallback ingestion", self.engine_url, conn_err)
                 try:
@@ -944,11 +948,13 @@ class DocumentTool(BaseTool):
 
     def _local_fallback_ingest(self, target_path: Path) -> dict[str, Any]:
         """Perform autonomous local document/image ingestion when Document Engine is unavailable."""
+        from app.sovereign_vault import read_sovereign_bytes
+        raw_bytes, _ = read_sovereign_bytes(target_path)
         ext = target_path.suffix.lower()
         stem = target_path.stem.lower()
         name = target_path.name.lower()
-        file_size = target_path.stat().st_size
-        file_hash = hashlib.sha256(target_path.read_bytes()).hexdigest()
+        file_size = len(raw_bytes)
+        file_hash = hashlib.sha256(raw_bytes).hexdigest()
         doc_id = f"doc_local_{file_hash[:12]}"
         
         elements: list[dict[str, Any]] = []
@@ -1056,7 +1062,7 @@ class DocumentTool(BaseTool):
             else:
                 try:
                     import base64
-                    b64 = base64.b64encode(target_path.read_bytes()).decode("utf-8")
+                    b64 = base64.b64encode(raw_bytes).decode("utf-8")
                     vlm_res = requests.post(
                         "http://127.0.0.1:11434/api/generate",
                         json={
@@ -1085,8 +1091,11 @@ class DocumentTool(BaseTool):
         # 2. PDF documents using PyMuPDF
         elif ext == ".pdf":
             try:
-                import fitz
-                doc = fitz.open(str(target_path))
+                try:
+                    import fitz
+                except ImportError:
+                    import pymupdf as fitz
+                doc = fitz.open(stream=raw_bytes, filetype="pdf")
                 for p_idx, p in enumerate(doc, 1):
                     p_txt = p.get_text().strip()
                     if p_txt:
@@ -1100,6 +1109,55 @@ class DocumentTool(BaseTool):
                         })
             except Exception as pdf_err:
                 logger.debug("Local PDF extraction failed: %s", pdf_err)
+
+        # 3. Office documents and spreadsheets fallback
+        elif ext in (".docx", ".doc", ".pptx", ".ppt", ".xlsx", ".xls", ".csv", ".txt", ".md"):
+            try:
+                from app.document_parser import parse_document
+                parsed = parse_document(target_path, target_path.name)
+                if ext in (".docx", ".doc"):
+                    for idx, sec in enumerate(parsed.get("sections", []), 1):
+                        txt = sec.get("text", "").strip()
+                        if txt:
+                            elements.append({
+                                "id": f"p1_e{idx}",
+                                "document_id": doc_id,
+                                "page": 1,
+                                "type": "paragraph",
+                                "text": txt,
+                                "confidence": 0.99,
+                            })
+                elif ext in (".pptx", ".ppt"):
+                    for s in parsed.get("slides", []):
+                        p_num = s.get("slide_number", 1)
+                        s_text = (s.get("title", "") + "\n" + "\n".join(s.get("bullets", []))).strip()
+                        if s_text:
+                            elements.append({
+                                "id": f"p{p_num}_e1",
+                                "document_id": doc_id,
+                                "page": p_num,
+                                "type": "slide",
+                                "text": s_text,
+                                "confidence": 0.99,
+                            })
+                elif ext in (".xlsx", ".xls", ".csv"):
+                    sheets = parsed.get("sheets", {})
+                    for s_name, s_info in sheets.items():
+                        headers = s_info.get("headers", [])
+                        rows = s_info.get("rows", [])
+                        summary_txt = f"Sheet: {s_name} ({len(rows)} rows)\nHeaders: {', '.join(headers)}"
+                        elements.append({
+                            "id": f"p1_e_{s_name}",
+                            "document_id": doc_id,
+                            "page": 1,
+                            "type": "table",
+                            "text": summary_txt,
+                            "headers": headers,
+                            "rows": rows[:50],
+                            "confidence": 0.99,
+                        })
+            except Exception as parse_err:
+                logger.debug("Local document parsing failed: %s", parse_err)
 
         return {
             "document_id": doc_id,

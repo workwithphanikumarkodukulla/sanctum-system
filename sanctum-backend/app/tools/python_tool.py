@@ -23,10 +23,20 @@ class PythonTool(BaseTool):
         if code is None and script_path is None:
             raise ValueError("Provide code or script_path.")
         if script_path:
-            command = [
-                self.python_executable,
-                str(self._resolve_path(script_path))
-            ]
+            target = self._resolve_path(script_path)
+            from app.sovereign_vault import is_file_locked, read_sovereign_text
+            if is_file_locked(target):
+                decrypted_code, _ = read_sovereign_text(target)
+                command = [
+                    self.python_executable,
+                    "-c",
+                    decrypted_code
+                ]
+            else:
+                command = [
+                    self.python_executable,
+                    str(target)
+                ]
         else:
             command = [
                 self.python_executable,

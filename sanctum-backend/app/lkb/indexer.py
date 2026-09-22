@@ -55,7 +55,8 @@ class LKBIndexer:
             return {"status": "skipped", "reason": f"Unsupported extension: {path.suffix}"}
 
         try:
-            text = path.read_text(encoding="utf-8", errors="ignore")
+            from app.sovereign_vault import read_sovereign_text
+            text, _ = read_sovereign_text(path)
         except Exception as e:
             return {"status": "error", "error": str(e)}
 
@@ -140,7 +141,8 @@ class LKBIndexer:
         for rel_path, meta in self._index.items():
             abs_path = meta.get("abs_path", rel_path)
             try:
-                text = Path(abs_path).read_text(encoding="utf-8", errors="ignore")
+                from app.sovereign_vault import read_sovereign_text
+                text, _ = read_sovereign_text(abs_path)
             except Exception:
                 continue
             chunks = self._chunk_text(text)
