@@ -24,6 +24,7 @@ class LLMManager:
             api_key=Config.LOCAL_LLM_API_KEY,
             base_url=self.base_url,
             timeout=Config.LOCAL_LLM_TIMEOUT,
+            max_retries=1,
             max_tokens=2048,
         )
         logger.info("Local LLM initialized: {} ({})", self.model_name, self.base_url)
@@ -83,6 +84,7 @@ class LLMManager:
             api_key=Config.LOCAL_LLM_API_KEY,
             base_url=self.base_url,
             timeout=Config.LOCAL_LLM_TIMEOUT,
+            max_retries=1,
             max_tokens=2048,
         )
         logger.info("Local model changed to '{}'.", self.model_name)

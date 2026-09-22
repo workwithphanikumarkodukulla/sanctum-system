@@ -886,7 +886,15 @@ class CodingAgent:
                 if "does not support tools" in err_str or "tool" in err_str:
                     logger.warning("Active model does not support tool calling: {}; falling back to direct invocation", invoke_err)
                     self.llm_with_tools = self.llm_manager._llm
-                    response = self.llm_with_tools.invoke(messages)
+                    try:
+                        response = self.llm_with_tools.invoke(messages)
+                    except Exception:
+                        from langchain_core.messages import AIMessage
+                        response = AIMessage(content="")
+                elif "connection" in err_str or "refused" in err_str or "connecterror" in err_str:
+                    logger.warning("Local LLM inference server not responding: {}. Activating sovereign deterministic rule execution.", invoke_err)
+                    from langchain_core.messages import AIMessage
+                    response = AIMessage(content="")
                 else:
                     raise invoke_err
             if response and response.content and response.content.strip():
@@ -1697,7 +1705,10 @@ class CodingAgent:
                     prompt_for_synth = messages + [
                         HumanMessage(content="You must now directly, factually, and completely answer the user's request based on the tool results above. Do not output a generic greeting or ask what to do next.")
                     ]
-                    synth_resp = self.llm_manager._llm.invoke(prompt_for_synth)
+                    try:
+                        synth_resp = self.llm_manager._llm.invoke(prompt_for_synth)
+                    except Exception:
+                        synth_resp = None
                     if synth_resp and synth_resp.content and synth_resp.content.strip():
                         new_lower = synth_resp.content.lower()
                         is_meta_ack = any(k in new_lower for k in (
