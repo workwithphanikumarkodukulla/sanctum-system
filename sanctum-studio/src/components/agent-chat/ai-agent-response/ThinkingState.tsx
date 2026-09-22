@@ -350,7 +350,7 @@ export const ThinkingState = React.forwardRef<HTMLDivElement, ThinkingStateProps
     {
       nodes = [],
       tools = DEFAULT_TOOL_REGISTRY,
-      autoPlay = true,
+      autoPlay = false,
       defaultExpanded,
       workingLabel = "Working...",
       onSettled,
@@ -368,7 +368,17 @@ export const ThinkingState = React.forwardRef<HTMLDivElement, ThinkingStateProps
     );
 
     const startTimeRef = React.useRef<number>(Date.now());
-    const [elapsedSeconds, setElapsedSeconds] = React.useState<number>(0);
+    const [elapsedSeconds, setElapsedSeconds] = React.useState<number>(() => {
+      if (!autoPlay) {
+        const total = nodes.reduce((sum, n) => {
+          if (n.durationSeconds) return sum + n.durationSeconds;
+          if (n.durationMs) return sum + n.durationMs / 1000;
+          return sum + 0.8;
+        }, 0);
+        return Math.max(1, Math.round(total));
+      }
+      return 0;
+    });
     const isWorkingRef = React.useRef(isWorking);
     isWorkingRef.current = isWorking;
 

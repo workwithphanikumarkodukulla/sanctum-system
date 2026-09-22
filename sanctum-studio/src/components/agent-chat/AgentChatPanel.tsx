@@ -479,7 +479,17 @@ export const AgentChatPanel: React.FC<AgentChatPanelProps> = ({
           />
           <div className="flex items-center gap-1.5 font-mono text-xs font-semibold text-white truncate">
             <span>Sanctum Agent</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#76B900] animate-pulse shrink-0" />
+            <span
+              className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                isSending
+                  ? "bg-[#00f0ff] animate-ping"
+                  : "bg-[#76B900]"
+              }`}
+              title={isSending ? "Agent is thinking..." : "Agent idle (ready)"}
+            />
+            <span className="text-[10px] font-normal text-neutral-400 font-sans ml-1">
+              {isSending ? "Thinking…" : "Idle"}
+            </span>
           </div>
         </div>
 
@@ -686,7 +696,8 @@ export const AgentChatPanel: React.FC<AgentChatPanelProps> = ({
                   <div className="pb-1">
                     <ThinkingState
                       nodes={msg.traceNodes}
-                      defaultExpanded={true}
+                      defaultExpanded={false}
+                      autoPlay={false}
                     />
                   </div>
                 )}

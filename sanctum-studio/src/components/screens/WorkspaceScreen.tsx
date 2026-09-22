@@ -85,7 +85,12 @@ export const WorkspaceScreen: React.FC<WorkspaceScreenProps> = ({
     if (typeof window !== "undefined") {
       try {
         const saved = localStorage.getItem("sanctum_active_file");
-        if (saved) return JSON.parse(saved);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.name && !parsed.name.includes(".zip") && !parsed.name.includes("fabrics")) {
+            return parsed;
+          }
+        }
       } catch {}
     }
     return files[0] || null;
@@ -97,7 +102,12 @@ export const WorkspaceScreen: React.FC<WorkspaceScreenProps> = ({
         const saved = localStorage.getItem("sanctum_open_tabs");
         if (saved) {
           const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            const filtered = parsed.filter(
+              (t) => t && t.name && !t.name.includes(".zip") && !t.name.includes("fabrics")
+            );
+            if (filtered.length > 0) return filtered;
+          }
         }
       } catch {}
     }
@@ -210,12 +220,25 @@ export const WorkspaceScreen: React.FC<WorkspaceScreenProps> = ({
               isDirectory: activeFile.isDirectory,
             })
           );
+        } else {
+          localStorage.removeItem("sanctum_active_file");
         }
+        localStorage.setItem(
+          "sanctum_open_tabs",
+          JSON.stringify(
+            openTabs.map((t) => ({
+              name: t.name,
+              path: t.path,
+              isDirectory: t.isDirectory,
+              language: t.language,
+            }))
+          )
+        );
       } catch (err) {
         console.warn("localStorage write skipped:", err);
       }
     }
-  }, [workspaceFiles, workspacePath, activeFile]);
+  }, [workspaceFiles, workspacePath, activeFile, openTabs]);
 
   // On mount: sync with backend active workspace if available
   useEffect(() => {
@@ -238,10 +261,36 @@ export const WorkspaceScreen: React.FC<WorkspaceScreenProps> = ({
               }
             });
             setExpandedFolders((prev) => ({ ...newExp, ...prev }));
+
+            // Helper to verify existence in current workspace
+            const nodeExistsInTree = (tree: FileItem[], targetPath: string): boolean => {
+              for (const item of tree) {
+                if (item.path === targetPath || item.name === targetPath) return true;
+                if (item.children && nodeExistsInTree(item.children, targetPath)) return true;
+              }
+              return false;
+            };
+
             const first = findFirstCodeFile(nodes);
-            if (first && !activeFile) {
-              handleSelectFile(first);
-            }
+
+            // Filter openTabs: remove any stale non-existent tabs (e.g. fabrics.zip.*)
+            setOpenTabs((prev) => {
+              const valid = prev.filter((t) => t && nodeExistsInTree(nodes, t.path));
+              if (valid.length > 0) return valid;
+              return first ? [first] : [];
+            });
+
+            // Ensure activeFile is actually a file in the workspace
+            setActiveFile((prev) => {
+              if (prev && nodeExistsInTree(nodes, prev.path)) {
+                return prev;
+              }
+              if (first) {
+                handleSelectFile(first);
+                return first;
+              }
+              return null;
+            });
           }
         }
       })
