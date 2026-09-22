@@ -1167,14 +1167,30 @@ class DocumentTool(BaseTool):
                                 "confidence": 0.99,
                             })
                 elif ext in (".pptx", ".ppt"):
-                    for s in parsed.get("slides", []):
+                    slides_list = parsed.get("slides", [])
+                    for s in slides_list:
                         p_num = s.get("slide_number", 1)
-                        s_text = (s.get("title", "") + "\n" + "\n".join(s.get("bullets", []))).strip()
-                        if s_text:
+                        s_title = s.get("title") or f"Slide {p_num}"
+                        elements.append({
+                            "id": f"s{p_num}_title",
+                            "document_id": doc_id,
+                            "page": p_num,
+                            "slide": p_num,
+                            "reading_order": 1,
+                            "type": "heading",
+                            "heading": s_title,
+                            "text": s_title,
+                            "confidence": 0.99,
+                        })
+                        bullets = s.get("bullets", [])
+                        s_text = (s_title + ("\n" + "\n".join(bullets) if bullets else "")).strip()
+                        if bullets or s_title:
                             elements.append({
-                                "id": f"p{p_num}_e1",
+                                "id": f"s{p_num}_body",
                                 "document_id": doc_id,
                                 "page": p_num,
+                                "slide": p_num,
+                                "reading_order": 2,
                                 "type": "slide",
                                 "text": s_text,
                                 "confidence": 0.99,
@@ -1198,6 +1214,9 @@ class DocumentTool(BaseTool):
             except Exception as parse_err:
                 logger.debug("Local document parsing failed: %s", parse_err)
 
+        total_slides_count = len(parsed.get("slides", [])) if (ext in (".pptx", ".ppt") and "parsed" in locals()) else None
+        total_pages_count = total_slides_count if ext in (".pptx", ".ppt") else (len(doc) if ext == ".pdf" and "doc" in locals() else (locals().get("parsed", {}).get("total_pages") or 1))
+
         return {
             "document_id": doc_id,
             "filename": target_path.name,
@@ -1205,8 +1224,9 @@ class DocumentTool(BaseTool):
             "file_size": file_size,
             "file_hash": file_hash,
             "processing_status": "completed",
-            "total_pages": 1,
-            "overall_confidence": 0.9,
+            "total_pages": total_pages_count,
+            "total_slides": total_slides_count,
+            "overall_confidence": 0.95,
             "elements": elements,
             "metadata": {
                 "pipeline_summary": {

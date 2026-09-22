@@ -992,7 +992,31 @@ class CodingAgent:
                             response.tool_calls = [{"name": "create_file", "args": {"path": code_filename, "content": code_content}, "id": "call_auto_code"}]
                             response.content = ""
                     else:
-                        has_doc = re.search(r"([A-Za-z0-9_\-\.]+\.(?:pdf|xlsx|docx|pptx|png|txt|csv))", message, re.IGNORECASE)
+                        # Match workspace files first (supports filenames with spaces like "BLOODLINK _ Team-CodeAlchemy.pptx")
+                        doc_target = None
+                        try:
+                            ws_dir = Path(self.tool_manager.get("workspace").root_dir)
+                            for wf in ws_dir.glob("*"):
+                                if wf.is_file() and wf.suffix.lower() in (".pdf", ".xlsx", ".docx", ".pptx", ".png", ".jpg", ".jpeg", ".webp", ".txt", ".csv"):
+                                    if wf.name.lower() in message.lower() or f"@{wf.name.lower()}" in message.lower():
+                                        doc_target = wf.name
+                                        break
+                                    if wf.name.replace(" ", "").lower() in message.replace(" ", "").lower():
+                                        doc_target = wf.name
+                                        break
+                        except Exception:
+                            pass
+
+                        if not doc_target:
+                            at_doc = re.search(r"@([^\n\r\t]+?\.(?:pdf|xlsx|docx|pptx|png|jpg|jpeg|webp|txt|csv))\b", message, re.IGNORECASE)
+                            if at_doc:
+                                doc_target = at_doc.group(1).strip()
+                            else:
+                                generic_doc = re.search(r"([A-Za-z0-9_\-\.\s]+\.(?:pdf|xlsx|docx|pptx|png|jpg|jpeg|webp|txt|csv))\b", message, re.IGNORECASE)
+                                if generic_doc:
+                                    doc_target = generic_doc.group(1).strip()
+
+                        has_doc = doc_target is not None
                         is_inspection_task = bool(
                             re.search(r"\b(inspection\s+report|scanned\s+inspection|inspection|sample_inspection)\b", message, re.IGNORECASE)
                             and re.search(r"\b(approval|findings|word|docx|draft)\b", message, re.IGNORECASE)
@@ -1007,7 +1031,7 @@ class CodingAgent:
                         is_single_math_img = bool(
                             re.search(r"\b(solve|solvee|calculate|evaluate|diff|derivative|differentiate|integrate|integral)\b", message, re.IGNORECASE)
                             and has_doc
-                            and bool(re.search(r"\.(?:png|jpg|jpeg|webp|tiff)$", has_doc.group(1), re.IGNORECASE))
+                            and bool(re.search(r"\.(?:png|jpg|jpeg|webp|tiff)$", doc_target or "", re.IGNORECASE))
                             and not is_multi_math
                         )
                         is_big_pdf = bool(re.search(r"\b(the\s+big\s+pdf|big\s+pdf|the\s+pdf)\b", message, re.IGNORECASE))
@@ -1110,7 +1134,7 @@ class CodingAgent:
                             response.tool_calls = []
 
                         elif is_single_math_img:
-                            target_img = has_doc.group(1).strip()
+                            target_img = (doc_target or "").strip()
                             read_res = self.tool_manager.execute("document", path=target_img, mode="summary")
                             tool_actions.append({
                                 "tool": "read_document",
@@ -1451,18 +1475,21 @@ class CodingAgent:
                             response.tool_calls = [{"name": "read_document", "args": {"path": doc_target, "query": "CSR expenditure scholarship project allocation"}, "id": "call_auto_big_pdf"}]
                             response.content = ""
 
-                        elif has_doc:
-                            doc_target = has_doc.group(1)
+                        elif has_doc and doc_target:
                             clean_q = message
-                            clean_q = re.sub(r"[A-Za-z0-9_\-\.]+\.(?:pdf|xlsx|docx|pptx|png|txt|csv)", "", clean_q, flags=re.IGNORECASE)
-                            clean_q = re.sub(r"\b(what is the|what is|tell me|in the|for the|amount allocated for the project|amount allocated|in lakhs|in)\b", "", clean_q, flags=re.IGNORECASE).strip(" .?:,")
+                            clean_q = re.sub(re.escape(doc_target), "", clean_q, flags=re.IGNORECASE)
+                            clean_q = re.sub(r"@[A-Za-z0-9_\-\.\s]+\.(?:pdf|xlsx|docx|pptx|png|jpg|jpeg|webp|txt|csv)", "", clean_q, flags=re.IGNORECASE)
+                            clean_q = re.sub(r"\b(what is the|what is|tell me|in the|for the|amount allocated for the project|amount allocated|in lakhs|in|summarise|summarize|summary|overview|explain|review|deck|presentation|slides|slide|ppt|document|file|about)\b", "", clean_q, flags=re.IGNORECASE).strip(" .?:,@_")
                             is_image = bool(re.search(r"\.(?:png|jpg|jpeg|webp|tiff)$", doc_target, re.IGNORECASE))
-                            if is_image or any(k in message.lower() for k in ("solve", "solvee", "summary", "summarize", "read", "diff", "say", "handwriting", "handwritten", "transcribe")):
+                            is_summary_req = any(k in message.lower() for k in (
+                                "summarise", "summarize", "summary", "overview", "explain", "review",
+                                "deck", "ppt", "presentation", "slides", "slide", "read", "inspect", "about",
+                                "solve", "solvee", "diff", "say", "handwriting", "handwritten", "transcribe", "show"
+                            ))
+                            if is_image or is_summary_req or not clean_q or len(clean_q.split()) < 2:
                                 response.tool_calls = [{"name": "read_document", "args": {"path": doc_target, "mode": "summary"}, "id": "call_auto_doc"}]
-                            elif len(clean_q.split()) >= 2:
-                                response.tool_calls = [{"name": "read_document", "args": {"path": doc_target, "query": clean_q}, "id": "call_auto_search"}]
                             else:
-                                response.tool_calls = [{"name": "read_document", "args": {"path": doc_target, "mode": "summary"}, "id": "call_auto_doc"}]
+                                response.tool_calls = [{"name": "read_document", "args": {"path": doc_target, "query": clean_q}, "id": "call_auto_search"}]
                             response.content = ""
                         elif is_greeting_or_canned or not (response.content or "").strip():
                             # Direct math intent
