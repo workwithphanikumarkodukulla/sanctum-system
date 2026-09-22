@@ -30,6 +30,7 @@ import {
   PixelDotsLoader,
   type TraceNode,
 } from "@/components/ui/ai-agent-response";
+import { MarkdownRenderer } from "@/components/ui/markdown-renderer";
 
 interface ChatSession {
   id: string;
@@ -784,10 +785,16 @@ export const AgentChatPanel: React.FC<AgentChatPanelProps> = ({
                   </div>
                 )}
 
-                {/* Assistant Message Content */}
-                <div className="whitespace-pre-wrap font-sans text-neutral-200 text-xs break-words leading-relaxed">
-                  {msg.content}
-                </div>
+                {/* Message Content (Markdown & Math rendered for Assistant) */}
+                {isUser ? (
+                  <div className="whitespace-pre-wrap font-sans text-neutral-100 text-xs break-words leading-relaxed">
+                    {msg.content}
+                  </div>
+                ) : (
+                  <div className="font-sans text-neutral-200 text-xs break-words leading-relaxed select-text">
+                    <MarkdownRenderer content={msg.content} />
+                  </div>
+                )}
 
                 {/* ── Human-In-The-Loop Approval Card ── */}
                 {!isUser && msg.hasApproval && (
