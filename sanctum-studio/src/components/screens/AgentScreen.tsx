@@ -1134,6 +1134,18 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
                   )}
                 </div>
 
+                {/* Raw End-to-End Workflow Trace from Backend */}
+                {activeTraceMessage?.debugTrace && (
+                  <div className="p-3 rounded-lg bg-[#14151a] border border-[#22232a] space-y-2">
+                    <span className="text-[11px] uppercase tracking-wider text-neutral-400 block mb-1">
+                      Raw Sovereign Workflow Trace
+                    </span>
+                    <div className="text-[10px] text-neutral-300 font-mono max-h-56 overflow-y-auto bg-black/60 p-2.5 rounded border border-white/5 scrollbar-thin scrollbar-thumb-white/20 select-text">
+                      <pre className="whitespace-pre-wrap leading-relaxed">{activeTraceMessage.debugTrace}</pre>
+                    </div>
+                  </div>
+                )}
+
                 {/* Live System Resource Telemetry */}
                 <div className="p-3 rounded-lg bg-[#14151a] border border-[#22232a] space-y-2">
                   <span className="text-[11px] uppercase tracking-wider text-neutral-400 block mb-1">

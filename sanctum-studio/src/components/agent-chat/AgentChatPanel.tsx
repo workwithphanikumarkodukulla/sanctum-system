@@ -478,6 +478,8 @@ export const AgentChatPanel: React.FC<AgentChatPanelProps> = ({
         model: res.modelUsed || options?.model || "gemma4:latest",
         durationS: durSec,
         durationMs: res.durationMs,
+        workflowTrace: res.workflowTrace,
+        debugTrace: res.debugTrace,
         tokensUsed: Math.max(120, Math.round(res.reply.length / 4)),
         isMath,
       };
