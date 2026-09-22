@@ -236,6 +236,32 @@ export async function sendAgentMessage(
   };
 }
 
+// ── Workspace Agent History ──
+export async function fetchWorkspaceHistory(): Promise<{ history: any[]; summary: string }> {
+  try {
+    const res = await fetch("/api/backend/workspace/history", { cache: "no-store" });
+    if (res.ok) {
+      const data = await res.json();
+      return {
+        history: Array.isArray(data.history) ? data.history : [],
+        summary: data.summary || "",
+      };
+    }
+  } catch (err) {
+    console.warn("Could not fetch workspace history:", err);
+  }
+  return { history: [], summary: "" };
+}
+
+export async function clearBackendWorkspaceHistory(): Promise<boolean> {
+  try {
+    const res = await fetch("/api/backend/workspace/history", { method: "DELETE" });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
 // ── Fluid Router Preview ──
 export async function fetchRoutePreview(task: string): Promise<{ selectedModel: string; reason: string; scores: Record<string, number> }> {
   try {
