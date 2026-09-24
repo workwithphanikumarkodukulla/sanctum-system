@@ -618,13 +618,11 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
         },
       ]);
 
+      const isDocCreation = /\b(create|make|generate|build|write)\b.*\b(pdf|docx?|excel|presentation|pptx?|sheet|report|note)\b/i.test(text);
       const needsApproval =
-        text.toLowerCase().includes("audit") ||
-        text.toLowerCase().includes("patch") ||
-        text.toLowerCase().includes("deploy") ||
-        text.toLowerCase().includes("fix") ||
-        text.toLowerCase().includes("run") ||
-        text.toLowerCase().includes("approve");
+        !isDocCreation &&
+        (text.toLowerCase().includes("inspection to approval note pipeline") ||
+         (text.toLowerCase().includes("pv-204b") && text.toLowerCase().includes("approval note")));
 
       const botMsg: ChatMessage = {
         id: `bot-${Date.now()}`,
