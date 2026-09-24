@@ -113,6 +113,40 @@ export async function fetchWorkspaceFileContent(filePath: string): Promise<strin
   return found?.content || `# ${filePath}\n# File loaded locally in Sanctum Sovereign Studio.\n`;
 }
 
+export async function deleteWorkspaceFile(filePath: string): Promise<boolean> {
+  try {
+    const res = await fetch(`/api/backend/workspace/file?path=${encodeURIComponent(filePath)}`, {
+      method: "DELETE",
+    });
+    return res.ok;
+  } catch (err) {
+    console.error("deleteWorkspaceFile error:", err);
+    return false;
+  }
+}
+
+export async function saveWorkspaceFile(
+  filePath: string,
+  content: string,
+  isDirectory = false
+): Promise<boolean> {
+  try {
+    const res = await fetch("/api/backend/workspace/file", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        path: filePath,
+        content,
+        is_directory: isDirectory,
+      }),
+    });
+    return res.ok;
+  } catch (err) {
+    console.error("saveWorkspaceFile error:", err);
+    return false;
+  }
+}
+
 export interface AgentChatResult {
   reply: string;
   toolsExecuted?: any[];

@@ -667,6 +667,72 @@ def read_workspace_file():
         return jsonify({"error": str(e)}), 500
 
 
+@main_bp.route("/api/workspace/file", methods=["DELETE"])
+def delete_workspace_file():
+    file_path = request.args.get("path", "")
+    if not file_path:
+        data = request.get_json(silent=True) or {}
+        file_path = data.get("path", "")
+    file_path = str(file_path).strip()
+    if not file_path:
+        return jsonify({"error": "File path parameter 'path' is required."}), 400
+    try:
+        agent = current_app.agent
+        root = agent.tool_manager.get("workspace").root_dir.resolve()
+        candidate = (root / file_path).expanduser().resolve()
+        try:
+            candidate.relative_to(root)
+        except ValueError:
+            return jsonify({"error": "File path escapes workspace root."}), 403
+
+        if candidate == root:
+            return jsonify({"error": "Cannot delete workspace root directory."}), 400
+
+        if not candidate.exists():
+            return jsonify({"error": "File or directory not found.", "path": file_path}), 404
+
+        if candidate.is_file() or candidate.is_symlink():
+            candidate.unlink()
+        elif candidate.is_dir():
+            shutil.rmtree(candidate)
+
+        logger.info(f"Deleted workspace item on disk: {file_path}")
+        return jsonify({"success": True, "path": file_path, "deleted": True})
+    except Exception as e:
+        logger.exception(f"Error deleting workspace item '{file_path}': {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@main_bp.route("/api/workspace/file", methods=["POST"])
+def save_workspace_file():
+    data = request.get_json(silent=True) or {}
+    file_path = str(data.get("path", "")).strip()
+    content = data.get("content", "")
+    is_directory = bool(data.get("is_directory", False))
+    if not file_path:
+        return jsonify({"error": "File path is required."}), 400
+    try:
+        agent = current_app.agent
+        root = agent.tool_manager.get("workspace").root_dir.resolve()
+        candidate = (root / file_path).expanduser().resolve()
+        try:
+            candidate.relative_to(root)
+        except ValueError:
+            return jsonify({"error": "File path escapes workspace root."}), 403
+
+        if is_directory:
+            candidate.mkdir(parents=True, exist_ok=True)
+            return jsonify({"success": True, "path": file_path, "is_directory": True})
+
+        candidate.parent.mkdir(parents=True, exist_ok=True)
+        from app.sovereign_vault import save_sovereign_file
+        save_sovereign_file(candidate, content, lock_on_disk=True)
+        return jsonify({"success": True, "path": file_path, "saved": True})
+    except Exception as e:
+        logger.exception(f"Error saving workspace file '{file_path}': {e}")
+        return jsonify({"error": str(e)}), 500
+
+
 @main_bp.route("/api/workspace/preview", methods=["GET"])
 def preview_workspace_file():
     """Serve any workspace document, PDF, or image inline, decrypting on the fly if locked."""

@@ -47,6 +47,7 @@ import { DocumentViewer, getDocumentType } from "@/components/editor/DocumentVie
 import { InteractiveTerminal } from "@/components/terminal/InteractiveTerminal";
 import { copyToClipboard } from "@/lib/utils";
 import { SanctumLogo } from "@/components/ui/sanctum-logo";
+import { deleteWorkspaceFile, saveWorkspaceFile } from "@/lib/api";
 
 
 interface WorkspaceScreenProps {
@@ -567,8 +568,25 @@ export const WorkspaceScreen: React.FC<WorkspaceScreenProps> = ({
       setTimeout(() => newItemInputRef.current?.focus(), 40);
     }
   }, [isCreatingItem]);
+
   const [editorContent, setEditorContent] = useState<string>(files[0]?.content || "");
   const [isChatOpen, setIsChatOpen] = useState(true);
+
+  // Keyboard shortcut to save file (Cmd+S / Ctrl+S)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s") {
+        e.preventDefault();
+        if (activeFile && !activeFile.isDirectory && !getDocumentType(activeFile.name)) {
+          saveWorkspaceFile(activeFile.path, editorContent, false)
+            .then(() => refreshWorkspaceFiles())
+            .catch((err) => console.error("Error saving file:", err));
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activeFile, editorContent]);
 
   // ── Panel Resizing State (VS Code / Sanctum Agent Style) ──
   const [explorerWidth, setExplorerWidth] = useState(240);
@@ -826,6 +844,11 @@ export const WorkspaceScreen: React.FC<WorkspaceScreenProps> = ({
         }
         return prev;
       });
+
+      // Persist new file to host disk
+      saveWorkspaceFile(name, `# ${name}\n\n`, false)
+        .then(() => refreshWorkspaceFiles())
+        .catch((err) => console.error("Failed to save new file to disk:", err));
     } else if (isCreatingItem === "folder") {
       const newFolder: FileItem = {
         name,
@@ -835,13 +858,18 @@ export const WorkspaceScreen: React.FC<WorkspaceScreenProps> = ({
       };
       setWorkspaceFiles((prev) => [newFolder, ...prev]);
       setExpandedFolders((prev) => ({ ...prev, [name]: true }));
+
+      // Persist new folder to host disk
+      saveWorkspaceFile(name, "", true)
+        .then(() => refreshWorkspaceFiles())
+        .catch((err) => console.error("Failed to create folder on disk:", err));
     }
 
     setIsCreatingItem(null);
     setNewItemName("");
   };
 
-  const handleDeleteItem = (e: React.MouseEvent, targetPath: string) => {
+  const handleDeleteItem = async (e: React.MouseEvent, targetPath: string) => {
     e.stopPropagation();
     const deleteRecursive = (items: FileItem[]): FileItem[] => {
       return items
@@ -853,11 +881,25 @@ export const WorkspaceScreen: React.FC<WorkspaceScreenProps> = ({
           return item;
         });
     };
+    // 1. Optimistic removal from UI state
     setWorkspaceFiles((prev) => deleteRecursive(prev));
     setOpenTabs((prev) => prev.filter((t) => t.path !== targetPath));
     if (activeFile?.path === targetPath) {
       setActiveFile(null);
       setEditorContent("");
+    }
+
+    // 2. Call backend to physically delete the file/folder from host disk
+    try {
+      const ok = await deleteWorkspaceFile(targetPath);
+      if (!ok) {
+        console.warn(`Backend delete call returned non-ok for path: ${targetPath}`);
+      }
+      // 3. Re-sync tree from disk
+      await refreshWorkspaceFiles();
+    } catch (err) {
+      console.error(`Error deleting file '${targetPath}':`, err);
+      await refreshWorkspaceFiles();
     }
   };
 
