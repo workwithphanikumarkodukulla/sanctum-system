@@ -83,6 +83,8 @@ export interface AgentChatBoxProps {
   activeFile?: string;
   availableFiles?: string[];
   placeholder?: string;
+  value?: string;
+  onChange?: (val: string) => void;
 }
 
 export type AntigravityChatBoxProps = AgentChatBoxProps;
@@ -93,8 +95,17 @@ export const AgentChatBox: React.FC<AgentChatBoxProps> = ({
   activeFile,
   availableFiles,
   placeholder = "Build anything...",
+  value,
+  onChange,
 }) => {
-  const [text, setText] = useState("");
+  const [internalText, setInternalText] = useState(value || "");
+  const text = value !== undefined ? value : internalText;
+
+  const updateText = (newVal: string | ((prev: string) => string)) => {
+    const nextVal = typeof newVal === "function" ? newVal(text) : newVal;
+    setInternalText(nextVal);
+    if (onChange) onChange(nextVal);
+  };
   const [agentMode, setAgentMode] = useState("Agent");
   const [routingMode, setRoutingMode] = useState("Auto");
   const [isAgentMenuOpen, setIsAgentMenuOpen] = useState(false);
@@ -146,11 +157,17 @@ export const AgentChatBox: React.FC<AgentChatBoxProps> = ({
   }, [isFileMenuOpen, isAgentMenuOpen, isRoutingMenuOpen]);
 
   useEffect(() => {
+    if (value !== undefined) {
+      setInternalText(value);
+    }
+  }, [value]);
+
+  useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${Math.min(
         textareaRef.current.scrollHeight,
-        100
+        140
       )}px`;
     }
   }, [text]);
@@ -158,7 +175,7 @@ export const AgentChatBox: React.FC<AgentChatBoxProps> = ({
   const handleSubmit = () => {
     if (!text.trim() || isLoading) return;
     onSend(text.trim(), { mode: agentMode, model: routingMode });
-    setText("");
+    updateText("");
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
     }
@@ -172,7 +189,7 @@ export const AgentChatBox: React.FC<AgentChatBoxProps> = ({
   };
 
   const handleAttachFile = (fileName: string) => {
-    setText((prev) => (prev ? `${prev} @${fileName} ` : `@${fileName} `));
+    updateText((prev) => (prev ? `${prev} @${fileName} ` : `@${fileName} `));
     setIsFileMenuOpen(false);
     setFileSearchQuery("");
     textareaRef.current?.focus();
@@ -306,7 +323,7 @@ export const AgentChatBox: React.FC<AgentChatBoxProps> = ({
                 ref={textareaRef}
                 rows={1}
                 value={text}
-                onChange={(e) => setText(e.target.value)}
+                onChange={(e) => updateText(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder={placeholder}
                 className="w-full bg-transparent text-[13px] text-neutral-200 placeholder-[#4e4e4e] font-sans font-normal leading-[16px] resize-none focus:outline-none"

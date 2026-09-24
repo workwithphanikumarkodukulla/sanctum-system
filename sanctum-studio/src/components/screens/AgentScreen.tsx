@@ -1194,6 +1194,8 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
           <div className="p-4 bg-[#0d0d0d] border-t border-[#202020] shrink-0 relative z-30 overflow-visible">
             <div className="max-w-3xl w-full mx-auto">
               <AgentChatBox
+                value={input}
+                onChange={setInput}
                 onSend={(msg) => handleSend(msg)}
                 isLoading={isSending}
                 availableFiles={workspaceFiles}

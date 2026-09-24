@@ -241,7 +241,12 @@ export default function Home() {
                         />
                       )}
                       {currentScreen === "lkb" && <LkbScreen />}
-                      {currentScreen === "tools" && <ToolsScreen />}
+                      {currentScreen === "tools" && (
+                        <ToolsScreen
+                          onNavigate={(scr) => setCurrentScreen(scr)}
+                          onQuickPrompt={handleQuickPrompt}
+                        />
+                      )}
                       {currentScreen === "locker" && <LockerScreen />}
                       {currentScreen === "security" && <SecurityScreen />}
                       {currentScreen === "logs" && <LogsScreen />}
