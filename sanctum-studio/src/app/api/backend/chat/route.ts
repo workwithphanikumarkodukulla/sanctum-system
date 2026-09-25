@@ -4,8 +4,9 @@ export const maxDuration = 300; // Allow long-running agent LLM loops
 
 export async function POST(req: NextRequest) {
   try {
+    const backendUrl = (process.env.SANCTUM_BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:5050").replace(/\/$/, "");
     const body = await req.text();
-    const backendRes = await fetch("http://127.0.0.1:5050/api/chat", {
+    const backendRes = await fetch(`${backendUrl}/api/chat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
