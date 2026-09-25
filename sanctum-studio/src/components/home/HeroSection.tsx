@@ -122,7 +122,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
       {/* Hero Content Container - Sanctum Sovereign Studio Content */}
       <div className="relative z-20 w-full max-w-7xl mx-auto px-8 sm:px-14 lg:px-20 pointer-events-none">
-        <div className="max-w-xl space-y-6 pointer-events-auto">
+        <div className="max-w-2xl space-y-5 sm:space-y-6 pointer-events-auto">
           {/* Brand Header with Standalone SanctumLogo */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
@@ -144,7 +144,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   v1.0 • SOVEREIGN
                 </span>
               </div>
-              <span className="text-xs font-mono tracking-wider text-neutral-400">
+              <span className="mt-0.5 w-fit rounded bg-black/35 px-1.5 py-0.5 text-xs font-mono tracking-wider text-neutral-100 backdrop-blur-sm">
                 Local-First Desktop AI Agent Studio
               </span>
             </div>
@@ -168,10 +168,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
-            className="text-5xl sm:text-6xl lg:text-7xl font-serif text-white tracking-tight leading-[1.08] font-normal"
+            className="max-w-2xl text-3xl sm:text-4xl lg:text-5xl xl:text-[3.5rem] font-serif text-white tracking-tight leading-[1.1] font-normal text-balance"
           >
-            Transform Local Code <br />
-            <span>Into Sovereign Action</span>
+            Sovereign On-Premise Agentic AI Workbench using Open-Weight Multimodal LLMs for Confidential Industrial Work
           </motion.h1>
 
           {/* Subtitle describing Sanctum */}

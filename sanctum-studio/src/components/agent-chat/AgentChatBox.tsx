@@ -322,11 +322,12 @@ export const AgentChatBox: React.FC<AgentChatBoxProps> = ({
               <textarea
                 ref={textareaRef}
                 rows={1}
+                wrap="soft"
                 value={text}
                 onChange={(e) => updateText(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder={placeholder}
-                className="w-full bg-transparent text-[13px] text-neutral-200 placeholder-[#4e4e4e] font-sans font-normal leading-[16px] resize-none focus:outline-none"
+                className="w-full bg-transparent text-[13px] text-neutral-200 placeholder-[#4e4e4e] font-sans font-normal leading-[16px] resize-none overflow-x-hidden overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden focus:outline-none"
               />
             </div>
 
