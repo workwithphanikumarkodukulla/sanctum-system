@@ -24,7 +24,6 @@ export const LockerScreen: React.FC = () => {
   const [mode, setMode] = useState<"lock" | "unlock">("lock");
   const [passphrase, setPassphrase] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [fallbackFileName, setFallbackFileName] = useState("calculator.py");
   const [isProcessing, setIsProcessing] = useState(false);
   const [success, setSuccess] = useState(false);
   const [resultBlobUrl, setResultBlobUrl] = useState<string | null>(null);
@@ -37,7 +36,6 @@ export const LockerScreen: React.FC = () => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setSelectedFile(file);
-      setFallbackFileName(file.name);
       setSuccess(false);
       setResultBlobUrl(null);
     }
@@ -47,17 +45,17 @@ export const LockerScreen: React.FC = () => {
     e.preventDefault();
     if (!passphrase.trim() || isProcessing) return;
 
+    if (!selectedFile) {
+      fileInputRef.current?.click();
+      return;
+    }
+
     setIsProcessing(true);
     setSuccess(false);
     setResultBlobUrl(null);
 
     try {
-      // Create a dummy file if user hasn't uploaded one
-      const fileToProcess = selectedFile || new File(
-        [mode === "lock" ? "def reciprocal(x): return 1.0/x if x!=0 else 0" : "ENCRYPTED_PAYLOAD_ARGON2ID_SANCTUM"],
-        mode === "lock" ? fallbackFileName : `${fallbackFileName}.locked`,
-        { type: "text/plain" }
-      );
+      const fileToProcess = selectedFile;
 
       let outputBlob: Blob | null = null;
       if (mode === "lock") {
@@ -69,7 +67,7 @@ export const LockerScreen: React.FC = () => {
       // Fallback blob if backend mock
       if (!outputBlob) {
         outputBlob = new Blob(
-          [mode === "lock" ? `LOCKED_SANCTUM_${fileToProcess.name}_ARGON2ID` : `# Decrypted contents of ${fileToProcess.name}\ndef reciprocal(x):\n    return 1.0 / x`],
+          [mode === "lock" ? `LOCKED_SANCTUM_${fileToProcess.name}_ARGON2ID` : `# Decrypted contents of ${fileToProcess.name}\nSovereign confidential data successfully decrypted.`],
           { type: "application/octet-stream" }
         );
       }
@@ -233,14 +231,20 @@ export const LockerScreen: React.FC = () => {
         >
           <FileUp className="w-8 h-8 text-[#76B900] mx-auto mb-2 group-hover:scale-110 transition-transform" />
           <div className="text-sm font-medium text-white">
-            {selectedFile
-              ? `Selected: ${selectedFile.name} (${Math.round(selectedFile.size / 1024)} KB)`
-              : mode === "lock"
-              ? `Using workspace default: ${fallbackFileName} (click to choose another)`
-              : `Using workspace default: ${fallbackFileName}.locked (click to choose another)`}
+            {selectedFile ? (
+              <span className="text-[#76B900] font-mono">
+                {selectedFile.name} <span className="text-neutral-400 font-sans text-xs">({Math.round(selectedFile.size / 1024) || 1} KB)</span>
+              </span>
+            ) : mode === "lock" ? (
+              "Click to browse or drop any file to encrypt"
+            ) : (
+              "Click to browse or drop an encrypted file (.locked) to decrypt"
+            )}
           </div>
-          <span className="text-[11px] font-mono text-neutral-500 mt-1 block">
-            Click to browse your computer or drag file here
+          <span className="text-[11px] font-mono text-neutral-400 mt-1 block">
+            {selectedFile
+              ? "Click to choose a different file"
+              : "Supports documents, source code, PDFs, archives, and binaries"}
           </span>
         </div>
 
