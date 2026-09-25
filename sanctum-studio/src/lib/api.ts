@@ -314,7 +314,7 @@ export async function fetchRoutePreview(task: string): Promise<{ selectedModel: 
         scores: Object.keys(modelScores).length > 0 ? modelScores : { [data.recommended_model || "gemma4:latest"]: 0.95 },
       };
     }
-  } catch {}
+  } catch { }
   // Offline mock
   const scores: Record<string, number> = {
     "gemma4:latest": 0.7 + Math.random() * 0.2,
@@ -339,7 +339,7 @@ export async function indexLkbDocuments(path: string, recursive: boolean): Promi
       body: JSON.stringify({ path, recursive }),
     });
     if (res.ok) return await res.json();
-  } catch {}
+  } catch { }
   return { status: "ok", filesIndexed: Math.floor(3 + Math.random() * 12) };
 }
 
@@ -350,7 +350,7 @@ export async function searchLkb(query: string): Promise<any[]> {
       const data = await res.json();
       if (Array.isArray(data.results)) return data.results;
     }
-  } catch {}
+  } catch { }
   const { sampleKnowledge } = await import("./mockData");
   return sampleKnowledge.filter(
     (k) => k.title.toLowerCase().includes(query.toLowerCase()) || k.snippet.toLowerCase().includes(query.toLowerCase())
@@ -361,7 +361,7 @@ export async function clearLkb(): Promise<boolean> {
   try {
     const res = await fetch("/api/backend/lkb/clear", { method: "POST" });
     return res.ok;
-  } catch {}
+  } catch { }
   return true;
 }
 
@@ -379,7 +379,7 @@ export async function fetchLogs(
       const data = await res.json();
       if (Array.isArray(data.logs)) return data.logs;
     }
-  } catch {}
+  } catch { }
   return sampleLogs;
 }
 
@@ -391,7 +391,7 @@ export async function lockerApplyCover(file: File, passphrase: string): Promise<
     formData.append("passphrase", passphrase);
     const res = await fetch("/api/backend/locker/lock", { method: "POST", body: formData });
     if (res.ok) return await res.blob();
-  } catch {}
+  } catch { }
   return null;
 }
 
@@ -402,7 +402,7 @@ export async function lockerRemoveCover(file: File, passphrase: string): Promise
     formData.append("passphrase", passphrase);
     const res = await fetch("/api/backend/locker/unlock", { method: "POST", body: formData });
     if (res.ok) return await res.blob();
-  } catch {}
+  } catch { }
   return null;
 }
 
@@ -415,7 +415,7 @@ export async function testWanEgress(target: string = "api.openai.com", port: num
       body: JSON.stringify({ target, port }),
     });
     if (res.ok) return await res.json();
-  } catch {}
+  } catch { }
   return {
     target,
     port,
@@ -429,7 +429,7 @@ export async function fetchWiresharkPackets(): Promise<any> {
   try {
     const res = await fetch("/api/backend/wireshark/packets", { cache: "no-store" });
     if (res.ok) return await res.json();
-  } catch {}
+  } catch { }
   return {
     packets: [],
     airgap_integrity_pct: 100.0,
@@ -444,7 +444,7 @@ export async function fetchNetworkAudit(): Promise<any> {
   try {
     const res = await fetch("/api/backend/sovereign/network", { cache: "no-store" });
     if (res.ok) return await res.json();
-  } catch {}
+  } catch { }
   return {
     externalCalls: 0,
     externalCallsBlocked: 1,

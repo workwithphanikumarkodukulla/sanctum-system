@@ -291,21 +291,19 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
             <div className="flex items-center bg-[#1c1c1c] border border-[#2b2b2b] rounded p-0.5 text-xs">
               <button
                 onClick={() => setPdfMode("embed")}
-                className={`px-2 py-1 rounded transition-colors ${
-                  pdfMode === "embed"
+                className={`px-2 py-1 rounded transition-colors ${pdfMode === "embed"
                     ? "bg-[#282828] text-white font-medium"
                     : "text-neutral-400 hover:text-neutral-200"
-                }`}
+                  }`}
               >
                 Native View
               </button>
               <button
                 onClick={() => setPdfMode("pages")}
-                className={`px-2 py-1 rounded transition-colors ${
-                  pdfMode === "pages"
+                className={`px-2 py-1 rounded transition-colors ${pdfMode === "pages"
                     ? "bg-[#282828] text-white font-medium"
                     : "text-neutral-400 hover:text-neutral-200"
-                }`}
+                  }`}
               >
                 Page Reader
               </button>
@@ -316,21 +314,19 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
             <div className="flex items-center bg-[#1c1c1c] border border-[#2b2b2b] rounded p-0.5 text-xs">
               <button
                 onClick={() => setDocxMode("styled")}
-                className={`px-2 py-1 rounded transition-colors ${
-                  docxMode === "styled"
+                className={`px-2 py-1 rounded transition-colors ${docxMode === "styled"
                     ? "bg-[#282828] text-white font-medium"
                     : "text-neutral-400 hover:text-neutral-200"
-                }`}
+                  }`}
               >
                 Document
               </button>
               <button
                 onClick={() => setDocxMode("markdown")}
-                className={`px-2 py-1 rounded transition-colors ${
-                  docxMode === "markdown"
+                className={`px-2 py-1 rounded transition-colors ${docxMode === "markdown"
                     ? "bg-[#282828] text-white font-medium"
                     : "text-neutral-400 hover:text-neutral-200"
-                }`}
+                  }`}
               >
                 Markdown
               </button>
@@ -465,11 +461,10 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
                       <button
                         key={p.page}
                         onClick={() => setCurrentPage(p.page)}
-                        className={`flex items-center justify-between p-2 rounded text-xs transition-all ${
-                          currentPage === p.page
+                        className={`flex items-center justify-between p-2 rounded text-xs transition-all ${currentPage === p.page
                             ? "bg-[#1f2b14] text-[#9ae018] font-medium border border-[#76B900]/40"
                             : "text-neutral-400 hover:bg-[#1a1a1a] hover:text-neutral-200"
-                        }`}
+                          }`}
                       >
                         <span>Page {p.page}</span>
                         <span className="text-[10px] font-mono text-neutral-500 truncate max-w-[70px]">
@@ -561,17 +556,15 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
                 <button
                   key={idx}
                   onClick={() => setCurrentSlide(idx)}
-                  className={`flex flex-col p-2 rounded-lg text-left transition-all border ${
-                    currentSlide === idx
+                  className={`flex flex-col p-2 rounded-lg text-left transition-all border ${currentSlide === idx
                       ? "bg-[#1d2913] border-[#76B900]/50 shadow-[0_0_12px_rgba(118,185,0,0.15)]"
                       : "bg-[#161616] border-[#242424] hover:border-[#383838]"
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span
-                      className={`text-[10px] font-mono font-bold ${
-                        currentSlide === idx ? "text-[#9ae018]" : "text-neutral-500"
-                      }`}
+                      className={`text-[10px] font-mono font-bold ${currentSlide === idx ? "text-[#9ae018]" : "text-neutral-500"
+                        }`}
                     >
                       #{slide.slide_number}
                     </span>
@@ -666,11 +659,10 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
                                 {tbl.map((row: string[], rIdx: number) => (
                                   <tr
                                     key={rIdx}
-                                    className={`border-b border-[#252525] ${
-                                      rIdx === 0
+                                    className={`border-b border-[#252525] ${rIdx === 0
                                         ? "bg-[#1f1f1f] text-white font-semibold"
                                         : "bg-[#141414] text-neutral-300"
-                                    }`}
+                                      }`}
                                   >
                                     {row.map((cell: string, cIdx: number) => (
                                       <td
@@ -758,13 +750,12 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
                     <a
                       key={sIdx}
                       href={`#sec-${sIdx}`}
-                      className={`text-xs block py-1 px-1.5 rounded hover:bg-[#1a1a1a] transition-colors truncate ${
-                        s.type === "title"
+                      className={`text-xs block py-1 px-1.5 rounded hover:bg-[#1a1a1a] transition-colors truncate ${s.type === "title"
                           ? "text-white font-bold"
                           : s.type === "heading_1"
-                          ? "text-neutral-300 font-semibold pl-2 border-l border-[#76B900]"
-                          : "text-neutral-400 pl-4"
-                      }`}
+                            ? "text-neutral-300 font-semibold pl-2 border-l border-[#76B900]"
+                            : "text-neutral-400 pl-4"
+                        }`}
                     >
                       {s.text}
                     </a>
@@ -865,11 +856,10 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
                               {sec.rows.map((r: string[], rIdx: number) => (
                                 <tr
                                   key={rIdx}
-                                  className={`border-b border-[#262626] ${
-                                    rIdx === 0
+                                  className={`border-b border-[#262626] ${rIdx === 0
                                       ? "bg-[#1f1f1f] text-white font-semibold"
                                       : "bg-[#141414] text-neutral-300 hover:bg-[#1a1a1a]"
-                                  }`}
+                                    }`}
                                 >
                                   {r.map((cell: string, cIdx: number) => (
                                     <td
@@ -894,17 +884,15 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
                       >
                         {sec.runs?.length > 0
                           ? sec.runs.map((r: any, rIdx: number) => (
-                              <span
-                                key={rIdx}
-                                className={`${
-                                  r.bold ? "font-bold text-white" : ""
-                                } ${r.italic ? "italic" : ""} ${
-                                  r.underline ? "underline" : ""
+                            <span
+                              key={rIdx}
+                              className={`${r.bold ? "font-bold text-white" : ""
+                                } ${r.italic ? "italic" : ""} ${r.underline ? "underline" : ""
                                 }`}
-                              >
-                                {r.text}
-                              </span>
-                            ))
+                            >
+                              {r.text}
+                            </span>
+                          ))
                           : sec.text}
                       </p>
                     );
@@ -930,11 +918,10 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
                   <button
                     key={sname}
                     onClick={() => setActiveSheet(sname)}
-                    className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
-                      activeSheet === sname
+                    className={`px-3 py-1 rounded text-xs font-medium transition-colors ${activeSheet === sname
                         ? "bg-[#1f2b14] text-[#9ae018] border border-[#76B900]/40"
                         : "bg-[#1b1b1b] text-neutral-400 hover:text-white"
-                    }`}
+                      }`}
                   >
                     {sname}
                   </button>
@@ -987,10 +974,10 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
                         ?.filter((row: string[]) =>
                           tableSearch
                             ? row.some((c) =>
-                                String(c)
-                                  .toLowerCase()
-                                  .includes(tableSearch.toLowerCase())
-                              )
+                              String(c)
+                                .toLowerCase()
+                                .includes(tableSearch.toLowerCase())
+                            )
                             : true
                         )
                         .map((row: string[], rIdx: number) => (
