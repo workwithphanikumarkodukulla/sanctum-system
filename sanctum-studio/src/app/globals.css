@@ -1150,5 +1150,301 @@
   opacity: 0.18 !important;
 }
 
+/* ══════════════════════════════════════════════════════════════════
+   Tools Screen Badge & Card Enhancements (Light Mode)
+   Replaces dark murky badge backgrounds (.PDF, .XLSX, AGENT, etc.)
+   with crisp, soft pastel fills and deep high-contrast text.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* 1. Rose (.PDF) */
+.light .bg-rose-950\/40,
+.light .tool-badge.bg-rose-950\/40 {
+  background-color: #ffe4e6 !important; /* rose-100 */
+}
+.light .text-rose-400 {
+  color: #be123c !important; /* rose-700 */
+}
+.light .border-rose-800\/40,
+.light .border-rose-500\/30 {
+  border-color: #fecdd3 !important; /* rose-200 */
+}
+.light .bg-rose-500\/10 {
+  background-color: #fff1f2 !important; /* rose-50 */
+}
+
+/* 2. Amber (.PPTX) */
+.light .bg-amber-950\/40,
+.light .tool-badge.bg-amber-950\/40 {
+  background-color: #fef3c7 !important; /* amber-100 */
+}
+.light .text-amber-400 {
+  color: #b45309 !important; /* amber-700 */
+}
+.light .border-amber-800\/40,
+.light .border-amber-500\/30 {
+  border-color: #fde68a !important; /* amber-200 */
+}
+.light .bg-amber-500\/10 {
+  background-color: #fffbeb !important; /* amber-50 */
+}
+
+/* 3. Emerald (.XLSX) */
+.light .bg-emerald-950\/40,
+.light .tool-badge.bg-emerald-950\/40 {
+  background-color: #dcfce7 !important; /* emerald-100 */
+}
+.light .text-emerald-400 {
+  color: #15803d !important; /* emerald-700 */
+}
+.light .border-emerald-800\/40,
+.light .border-emerald-500\/30 {
+  border-color: #bbf7d0 !important; /* emerald-200 */
+}
+.light .bg-emerald-500\/10 {
+  background-color: #f0fdf4 !important; /* emerald-50 */
+}
+
+/* 4. Blue (.DOCX) */
+.light .bg-blue-950\/40,
+.light .tool-badge.bg-blue-950\/40 {
+  background-color: #dbeafe !important; /* blue-100 */
+}
+.light .text-blue-400 {
+  color: #1d4ed8 !important; /* blue-700 */
+}
+.light .border-blue-800\/40,
+.light .border-blue-500\/30 {
+  border-color: #bfdbfe !important; /* blue-200 */
+}
+.light .bg-blue-500\/10 {
+  background-color: #eff6ff !important; /* blue-50 */
+}
+
+/* 5. Purple (.PY / .TS) */
+.light .bg-purple-950\/40,
+.light .tool-badge.bg-purple-950\/40 {
+  background-color: #f3e8ff !important; /* purple-100 */
+}
+.light .text-purple-400 {
+  color: #7e22ce !important; /* purple-700 */
+}
+.light .border-purple-800\/40,
+.light .border-purple-500\/30 {
+  border-color: #e9d5ff !important; /* purple-200 */
+}
+.light .bg-purple-500\/10 {
+  background-color: #faf5ff !important; /* purple-50 */
+}
+
+/* 6. Cyan (AGENT) */
+.light .bg-cyan-950\/40,
+.light .tool-badge.bg-cyan-950\/40 {
+  background-color: #cffafe !important; /* cyan-100 */
+}
+.light .text-cyan-400 {
+  color: #0e7490 !important; /* cyan-700 */
+}
+.light .border-cyan-800\/40,
+.light .border-cyan-500\/30 {
+  border-color: #a5f3fc !important; /* cyan-200 */
+}
+.light .bg-cyan-500\/10 {
+  background-color: #ecfeff !important; /* cyan-50 */
+}
+
+/* 7. Indigo (GIT) */
+.light .bg-indigo-950\/40,
+.light .tool-badge.bg-indigo-950\/40 {
+  background-color: #e0e7ff !important; /* indigo-100 */
+}
+.light .text-indigo-400 {
+  color: #4338ca !important; /* indigo-700 */
+}
+.light .border-indigo-800\/40,
+.light .border-indigo-500\/30 {
+  border-color: #c7d2fe !important; /* indigo-200 */
+}
+.light .bg-indigo-500\/10 {
+  background-color: #eef2ff !important; /* indigo-50 */
+}
+
+/* 8. Zinc / Slate (BASH) */
+.light .tool-badge.bg-zinc-900,
+.light .tool-badge.border-zinc-700 {
+  background-color: #f1f5f9 !important;
+  color: #334155 !important;
+  border-color: #cbd5e1 !important;
+}
+.light .tool-card .bg-zinc-800\/50 {
+  background-color: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #334155 !important;
+}
+
+/* 9. Yellow (FILES) */
+.light .bg-yellow-950\/40,
+.light .tool-badge.bg-yellow-950\/40 {
+  background-color: #fef9c3 !important; /* yellow-100 */
+}
+.light .text-yellow-400 {
+  color: #a16207 !important; /* yellow-700 */
+}
+.light .border-yellow-800\/40,
+.light .border-yellow-500\/30 {
+  border-color: #fef08a !important; /* yellow-200 */
+}
+.light .bg-yellow-500\/10 {
+  background-color: #fefce8 !important; /* yellow-50 */
+}
+
+/* 10. Teal (OCR / RAG) */
+.light .bg-teal-950\/40,
+.light .tool-badge.bg-teal-950\/40 {
+  background-color: #ccfbf1 !important; /* teal-100 */
+}
+.light .text-teal-400 {
+  color: #0f766e !important; /* teal-700 */
+}
+.light .border-teal-800\/40,
+.light .border-teal-500\/30 {
+  border-color: #99f6e4 !important; /* teal-200 */
+}
+.light .bg-teal-500\/10 {
+  background-color: #f0fdfa !important; /* teal-50 */
+}
+
+/* 11. Pink (.MD) */
+.light .bg-pink-950\/40,
+.light .tool-badge.bg-pink-950\/40 {
+  background-color: #fce7f3 !important; /* pink-100 */
+}
+.light .text-pink-400 {
+  color: #be185d !important; /* pink-700 */
+}
+.light .border-pink-800\/40,
+.light .border-pink-500\/30 {
+  border-color: #fbcfe8 !important; /* pink-200 */
+}
+.light .bg-pink-500\/10 {
+  background-color: #fdf2f8 !important; /* pink-50 */
+}
+
+/* 12. Locked (.LOCKED) & Green Accents */
+.light .tool-badge.bg-\[\#1a2512\],
+.light .bg-\[\#1a2512\] {
+  background-color: #ecfdf5 !important;
+  color: #047857 !important;
+  border-color: #a7f3d0 !important;
+}
+
+/* Tool Card Sub-components in Light Mode */
+.light .tool-capability-tag,
+.light .tool-card .bg-\[\#171820\] {
+  background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+  color: #475569 !important;
+}
+
+.light .tool-prompt-preview,
+.light .tool-card .bg-\[\#0a0a0d\] {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+  color: #334155 !important;
+}
+.light .tool-card .bg-\[\#0a0a0d\] .text-neutral-300 {
+  color: #1e293b !important;
+}
+
+.light .tool-card .bg-\[\#1b2513\] {
+  background-color: #eef7e4 !important;
+  border-color: rgba(82, 131, 0, 0.45) !important;
+  color: #365314 !important;
+}
+.light .tool-card .bg-\[\#1b2513\]:hover,
+.light .hover\:bg-\[\#25351a\]:hover {
+  background-color: #e2f2d2 !important;
+  border-color: #528300 !important;
+}
+
+.light .tool-card .bg-\[\#191b22\] {
+  background-color: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #1e293b !important;
+}
+.light .tool-card .hover\:bg-\[\#222530\]:hover {
+  background-color: #e2e8f0 !important;
+}
+
+.light .tool-card .bg-\[\#161820\] {
+  background-color: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #334155 !important;
+}
+.light .tool-card .hover\:bg-\[\#222532\]:hover {
+  background-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+.light .tool-card {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05) !important;
+}
+.light .tool-card:hover {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(82, 131, 0, 0.3) !important;
+  border-color: rgba(82, 131, 0, 0.4) !important;
+}
+
+/* Category Filters in Light Mode */
+.light .bg-\[\#1f2b14\] {
+  background-color: #ecfdf5 !important;
+  color: #047857 !important;
+  border-color: #a7f3d0 !important;
+}
+.light .bg-\[\#162210\] {
+  background-color: #ecfdf5 !important;
+  color: #047857 !important;
+  border-color: #a7f3d0 !important;
+}
+.light .bg-\[\#14151b\] {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+  color: #475569 !important;
+}
+.light .border-\[\#202127\] {
+  border-color: #e2e8f0 !important;
+}
+
+/* Tools Configurator Modal in Light Mode */
+.light .bg-\[\#0e1014\] {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15) !important;
+}
+.light .bg-\[\#14161c\] {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+.light .bg-\[\#181a22\] {
+  background-color: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #1e293b !important;
+}
+.light .bg-\[\#0b0c0f\] {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+.light .bg-\[\#07080a\] {
+  background-color: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+  color: #365314 !important;
+}
+.light .bg-\[\#1a1c24\] {
+  background-color: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #1e293b !important;
+}
+
 
 

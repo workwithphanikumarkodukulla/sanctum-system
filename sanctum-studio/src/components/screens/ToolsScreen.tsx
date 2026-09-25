@@ -982,7 +982,7 @@ export const ToolsScreen: React.FC<ToolsScreenProps> = ({
                   whileHover={{ y: -3 }}
                   transition={{ duration: 0.16 }}
                   onClick={() => handleOpenConfigurator(tool)}
-                  className="group relative rounded-xl bg-[#111216] border border-[#21232b] hover:border-[#76B900]/50 p-5 flex flex-col justify-between transition-all cursor-pointer shadow-lg hover:shadow-[#76B900]/5 overflow-hidden"
+                  className="group tool-card relative rounded-xl bg-[#111216] border border-[#21232b] hover:border-[#76B900]/50 p-5 flex flex-col justify-between transition-all cursor-pointer shadow-lg hover:shadow-[#76B900]/5 overflow-hidden"
                 >
                   {/* Subtle Top Gradient Glow */}
                   <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#76B900]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -1008,7 +1008,7 @@ export const ToolsScreen: React.FC<ToolsScreenProps> = ({
 
                       {/* Output Extension Badge */}
                       <span
-                        className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border uppercase tracking-wider ${tool.badgeColor}`}
+                        className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border uppercase tracking-wider tool-badge ${tool.badgeColor}`}
                       >
                         {tool.extensionBadge}
                       </span>
@@ -1030,7 +1030,7 @@ export const ToolsScreen: React.FC<ToolsScreenProps> = ({
                       {tool.capabilities.map((cap, idx) => (
                         <span
                           key={idx}
-                          className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[#171820] text-neutral-400 border border-white/5"
+                          className="tool-capability-tag text-[9px] font-mono px-1.5 py-0.5 rounded bg-[#171820] text-neutral-400 border border-white/5"
                         >
                           • {cap}
                         </span>
@@ -1039,7 +1039,7 @@ export const ToolsScreen: React.FC<ToolsScreenProps> = ({
 
                     {/* Prompt Preview Snippet */}
                     {!isDirectNav && (
-                      <div className="mt-3.5 p-2 rounded-lg bg-[#0a0a0d] border border-white/5 font-mono text-[10px] text-neutral-400 truncate group-hover:border-[#76B900]/20 transition-colors">
+                      <div className="tool-prompt-preview mt-3.5 p-2 rounded-lg bg-[#0a0a0d] border border-white/5 font-mono text-[10px] text-neutral-400 truncate group-hover:border-[#76B900]/20 transition-colors">
                         <span className="text-[#76B900] mr-1.5 font-bold">&gt;</span>
                         <span className="text-neutral-300">{tool.defaultPromptTemplate}</span>
                       </div>
@@ -1320,7 +1320,7 @@ export const ToolsScreen: React.FC<ToolsScreenProps> = ({
                         Configure {activeConfigTool.title}
                       </h2>
                       <span
-                        className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded border ${activeConfigTool.badgeColor}`}
+                        className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded border tool-badge ${activeConfigTool.badgeColor}`}
                       >
                         {activeConfigTool.extensionBadge}
                       </span>
