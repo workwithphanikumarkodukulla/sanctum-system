@@ -3,12 +3,35 @@
 
 @theme inline {
   --font-serif: var(--font-serif);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
 }
 
 @layer base {
   :root,
   .dark {
     color-scheme: dark;
+    --background: #0a0a0a;
+    --foreground: #ffffff;
+    --card: #161816;
+    --card-foreground: #ffffff;
+    --popover: #131417;
+    --popover-foreground: #ffffff;
+    --muted: #1e2220;
+    --muted-foreground: #9ca3af;
+    --border: #202622;
+    --input: #141816;
+    --ring: #76B900;
+
     --nvidia-green: #76B900;
     --nvidia-green-hover: #86d000;
     --nvidia-green-subtle: rgba(118, 185, 0, 0.12);
@@ -47,6 +70,18 @@
 
   .light {
     color-scheme: light;
+    --background: #f5f7fa;
+    --foreground: #0f172a;
+    --card: #ffffff;
+    --card-foreground: #0f172a;
+    --popover: #ffffff;
+    --popover-foreground: #0f172a;
+    --muted: #f1f5f9;
+    --muted-foreground: #64748b;
+    --border: #e2e8f0;
+    --input: #f1f5f9;
+    --ring: #528300;
+
     /* High-contrast sovereign emerald for white backgrounds */
     --nvidia-green: #528300;
     --nvidia-green-hover: #436b00;
@@ -145,6 +180,14 @@
   border: 1px solid rgba(255, 255, 255, 0.07);
 }
 
+.light .glass-panel {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
 .glass-card {
   background: rgba(25, 25, 25, 0.8);
   backdrop-filter: blur(12px);
@@ -153,10 +196,24 @@
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.light .glass-card {
+  background: #ffffff !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 2px 8px -1px rgba(0, 0, 0, 0.04) !important;
+}
+
 .glass-card:hover {
   background: rgba(34, 34, 34, 0.95);
   border-color: rgba(118, 185, 0, 0.45);
   box-shadow: 0 8px 32px -8px rgba(118, 185, 0, 0.15);
+}
+
+.light .glass-card:hover {
+  background: #f8fafc !important;
+  border-color: #528300 !important;
+  box-shadow: 0 8px 24px -4px rgba(82, 131, 0, 0.12) !important;
 }
 
 .glow-green {
@@ -666,93 +723,311 @@
    LIGHT THEME UNIVERSAL SURFACE & TEXT HARMONIZATION
    ═════════════════════════════════════════════════════════════════════ */
 
-/* Screen background overrides for light theme */
+/* Screen & Primary Page Backgrounds */
 .light .bg-\[\#0a0a0a\],
 .light .bg-\[\#0c0e0d\],
 .light .bg-\[\#0d0d0d\],
 .light .bg-\[\#0f0f0f\],
+.light .bg-\[\#080808\],
+.light .bg-\[\#070707\],
+.light .bg-\[\#0b0b0b\],
+.light .bg-\[\#0c0c0c\],
 .light .bg-\[\#0a0a0a\]\/90 {
   background-color: var(--bg-page) !important;
 }
 
-/* Card / Surface / Container background overrides for light theme */
+/* Card, Panel, Modal, Tool, Input, and Sub-surface Backgrounds */
+.light .bg-\[\#070709\],
+.light .bg-\[\#07080a\],
+.light .bg-\[\#08080a\],
+.light .bg-\[\#08090c\],
+.light .bg-\[\#090a0d\],
+.light .bg-\[\#0a0a0d\],
+.light .bg-\[\#0b0c0e\],
+.light .bg-\[\#0b0c0f\],
+.light .bg-\[\#0c0d10\],
+.light .bg-\[\#0d0e11\],
+.light .bg-\[\#0d0e12\],
+.light .bg-\[\#0d0e12\]\/80,
+.light .bg-\[\#0e0e0e\],
+.light .bg-\[\#0e0e0e\]\/50,
+.light .bg-\[\#0e0e11\],
+.light .bg-\[\#0e0f12\],
+.light .bg-\[\#0e0f13\],
+.light .bg-\[\#0f1012\],
+.light .bg-\[\#0f1013\],
+.light .bg-\[\#0f1014\],
+.light .bg-\[\#101010\],
+.light .bg-\[\#101114\],
+.light .bg-\[\#101115\],
 .light .bg-\[\#111\],
 .light .bg-\[\#111111\],
+.light .bg-\[\#111216\],
 .light .bg-\[\#121212\],
+.light .bg-\[\#121316\],
+.light .bg-\[\#121317\],
+.light .bg-\[\#121413\],
+.light .bg-\[\#121614\],
 .light .bg-\[\#131313\],
 .light .bg-\[\#131417\],
+.light .bg-\[\#131418\],
+.light .bg-\[\#131419\],
+.light .bg-\[\#13141a\],
 .light .bg-\[\#141414\],
+.light .bg-\[\#141518\],
+.light .bg-\[\#14151b\],
+.light .bg-\[\#14161c\],
 .light .bg-\[\#141816\],
+.light .bg-\[\#151515\],
+.light .bg-\[\#15161c\],
 .light .bg-\[\#161616\],
 .light .bg-\[\#16171a\],
 .light .bg-\[\#16171b\],
+.light .bg-\[\#16171d\],
+.light .bg-\[\#16181e\],
+.light .bg-\[\#161820\],
+.light .bg-\[\#171820\],
+.light .bg-\[\#171c15\],
 .light .bg-\[\#181818\],
 .light .bg-\[\#18191d\],
+.light .bg-\[\#18191e\],
+.light .bg-\[\#18191f\],
+.light .bg-\[\#181920\],
+.light .bg-\[\#181a22\],
 .light .bg-\[\#191919\],
+.light .bg-\[\#191919\]\/60,
+.light .bg-\[\#191b22\],
 .light .bg-\[\#1a1a1a\],
+.light .bg-\[\#1a1b22\],
+.light .bg-\[\#1a1c24\],
+.light .bg-\[\#1b1b1b\],
+.light .bg-\[\#1b1c22\],
+.light .bg-\[\#1b1c24\],
 .light .bg-\[\#1c1c1c\],
-.light .bg-\[\#101115\],
-.light .bg-\[\#0e0e11\],
-.light .bg-\[\#0d110d\],
-.light .bg-\[\#111216\],
-.light .bg-\[\#16171d\] {
+.light .bg-\[\#1e1e1e\],
+.light .bg-\[\#1f1f1f\],
+.light .bg-\[\#202020\],
+.light .bg-\[\#202227\],
+.light .bg-\[\#202330\],
+.light .bg-\[\#222\],
+.light .bg-\[\#222222\],
+.light .bg-\[\#22242a\],
+.light .bg-\[\#222530\],
+.light .bg-\[\#222532\],
+.light .bg-\[\#23242c\],
+.light .bg-\[\#23252c\],
+.light .bg-\[\#23252d\],
+.light .bg-\[\#252525\],
+.light .bg-\[\#252834\],
+.light .bg-\[\#282828\],
+.light .bg-\[\#2a2a2a\],
+.light .bg-\[\#2b2d35\],
+.light .bg-black,
+.light .bg-neutral-950,
+.light .bg-neutral-900,
+.light .bg-neutral-850,
+.light .bg-neutral-800,
+.light .bg-zinc-950,
+.light .bg-zinc-900,
+.light .bg-zinc-850,
+.light .bg-zinc-800,
+.light .bg-gray-950,
+.light .bg-gray-900,
+.light .bg-gray-800 {
   background-color: var(--bg-surface) !important;
 }
 
-/* Card hover background overrides for light theme */
+/* Overview Hero Banner Gradient in Light Mode */
+.light .bg-gradient-to-r.from-\[\#12180e\],
+.light .from-\[\#12180e\] {
+  background-image: linear-gradient(135deg, #eef7e4 0%, #f8fafc 50%, #ffffff 100%) !important;
+  border-color: #cbd5e1 !important;
+}
+
+/* Progress Bar Tracks & Subtle Dark Underlays */
+.light .w-full.bg-\[\#202020\],
+.light .h-1.bg-\[\#202020\],
+.light .bg-\[\#202020\].h-1,
+.light .bg-\[\#202020\].h-full {
+  background-color: #e2e8f0 !important;
+}
+
+.light .bg-white\/5,
+.light .bg-white\/10,
+.light .bg-white\/\[0\.04\],
+.light .bg-white\/\[0\.02\],
+.light .bg-white\/\[0\.08\] {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Hover Background Overrides */
 .light .hover\:bg-\[\#181818\]:hover,
+.light .hover\:bg-\[\#1a1a1a\]:hover,
 .light .hover\:bg-\[\#1c1c1c\]:hover,
 .light .hover\:bg-\[\#202020\]:hover,
+.light .hover\:bg-\[\#202227\]:hover,
 .light .hover\:bg-\[\#222\]:hover,
 .light .hover\:bg-\[\#222222\]:hover,
+.light .hover\:bg-\[\#222530\]:hover,
+.light .hover\:bg-\[\#222532\]:hover,
+.light .hover\:bg-\[\#23242c\]:hover,
+.light .hover\:bg-\[\#23252c\]:hover,
+.light .hover\:bg-\[\#23252d\]:hover,
+.light .hover\:bg-\[\#252525\]:hover,
+.light .hover\:bg-\[\#252834\]:hover,
 .light .hover\:bg-\[\#282828\]:hover,
-.light .hover\:bg-\[\#2a2a2a\]:hover {
+.light .hover\:bg-\[\#2a2a2a\]:hover,
+.light .hover\:bg-\[\#2b2d35\]:hover,
+.light .hover\:bg-white\/5:hover,
+.light .hover\:bg-white\/10:hover {
   background-color: var(--bg-card-hover) !important;
 }
 
-/* Border overrides for light theme */
-.light .border-\[\#1f2622\],
+/* Emerald Badges & Active Indicators (Light Mode: Soft mint with deep sovereign emerald text) */
+.light .bg-\[\#0a1e10\],
+.light .bg-\[\#0e120d\],
+.light .bg-\[\#101913\],
+.light .bg-\[\#12180e\],
+.light .bg-\[\#131d10\],
+.light .bg-\[\#141812\],
+.light .bg-\[\#141a10\],
+.light .bg-\[\#141d0f\],
+.light .bg-\[\#14230e\],
+.light .bg-\[\#161f10\],
+.light .bg-\[\#161f12\],
+.light .bg-\[\#162210\],
+.light .bg-\[\#172010\],
+.light .bg-\[\#182310\],
+.light .bg-\[\#182512\],
+.light .bg-\[\#192410\],
+.light .bg-\[\#1a2512\],
+.light .bg-\[\#1b2513\],
+.light .bg-\[\#1c2217\],
+.light .bg-\[\#1c2616\],
+.light .bg-\[\#1d2913\],
+.light .bg-\[\#1d2914\],
+.light .bg-\[\#1e2814\],
+.light .bg-\[\#1e2912\],
+.light .bg-\[\#1f2917\],
+.light .bg-\[\#1f2b14\],
+.light .bg-\[\#1f2c16\],
+.light .bg-\[\#1f2e14\],
+.light .bg-\[\#253518\],
+.light .bg-\[\#25351a\],
+.light .bg-\[\#253618\],
+.light .bg-\[\#26371c\],
+.light .bg-\[\#26381b\],
+.light .bg-\[\#283d19\],
+.light .bg-\[\#2b3a1a\],
+.light .bg-\[\#2c3c1a\] {
+  background-color: #ecf7dc !important;
+  border-color: rgba(82, 131, 0, 0.35) !important;
+  color: #335500 !important;
+}
+
+/* Red / Danger Badges in Light Mode */
+.light .bg-\[\#1a1414\],
+.light .bg-\[\#231214\],
+.light .bg-\[\#251818\],
+.light .hover\:bg-\[\#251818\]:hover {
+  background-color: #fee2e2 !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
+  color: #991b1b !important;
+}
+
+/* Dark Borders Harmonization in Light Mode */
+.light .border-\[\#1e1e1e\],
+.light .border-\[\#1f1f1f\],
 .light .border-\[\#202020\],
 .light .border-\[\#202127\],
-.light .border-\[\#222\],
+.light .border-\[\#20222a\],
+.light .border-\[\#21232b\],
 .light .border-\[\#222222\],
+.light .border-\[\#222329\],
+.light .border-\[\#22232a\],
+.light .border-\[\#22242c\],
+.light .border-\[\#22242e\],
+.light .border-\[\#222\],
+.light .border-\[\#23242a\],
 .light .border-\[\#23242c\],
-.light .border-\[\#232c26\],
 .light .border-\[\#242424\],
+.light .border-\[\#24252a\],
+.light .border-\[\#24252c\],
+.light .border-\[\#242630\],
 .light .border-\[\#252525\],
 .light .border-\[\#262626\],
+.light .border-\[\#26272c\],
 .light .border-\[\#26272e\],
+.light .border-\[\#262730\],
+.light .border-\[\#262833\],
+.light .border-\[\#27282d\],
 .light .border-\[\#282828\],
+.light .border-\[\#282933\],
+.light .border-\[\#292929\],
 .light .border-\[\#2a2a2a\],
+.light .border-\[\#2a2b33\],
+.light .border-\[\#2a2c32\],
 .light .border-\[\#2b2b2b\],
+.light .border-\[\#2b2e3c\],
 .light .border-\[\#2c2c2c\],
-.light .border-\[\#2d2d2d\],
-.light .border-\[\#2d2d30\],
+.light .border-\[\#2c2d36\],
 .light .border-\[\#2e2e2e\],
+.light .border-\[\#2e313d\],
 .light .border-\[\#303030\],
+.light .border-\[\#333742\],
 .light .border-\[\#333\],
 .light .border-\[\#383838\],
 .light .border-white\/5,
-.light .border-white\/10 {
+.light .border-white\/10,
+.light .border-white\/\[0\.04\],
+.light .border-white\/\[0\.08\],
+.light .border-white\/20,
+.light .border-neutral-800,
+.light .border-neutral-700,
+.light .border-zinc-800,
+.light .border-zinc-700 {
   border-color: var(--border-subtle) !important;
 }
 
-/* Text color harmonization in light mode */
+.light .border-\[\#1a2517\],
+.light .border-\[\#233320\],
+.light .border-\[\#283624\] {
+  border-color: rgba(82, 131, 0, 0.35) !important;
+}
+
+/* Universal Text Contrast & Readability */
+.light .text-white:not([class*="bg-[#76B900]"] *):not([class*="bg-black"] *):not([class*="bg-emerald"] *):not([class*="bg-green"] *):not([class*="bg-rose"] *):not([class*="bg-red"] *):not([class*="bg-blue"] *):not([class*="bg-indigo"] *):not([class*="bg-amber"] *):not([class*="bg-purple"] *):not([class*="bg-violet"] *):not([class*="bg-neutral-900"] *):not([class*="bg-zinc-900"] *),
 .light .text-neutral-100,
-.light .text-neutral-200 {
+.light .text-neutral-200,
+.light .text-zinc-100,
+.light .text-zinc-200,
+.light .text-gray-100,
+.light .text-gray-200 {
   color: var(--text-main) !important;
 }
-.light .text-neutral-300 {
+
+.light .text-neutral-300,
+.light .text-zinc-300,
+.light .text-gray-300 {
   color: var(--text-secondary) !important;
 }
-.light .text-neutral-400 {
+
+.light .text-neutral-400,
+.light .text-neutral-500,
+.light .text-zinc-400,
+.light .text-zinc-500,
+.light .text-gray-400,
+.light .text-gray-500 {
   color: var(--text-muted) !important;
 }
-.light .text-neutral-500 {
+
+.light .text-neutral-600,
+.light .text-zinc-600,
+.light .text-gray-600 {
   color: var(--text-faint) !important;
 }
 
-/* Headings in light mode */
+/* Headings in Light Mode */
 .light h1,
 .light h2,
 .light h3,
@@ -762,42 +1037,118 @@
   color: var(--text-main);
 }
 
-.light h1.text-white,
-.light h2.text-white,
-.light h3.text-white,
-.light span.text-white:not(button *):not(.badge *):not([class*="bg-[#76B900]"]):not([class*="bg-black"]):not([class*="bg-green"]):not([class*="bg-blue"]):not([class*="bg-rose"]):not([class*="bg-red"]),
-.light div.text-white:not(button *):not(.badge *):not([class*="bg-[#76B900]"]):not([class*="bg-black"]):not([class*="bg-green"]):not([class*="bg-blue"]):not([class*="bg-rose"]):not([class*="bg-red"]),
-.light p.text-white {
-  color: var(--text-main) !important;
+/* Deep Accessible Emerald for Light Surfaces */
+.light .text-\[\#86e810\],
+.light .text-\[\#9ae018\],
+.light .text-\[\#a8d38d\] {
+  color: #3f6800 !important;
 }
 
-/* Inputs & textareas in light mode */
-.light input:not([type="checkbox"]):not([type="radio"]):not([type="button"]):not([type="submit"]):not([type="range"]),
-.light textarea {
-  background-color: var(--bg-surface);
-  color: var(--text-main);
-  border-color: var(--border-subtle);
+.light .text-\[\#76B900\]:not([class*="bg-[#76B900]"] *):not([class*="bg-black"] *) {
+  color: #436b00 !important;
 }
+
+/* Inputs & Form Controls in Light Mode */
+.light input:not([type="checkbox"]):not([type="radio"]):not([type="button"]):not([type="submit"]):not([type="range"]),
+.light textarea,
+.light select {
+  background-color: var(--bg-surface) !important;
+  color: var(--text-main) !important;
+  border-color: var(--border-subtle) !important;
+}
+
 .light input::placeholder,
 .light textarea::placeholder {
   color: var(--text-muted) !important;
 }
 
-/* Emerald badges in light mode: deep accessible contrast */
-.light .text-\[\#86e810\],
-.light .text-\[\#9ae018\] {
-  color: #456f00 !important;
+.light input:focus,
+.light textarea:focus {
+  border-color: #528300 !important;
 }
-.light .bg-\[\#1a2512\],
-.light .bg-\[\#1f2c16\],
-.light .bg-\[\#1f2b14\],
-.light .bg-\[\#1c2616\],
-.light .bg-\[\#192410\],
-.light .bg-\[\#141812\],
-.light .bg-\[\#1f2e14\],
-.light .bg-\[\#1c2912\] {
-  background-color: rgba(82, 131, 0, 0.12) !important;
-  color: #3b6100 !important;
+
+/* Code, Preformatted Blocks & Shells */
+.light pre:not([class*="bg-[#76B900]"] *),
+.light code:not([class*="bg-[#76B900]"] *):not(button *) {
+  background-color: #f1f5f9;
+  color: #0f172a;
+  border-color: #e2e8f0;
 }
+
+.light pre.text-neutral-300,
+.light pre.text-neutral-200 {
+  color: #1e293b !important;
+}
+
+.light pre.text-\[\#86e810\] {
+  color: #3f6800 !important;
+}
+
+/* Tables in Light Mode */
+.light table {
+  border-color: #e2e8f0 !important;
+}
+
+.light th {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+
+.light td {
+  background-color: #ffffff !important;
+  color: #334155 !important;
+  border-color: #e2e8f0 !important;
+}
+
+.light tr:hover td {
+  background-color: #f8fafc !important;
+}
+
+/* Chatbox Pills & Popups in Light Mode */
+.light [data-testid="at-mention-button"],
+.light [data-testid="agent-mode-button"],
+.light [data-testid="routing-mode-button"] {
+  background: #f1f5f9 !important;
+  box-shadow: inset 0 0 0 1px #e2e8f0 !important;
+  color: #1e293b !important;
+}
+
+.light [data-testid="at-files-popup"],
+.light [data-testid="agent-mode-popup"],
+.light [data-testid="routing-mode-popup"] {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.12) !important;
+}
+
+.light .bg-modal-theme {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Agent Chat Bottom Bar */
+.light .p-4.bg-\[\#0d0d0d\],
+.light .bg-\[\#0d0d0d\] {
+  background-color: var(--bg-page) !important;
+  border-color: var(--border-subtle) !important;
+}
+
+/* Chatbox Send Button Disabled State in Light Mode */
+.light button:has(> svg > path[d*="M8 12.6667V3.33333"])[disabled] {
+  background: #f1f5f9 !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.light button:has(> svg > path[d*="M8 12.6667V3.33333"])[disabled] svg path {
+  stroke: #94a3b8 !important;
+}
+
+/* Subtle Cursor Ring in Light Mode */
+.light .opacity-65 {
+  opacity: 0.18 !important;
+}
+
 
 
