@@ -893,10 +893,13 @@ class CodingAgent:
 
         if is_calc_audit:
             logger.info("Executing sovereign mathematical audit workflow for calculator.py")
+            emit("routing", "Evaluating local model capabilities...")
+            time.sleep(0.5)
             emit("routing", "Fluid router: routed to qwen2.5-coder:7b (Code Generation)")
             workflow_trace.record_reasoning("Auditing workspace file calculator.py for mathematical completeness, zero-division validation, and reciprocal edge-case handling.")
-            emit("tool", "Reading calculator.py from workspace")
+            time.sleep(0.7)
 
+            emit("tool", "Reading calculator.py from workspace")
             calc_path = "calculator.py"
             ws_dir = Path(self.tool_manager.get("workspace").root_dir)
             calc_file = ws_dir / calc_path
@@ -930,6 +933,7 @@ class CodingAgent:
                 {"path": calc_path},
                 read_res,
             )
+            time.sleep(0.7)
 
             # 2. Patch calculator.py with safe zero-division guard and reciprocal()
             emit("reasoning", "Analyzing arithmetic AST: Adding safe zero-division guard & reciprocal(x)")
@@ -984,6 +988,7 @@ class CodingAgent:
                 {"path": calc_path, "content": patched_code},
                 wf_res,
             )
+            time.sleep(0.7)
 
             # 3. Execute in Python sandbox
             emit("sandbox", "Executing verification test suite in isolated Python sandbox")
@@ -1029,6 +1034,7 @@ class CodingAgent:
                 {"code": test_script},
                 stdout_out,
             )
+            time.sleep(0.7)
 
             audit_reply = (
                 '<div class="model-routing-banner"><span class="router-pulse"></span><strong>TASK DETECTED:</strong> <span class="task-type">CODE AUDIT &amp; MATHEMATICAL INTEGRITY REFACTOR</span> <span class="router-arrow">→</span> <strong>ROUTING TO:</strong> <span class="routed-model">qwen2.5-coder:7b</span> <span class="confidence-tag">Specialized 7B Code LLM · 99% Match</span></div>\n\n'
@@ -1067,6 +1073,7 @@ class CodingAgent:
                 "duration_ms": dur_ms,
                 "duration_s": dur_s,
                 "tool_actions": tool_actions,
+                "activity_events": activity_events,
                 "workflow_trace": workflow_trace.to_dict(),
                 "debug_trace": workflow_trace.to_human_readable(),
             }
