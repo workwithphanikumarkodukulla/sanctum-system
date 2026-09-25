@@ -264,6 +264,7 @@ export const AgentChatPanel: React.FC<AgentChatPanelProps> = ({
       messages: [],
     };
 
+    fetch("/api/backend/clear", { method: "POST" }).catch(() => {});
     setSessions((prev) => [newSession, ...prev]);
     setActiveSessionId(newSession.id);
     setMessages([]);
@@ -545,8 +546,14 @@ export const AgentChatPanel: React.FC<AgentChatPanelProps> = ({
     );
   };
 
+  const isDocFile = activeFile ? /\.(pdf|docx?|pptx?|xlsx?|csv|png|jpe?g)$/i.test(activeFile) : false;
+
   const quickPrompts = [
-    activeFile ? `Audit @${activeFile} and suggest edge-case guards` : "Audit workspace files",
+    activeFile
+      ? isDocFile
+        ? `Audit @${activeFile} and summarize key compliance & allocations`
+        : `Audit @${activeFile} and suggest edge-case guards`
+      : "Audit workspace files",
     "Run unit tests in local Python sandbox",
     "Check network socket to confirm 0 external egress",
   ];

@@ -138,8 +138,13 @@ class MemoryManager:
                 + "\nAlways reference and respect these details when answering the user."
             )
 
-        if query:
-            relevant_turns = self.search_relevant_history(query, top_k=4)
+        is_recall_query = bool(re.search(
+            r"\b(recall|remember|earlier|previous|what\s+did\s+(?:i|we)|what\s+was\s+the|who\s+am\s+i|my\s+name|do\s+you\s+(?:know|remember)\s+my)\b",
+            query,
+            re.IGNORECASE,
+        ))
+        if query and is_recall_query:
+            relevant_turns = self.search_relevant_history(query, top_k=3)
             if relevant_turns:
                 turn_lines: list[str] = []
                 for turn in relevant_turns:

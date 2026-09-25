@@ -610,6 +610,26 @@ class CodingAgent:
         found_doc = re.search(r"([A-Za-z0-9_\-\.]+\.(?:pdf|xlsx|docx|pptx|png|txt|csv))", message)
         if found_doc:
             self._last_active_document = found_doc.group(1)
+        else:
+            # Check if any word in the query matches a document in the workspace (e.g. 'mrpl' -> 'mrpl_csr_2025_26.pdf')
+            try:
+                ws_root = Path(self.tool_manager.get("workspace").root_dir)
+                for f in ws_root.rglob("*"):
+                    if f.is_file() and f.suffix.lower() in (".pdf", ".docx", ".xlsx", ".pptx", ".csv", ".png"):
+                        f_stem_clean = re.sub(r"[_\-\.]", " ", f.stem).lower()
+                        for word in re.findall(r"\b[a-zA-Z0-9]{3,}\b", message.lower()):
+                            if word in ("the", "and", "for", "run", "all", "out", "new", "get", "put", "let"):
+                                continue
+                            if word in f_stem_clean or word in f.name.lower():
+                                self._last_active_document = f.name
+                                if f.name not in message:
+                                    message = f"{message} ({f.name})"
+                                found_doc = re.search(r"([A-Za-z0-9_\-\.]+\.(?:pdf|xlsx|docx|pptx|png|txt|csv))", message)
+                                break
+                        if found_doc:
+                            break
+            except Exception:
+                pass
 
         is_file_only = bool(re.match(r"^(?:it\s+is\s+|it's\s+|file\s+is\s+|in\s+is\s+)?([A-Za-z0-9_\-\.]+\.(?:pdf|xlsx|docx|pptx|png|txt|csv))\s*$", message.strip(), re.IGNORECASE))
         if is_file_only and found_doc:

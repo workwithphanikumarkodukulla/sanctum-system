@@ -394,6 +394,7 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
       messages: [],
     };
 
+    fetch("/api/backend/clear", { method: "POST" }).catch(() => {});
     setSessions((prev) => [newSession, ...prev]);
     setActiveSessionId(newSession.id);
     setMessages([]);
@@ -441,6 +442,7 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
           updatedAt: Date.now(),
           messages: [],
         };
+        fetch("/api/backend/clear", { method: "POST" }).catch(() => {});
         setSessions([fresh]);
         setActiveSessionId(fresh.id);
         setMessages([]);

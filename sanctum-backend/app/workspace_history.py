@@ -58,12 +58,12 @@ class WorkspaceHistoryManager:
         user_msgs = [e for e in self._history if e["role"] == "user"]
         if not user_msgs:
             return ""
-        recent = user_msgs[-10:]
-        topics = [m["content"][:120].replace("\n", " ") for m in recent]
+        recent = user_msgs[-5:]
+        topics = [m["content"][:100].replace("\n", " ") for m in recent]
         summary = "\n".join(f"- {t}" for t in topics)
         return (
             f"[WORKSPACE HISTORY — {len(self._history)} messages]\n"
-            f"Recent user topics:\n{summary}\n"
+            f"Prior workspace topics (for background reference only; do NOT answer or repeat these unless asked in the current message):\n{summary}\n"
         )
 
     def get_all(self) -> list[dict[str, Any]]:
