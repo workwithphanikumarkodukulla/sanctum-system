@@ -766,6 +766,25 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
     return activityEvents;
   }, [selectedMessageId, isSending, messages, activityEvents, activeModel]);
 
+  const traceTools = React.useMemo(() => {
+    const list: string[] = [];
+    if (activeTraceMessage?.toolsExecuted && activeTraceMessage.toolsExecuted.length > 0) {
+      activeTraceMessage.toolsExecuted.forEach((t: any) => {
+        const name = t.tool || t.name || t.action || "Tool";
+        if (!list.includes(name)) list.push(name);
+      });
+    } else if (activeTraceMessage?.traceNodes && activeTraceMessage.traceNodes.length > 0) {
+      activeTraceMessage.traceNodes.forEach((n: any) => {
+        if ((n.type === "tool" || n.type === "terminal" || n.type === "diffs") && n.primary) {
+          if (!list.includes(n.primary)) list.push(n.primary);
+        }
+      });
+    }
+    if (list.length === 0) {
+      return ["Python Sandbox", "MCP Workspace", "Wireshark Guard"];
+    }
+    return list;
+  }, [activeTraceMessage]);
 
   const suggestions = [
     "Audit calculator.py and add safe reciprocal math handling",
@@ -1244,12 +1263,36 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
                 </div>
               </div>
 
-              {/* Model & Latency mini sub-banner */}
-              <div className="mx-3 mt-3 px-3 py-2 rounded-lg bg-[#141812] border border-[#233320] text-[11px] font-mono flex items-center justify-between shrink-0">
-                <span className="text-neutral-400">ROUTED MODEL</span>
-                <span className="text-[#76B900] font-semibold bg-[#161b22] px-2 py-0.5 rounded border border-[#30363d]">
-                  {activeTraceMessage?.model || activeModel}
-                </span>
+              {/* Small Card: Model & Tools being used */}
+              <div className="mx-3 mt-3 p-2.5 rounded-lg bg-[#141812] border border-[#233320] text-[11px] font-mono space-y-2 shrink-0 shadow-sm">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-neutral-400 text-[10px] uppercase tracking-wider flex items-center gap-1.5 font-semibold">
+                    <Cpu className="w-3.5 h-3.5 text-[#76B900]" />
+                    Model
+                  </span>
+                  <span
+                    className="text-[#76B900] font-semibold bg-[#161b22] px-2 py-0.5 rounded border border-[#30363d] text-[10px] truncate max-w-[190px]"
+                    title={activeTraceMessage?.model || activeModel}
+                  >
+                    {activeTraceMessage?.model || activeModel}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-2 pt-1.5 border-t border-[#1f2c1d]">
+                  <span className="text-neutral-400 text-[10px] uppercase tracking-wider flex items-center gap-1.5 font-semibold shrink-0">
+                    <Wrench className="w-3.5 h-3.5 text-[#76B900]" />
+                    Tools
+                  </span>
+                  <div className="flex items-center gap-1 flex-wrap justify-end">
+                    {traceTools.map((tName, i) => (
+                      <span
+                        key={i}
+                        className="px-1.5 py-0.5 rounded bg-[#1c221a] text-neutral-300 border border-[#2d3a28] text-[9.5px] font-mono"
+                      >
+                        {tName}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               {/* Timeline with line and dots */}

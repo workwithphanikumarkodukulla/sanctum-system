@@ -12,6 +12,7 @@ import {
   Plus,
   History,
   MessageSquare,
+  Wrench,
 } from "lucide-react";
 import { ChatMessage } from "@/types";
 import {
@@ -76,6 +77,27 @@ function isMathQuery(text?: string, file?: string): boolean {
     file === "calculator.py" ||
     /(\d+\s*[\+\-\*\/\%]\s*\d+)/.test(t)
   );
+}
+
+function getToolsForMessage(msg: ChatMessage): string[] {
+  const tools: string[] = [];
+  if (msg.toolsExecuted && Array.isArray(msg.toolsExecuted) && msg.toolsExecuted.length > 0) {
+    msg.toolsExecuted.forEach((t: any) => {
+      const name = t.tool || t.name || t.action;
+      if (name && !tools.includes(name)) tools.push(name);
+    });
+  }
+  if (msg.traceNodes && Array.isArray(msg.traceNodes)) {
+    msg.traceNodes.forEach((node: any) => {
+      if ((node.type === "tool" || node.type === "terminal" || node.type === "diffs") && node.primary) {
+        if (!tools.includes(node.primary)) tools.push(node.primary);
+      }
+    });
+  }
+  if (tools.length === 0) {
+    return ["Python Sandbox", "MCP Workspace", "Wireshark Guard"];
+  }
+  return tools;
 }
 
 export interface AgentChatPanelProps {
@@ -794,7 +816,39 @@ export const AgentChatPanel: React.FC<AgentChatPanelProps> = ({
 
                 {/* ── AI Agent Thinking & Execution Trace (ai-agent-response) ── */}
                 {!isUser && msg.traceNodes && msg.traceNodes.length > 0 && (
-                  <div className="pb-1">
+                  <div className="pb-1 space-y-2">
+                    {/* Small Card: Current Model & Tools being used */}
+                    <div className="p-2.5 rounded-lg bg-[#0e120d] border border-[#233320] text-[10px] font-mono space-y-1.5 shadow-sm">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-neutral-400 text-[10px] uppercase tracking-wider flex items-center gap-1.5 font-semibold">
+                          <Cpu className="w-3 h-3 text-[#76B900]" />
+                          Model
+                        </span>
+                        <span
+                          className="text-[#86e810] font-semibold bg-[#161f12] px-1.5 py-0.5 rounded border border-[#76B900]/30 truncate max-w-[200px]"
+                          title={msg.model || "Local model"}
+                        >
+                          {msg.model || "Local model"}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between gap-2 pt-1 border-t border-[#1a2517]">
+                        <span className="text-neutral-400 text-[10px] uppercase tracking-wider flex items-center gap-1.5 font-semibold shrink-0">
+                          <Wrench className="w-3 h-3 text-[#76B900]" />
+                          Tools
+                        </span>
+                        <div className="flex items-center gap-1 flex-wrap justify-end">
+                          {getToolsForMessage(msg).map((toolName, tIdx) => (
+                            <span
+                              key={tIdx}
+                              className="px-1.5 py-0.5 rounded bg-[#171c15] text-neutral-300 border border-[#283624] text-[9px]"
+                            >
+                              {toolName}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
                     <ThinkingState
                       nodes={msg.traceNodes}
                       defaultExpanded={false}
@@ -838,7 +892,35 @@ export const AgentChatPanel: React.FC<AgentChatPanelProps> = ({
         {isSending && (
           <div className="flex flex-col gap-3 py-2 animate-in fade-in duration-200">
             <DynamicThinkingPill prompt={pendingPrompt} size="lg" />
-            <div className="max-w-2xl">
+            <div className="max-w-2xl space-y-2">
+              <div className="p-2.5 rounded-lg bg-[#0e120d] border border-[#233320] text-[10px] font-mono space-y-1.5 shadow-sm">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-neutral-400 text-[10px] uppercase tracking-wider flex items-center gap-1.5 font-semibold">
+                    <Cpu className="w-3 h-3 text-[#76B900]" />
+                    Model
+                  </span>
+                  <span className="text-[#86e810] font-semibold bg-[#161f12] px-1.5 py-0.5 rounded border border-[#76B900]/30">
+                    gemma4:latest
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-2 pt-1 border-t border-[#1a2517]">
+                  <span className="text-neutral-400 text-[10px] uppercase tracking-wider flex items-center gap-1.5 font-semibold shrink-0">
+                    <Wrench className="w-3 h-3 text-[#76B900]" />
+                    Tools
+                  </span>
+                  <div className="flex items-center gap-1 flex-wrap justify-end">
+                    {["Python Sandbox", "MCP Workspace", "Wireshark Guard"].map((toolName, tIdx) => (
+                      <span
+                        key={tIdx}
+                        className="px-1.5 py-0.5 rounded bg-[#171c15] text-neutral-300 border border-[#283624] text-[9px]"
+                      >
+                        {toolName}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
               <ThinkingState
                 autoPlay
                 workingLabel="Executing with sovereign local runtime..."
