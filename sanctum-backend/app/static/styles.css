@@ -7,9 +7,14 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-    --nvidia-green: #76B900;
-    --nvidia-green-subtle: rgba(118, 185, 0, 0.1);
-    --nvidia-green-border: rgba(118, 185, 0, 0.35);
+    --sovereign-green: #76B900;
+    --sovereign-green-subtle: rgba(118, 185, 0, 0.1);
+    --sovereign-green-border: rgba(118, 185, 0, 0.35);
+
+    /* Backward-compatibility aliases */
+    --nvidia-green: var(--sovereign-green);
+    --nvidia-green-subtle: var(--sovereign-green-subtle);
+    --nvidia-green-border: var(--sovereign-green-border);
 
     --bg-dark: #111111;
     --bg-surface: #181818;

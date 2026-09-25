@@ -690,7 +690,7 @@ export const SecurityScreen: React.FC = () => {
                 </p>
                 <div className="pt-2 border-t border-white/5 text-[10px] text-neutral-500 space-y-1">
                   <div>• React 19 + Framer Motion</div>
-                  <div>• Tailored NVIDIA / Sanctuary palette</div>
+                  <div>• Tailored Sovereign / Emerald palette</div>
                   <div>• WebSocket loopback streaming</div>
                 </div>
               </div>

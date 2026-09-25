@@ -32,11 +32,18 @@
     --input: #141816;
     --ring: #76B900;
 
-    --nvidia-green: #76B900;
-    --nvidia-green-hover: #86d000;
-    --nvidia-green-subtle: rgba(118, 185, 0, 0.12);
-    --nvidia-green-glow: rgba(118, 185, 0, 0.28);
-    --nvidia-green-border: rgba(118, 185, 0, 0.35);
+    --sovereign-green: #76B900;
+    --sovereign-green-hover: #86d000;
+    --sovereign-green-subtle: rgba(118, 185, 0, 0.12);
+    --sovereign-green-glow: rgba(118, 185, 0, 0.28);
+    --sovereign-green-border: rgba(118, 185, 0, 0.35);
+
+    /* Backward-compatibility aliases */
+    --nvidia-green: var(--sovereign-green);
+    --nvidia-green-hover: var(--sovereign-green-hover);
+    --nvidia-green-subtle: var(--sovereign-green-subtle);
+    --nvidia-green-glow: var(--sovereign-green-glow);
+    --nvidia-green-border: var(--sovereign-green-border);
 
     --bg-page: #0a0a0a;
     --bg-dark: #0a0a0a;
@@ -83,11 +90,18 @@
     --ring: #528300;
 
     /* High-contrast sovereign emerald for white backgrounds */
-    --nvidia-green: #528300;
-    --nvidia-green-hover: #436b00;
-    --nvidia-green-subtle: rgba(82, 131, 0, 0.10);
-    --nvidia-green-glow: rgba(82, 131, 0, 0.20);
-    --nvidia-green-border: rgba(82, 131, 0, 0.30);
+    --sovereign-green: #528300;
+    --sovereign-green-hover: #436b00;
+    --sovereign-green-subtle: rgba(82, 131, 0, 0.10);
+    --sovereign-green-glow: rgba(82, 131, 0, 0.20);
+    --sovereign-green-border: rgba(82, 131, 0, 0.30);
+
+    /* Backward-compatibility aliases */
+    --nvidia-green: var(--sovereign-green);
+    --nvidia-green-hover: var(--sovereign-green-hover);
+    --nvidia-green-subtle: var(--sovereign-green-subtle);
+    --nvidia-green-glow: var(--sovereign-green-glow);
+    --nvidia-green-border: var(--sovereign-green-border);
 
     --bg-page: #f5f7fa;
     --bg-dark: #f5f7fa;
