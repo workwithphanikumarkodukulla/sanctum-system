@@ -982,7 +982,7 @@ export const WorkspaceScreen: React.FC<WorkspaceScreenProps> = ({
   return (
     <div
       ref={containerRef}
-      className="h-full flex overflow-hidden select-none bg-[#0a0a0a] relative"
+      className="h-full flex overflow-hidden select-none bg-page relative transition-colors duration-200"
     >
       {/* Global transparent drag capture overlay to prevent Monaco cursor traps */}
       {(isDraggingExplorer || isDraggingChat || isDraggingTerminal) && (
@@ -992,19 +992,19 @@ export const WorkspaceScreen: React.FC<WorkspaceScreenProps> = ({
       {/* ── PANEL 1: File Tree Explorer Sidebar (Left, Resizable) ── */}
       <div
         style={{ width: `${explorerWidth}px` }}
-        className="bg-[#111111] border-r border-[#202020] flex flex-col shrink-0 relative will-change-[width]"
+        className="bg-surface border-r border-theme flex flex-col shrink-0 relative will-change-[width] transition-colors duration-200"
       >
         {/* Explorer Header with VS Code Actions */}
-        <div className="p-2.5 px-3 border-b border-[#202020] flex items-center justify-between shrink-0">
+        <div className="p-2.5 px-3 border-b border-theme flex items-center justify-between shrink-0">
           <div className="flex items-center gap-1.5 min-w-0">
-            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-300">
+            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-main">
               Explorer
             </span>
             <button
               type="button"
               onClick={handleOpenFolder}
               title="Click to Open/Change Workspace Folder (VS Code style)"
-              className="text-[10px] font-mono px-1.5 py-0.5 bg-[#1e1e1e] hover:bg-[#282828] text-[#76B900] rounded flex items-center gap-1 border border-white/5 truncate max-w-[110px] transition-colors cursor-pointer"
+              className="text-[10px] font-mono px-1.5 py-0.5 bg-card-theme hover:bg-surface text-[#76B900] rounded flex items-center gap-1 border border-theme truncate max-w-[110px] transition-colors cursor-pointer"
             >
               <FolderOpen className="w-3 h-3 shrink-0" />
               <span className="truncate">{workspacePath}</span>
@@ -1119,12 +1119,12 @@ export const WorkspaceScreen: React.FC<WorkspaceScreenProps> = ({
       </div>
 
       {/* ── PANEL 2: Editor & Code Viewer Area (Center, Flex-1) ── */}
-      <div className="flex-1 flex flex-col min-w-[280px] bg-[#0f0f0f] overflow-hidden relative">
+      <div className="flex-1 flex flex-col min-w-[280px] bg-page overflow-hidden relative transition-colors duration-200">
         {/* Editor Tab Bar */}
-        <div className="h-9 bg-[#141414] border-b border-[#202020] flex items-center justify-between px-2 overflow-x-auto shrink-0">
+        <div className="h-9 bg-surface border-b border-theme flex items-center justify-between px-2 overflow-x-auto shrink-0">
           <div className="flex items-center gap-1">
             {openTabs.length === 0 ? (
-              <span className="text-[11px] font-mono text-neutral-500 px-2 select-none italic">
+              <span className="text-[11px] font-mono text-muted-theme px-2 select-none italic">
                 No tabs open
               </span>
             ) : (
@@ -1149,8 +1149,8 @@ export const WorkspaceScreen: React.FC<WorkspaceScreenProps> = ({
                     }}
                     className={`h-7 px-3 rounded-t text-xs font-mono flex items-center gap-2 cursor-pointer transition-colors border-t-2 ${
                       isActive
-                        ? "bg-[#0f0f0f] border-[#76B900] text-white font-medium shadow-sm"
-                        : "bg-[#181818] border-transparent text-neutral-400 hover:text-neutral-200"
+                        ? "bg-page border-[#76B900] text-main font-medium shadow-sm"
+                        : "bg-card-theme border-transparent text-muted-theme hover:text-main"
                     }`}
                   >
                     {renderItemIcon(tab.name, "w-3 h-3")}

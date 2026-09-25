@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import Editor, { OnMount } from "@monaco-editor/react";
+import { useTheme } from "@/lib/theme";
 
 interface MonacoCodeEditorProps {
   value: string;
@@ -17,6 +18,8 @@ export const MonacoCodeEditor: React.FC<MonacoCodeEditorProps> = ({
   readOnly = false,
 }) => {
   const editorRef = useRef<any>(null);
+  const monacoRef = useRef<any>(null);
+  const { theme } = useTheme();
 
   // Map file extension/language names to Monaco standard language IDs
   const getMonacoLanguage = (lang: string) => {
@@ -50,10 +53,19 @@ export const MonacoCodeEditor: React.FC<MonacoCodeEditorProps> = ({
     }
   };
 
+  const activeThemeName = theme === "light" ? "sanctum-light" : "sanctum-dark";
+
+  useEffect(() => {
+    if (monacoRef.current) {
+      monacoRef.current.editor.setTheme(activeThemeName);
+    }
+  }, [theme, activeThemeName]);
+
   const handleEditorDidMount: OnMount = (editor, monaco) => {
     editorRef.current = editor;
+    monacoRef.current = monaco;
 
-    // Define custom "sanctum-dark" theme matching Sanctum's obsidian & emerald palette
+    // Define custom "sanctum-dark" theme
     monaco.editor.defineTheme("sanctum-dark", {
       base: "vs-dark",
       inherit: true,
@@ -83,22 +95,52 @@ export const MonacoCodeEditor: React.FC<MonacoCodeEditorProps> = ({
       },
     });
 
-    monaco.editor.setTheme("sanctum-dark");
+    // Define custom "sanctum-light" theme
+    monaco.editor.defineTheme("sanctum-light", {
+      base: "vs",
+      inherit: true,
+      rules: [
+        { token: "keyword", foreground: "528300", fontStyle: "bold" },
+        { token: "type", foreground: "16a34a" },
+        { token: "string", foreground: "b45309" },
+        { token: "number", foreground: "0284c7" },
+        { token: "comment", foreground: "94a3b8", fontStyle: "italic" },
+        { token: "identifier", foreground: "0f172a" },
+        { token: "delimiter", foreground: "475569" },
+      ],
+      colors: {
+        "editor.background": "#ffffff",
+        "editor.foreground": "#0f172a",
+        "editor.lineHighlightBackground": "#f8fafc",
+        "editor.selectionBackground": "#52830022",
+        "editor.selectionHighlightBackground": "#52830018",
+        "editorCursor.foreground": "#528300",
+        "editorWhitespace.foreground": "#e2e8f0",
+        "editorIndentGuide.background": "#f1f5f9",
+        "editorIndentGuide.activeBackground": "#52830055",
+        "editorLineNumber.foreground": "#94a3b8",
+        "editorLineNumber.activeForeground": "#528300",
+        "editorGutter.background": "#ffffff",
+        "minimap.background": "#ffffff",
+      },
+    });
+
+    monaco.editor.setTheme(activeThemeName);
   };
 
   return (
-    <div className="w-full h-full relative overflow-hidden bg-[#0d0d0d]">
+    <div className="w-full h-full relative overflow-hidden bg-surface transition-colors duration-200">
       <Editor
         height="100%"
         width="100%"
         language={getMonacoLanguage(language)}
-        theme="sanctum-dark"
+        theme={activeThemeName}
         value={value}
         onChange={(val) => onChange?.(val || "")}
         onMount={handleEditorDidMount}
         loading={
-          <div className="flex items-center justify-center h-full w-full bg-[#0d0d0d] text-neutral-500 font-mono text-xs gap-2">
-            <span className="w-3.5 h-3.5 rounded-full border-2 border-neutral-600 border-t-[#76B900] animate-spin" />
+          <div className="flex items-center justify-center h-full w-full bg-surface text-muted-theme font-mono text-xs gap-2">
+            <span className="w-3.5 h-3.5 rounded-full border-2 border-neutral-400 border-t-[#76B900] animate-spin" />
             <span>Initializing Monaco Engine...</span>
           </div>
         }

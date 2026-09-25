@@ -2,9 +2,10 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { ChevronRight, ShieldCheck, Terminal, Cpu, Zap, Code2 } from "lucide-react";
+import { ChevronRight, ShieldCheck, Terminal, Cpu, Zap, Code2, Sun, Moon } from "lucide-react";
 import Vortex from "@/components/Vortex";
 import { SanctumLogo } from "@/components/ui/sanctum-logo";
+import { useTheme } from "@/lib/theme";
 
 interface HeroSectionProps {
   onExploreAI: () => void;
@@ -15,8 +16,31 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onExploreAI,
   onRequestDemo,
 }) => {
+  const { theme, toggleTheme } = useTheme();
+
   return (
     <section className="relative w-full h-screen overflow-hidden bg-black select-none flex items-center">
+      {/* Top-Right Theme Toggle */}
+      <div className="absolute top-6 right-8 z-30 pointer-events-auto">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={toggleTheme}
+          title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+          aria-label="Toggle Theme Mode"
+          className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/40 hover:bg-black/60 border border-white/10 hover:border-[#22c55e]/40 text-neutral-200 text-xs backdrop-blur-md shadow-lg transition-colors cursor-pointer"
+        >
+          {theme === "dark" ? (
+            <Moon className="w-3.5 h-3.5 text-[#22c55e]" />
+          ) : (
+            <Sun className="w-3.5 h-3.5 text-amber-400" />
+          )}
+          <span className="font-mono text-[11px] font-medium tracking-wide">
+            {theme === "dark" ? "Dark" : "Light"}
+          </span>
+        </motion.button>
+      </div>
+
       {/* 3D Vortex / Tornado Canvas - Full Screen with xOffset shifting it to the right */}
       <div className="absolute inset-0 z-0 pointer-events-auto">
         <Vortex

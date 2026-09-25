@@ -794,9 +794,9 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
   ];
 
   return (
-    <div className="h-full flex flex-col bg-[#0a0a0a]/90 backdrop-blur-[2px] select-none relative overflow-hidden">
+    <div className="h-full flex flex-col bg-page select-none relative overflow-hidden transition-colors duration-200">
       {/* Top Header */}
-      <div className="h-12 px-6 bg-[#111] border-b border-[#202020] flex items-center justify-between shrink-0 relative z-30">
+      <div className="h-12 px-6 bg-surface border-b border-theme flex items-center justify-between shrink-0 relative z-30 transition-colors duration-200">
         <div className="flex items-center gap-2.5 min-w-0">
           <SanctumLogo
             size={20}
@@ -804,7 +804,7 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
             className="shrink-0 drop-shadow-[0_0_10px_rgba(118,185,0,0.4)]"
           />
           <div>
-            <h1 className="text-xs font-semibold text-white tracking-wide font-mono flex items-center gap-2">
+            <h1 className="text-xs font-semibold text-main tracking-wide font-mono flex items-center gap-2">
               <span>Sanctum Agent Studio</span>
               <span className="w-1.5 h-1.5 rounded-full bg-[#76B900] animate-pulse shrink-0" />
             </h1>
@@ -818,10 +818,10 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
               type="button"
               onClick={() => setIsToolPickerOpen(!isToolPickerOpen)}
               title="Tool Picker / Launcher"
-              className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-mono transition-colors border ${
+              className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-mono transition-colors border cursor-pointer ${
                 isToolPickerOpen
-                  ? "bg-[#1f2c16] text-[#76B900] border-[#76B900]/40"
-                  : "bg-[#161616] text-neutral-300 border-[#2a2a2a] hover:bg-[#202020] hover:text-white"
+                  ? "bg-[#76B900]/15 text-[#76B900] border-[#76B900]/40"
+                  : "bg-surface text-muted-theme border-theme hover:bg-card-theme hover:text-main"
               }`}
             >
               <Wrench className="w-3.5 h-3.5 text-[#76B900]" />
@@ -837,14 +837,14 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -6, scale: 0.97 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute right-0 top-full mt-2 w-80 sm:w-96 bg-[#131417] border border-[#2d2d30] rounded-xl shadow-2xl shadow-black/90 overflow-hidden z-50 text-left font-sans"
+                  className="absolute right-0 top-full mt-2 w-80 sm:w-96 bg-modal-theme border border-theme rounded-xl shadow-2xl overflow-hidden z-50 text-left font-sans"
                 >
-                  <div className="px-3.5 py-2.5 border-b border-[#222] flex items-center justify-between bg-[#16171b]">
+                  <div className="px-3.5 py-2.5 border-b border-theme flex items-center justify-between bg-surface">
                     <div className="flex items-center gap-2">
                       <Wrench className="w-4 h-4 text-[#76B900]" />
-                      <span className="text-xs font-semibold text-white">Sovereign Tools Directory</span>
+                      <span className="text-xs font-semibold text-main">Sovereign Tools Directory</span>
                     </div>
-                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#222] text-[#76B900]">
+                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-surface border border-theme text-[#76B900]">
                       5 Active
                     </span>
                   </div>
@@ -1053,13 +1053,13 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
           <div className="flex-1 overflow-y-auto p-6 space-y-6 max-w-4xl w-full mx-auto">
             {messages.length === 0 && (
               <div className="py-16 text-center space-y-4">
-                <div className="w-12 h-12 rounded-2xl bg-[#1a2512] border border-[#76B900]/40 mx-auto flex items-center justify-center text-[#76B900] shadow-lg shadow-[#76B900]/10">
+                <div className="w-12 h-12 rounded-2xl bg-[#76B900]/15 border border-[#76B900]/40 mx-auto flex items-center justify-center text-[#76B900] shadow-lg shadow-[#76B900]/10">
                   <Bot className="w-6 h-6" />
                 </div>
-                <h2 className="text-base font-semibold text-white">
+                <h2 className="text-base font-semibold text-main">
                   Autonomous Sovereign Coding Agent
                 </h2>
-                <p className="text-xs text-neutral-400 max-w-md mx-auto leading-relaxed">
+                <p className="text-xs text-muted-theme max-w-md mx-auto leading-relaxed">
                   Ask to generate code, run tests, or inspect workspace files with full loopback security.
                 </p>
               </div>
@@ -1081,7 +1081,7 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
                   }`}
                 >
                   {!isUser && (
-                    <div className="w-7 h-7 rounded-lg bg-[#192410] border border-[#76B900]/40 flex items-center justify-center text-[#76B900] shrink-0 mt-0.5 shadow-sm">
+                    <div className="w-7 h-7 rounded-lg bg-[#76B900]/15 border border-[#76B900]/40 flex items-center justify-center text-[#76B900] shrink-0 mt-0.5 shadow-sm">
                       <Bot className="w-4 h-4" />
                     </div>
                   )}
@@ -1089,10 +1089,10 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
                   <div
                     className={`max-w-2xl rounded-2xl p-4 text-xs leading-relaxed transition-all ${
                       isUser
-                        ? "bg-[#1c2912] border border-[#76B900]/40 text-neutral-100 shadow-md"
+                        ? "bg-[#76B900]/15 border border-[#76B900]/40 text-main shadow-sm"
                         : isSelected
-                        ? "bg-[#161616] border border-[#76B900]/60 text-neutral-200 shadow-[0_0_15px_rgba(118,185,0,0.1)] space-y-3"
-                        : "bg-[#141414] border border-[#262626] hover:border-[#383838] text-neutral-200 shadow-sm space-y-3"
+                        ? "bg-surface border border-[#76B900]/60 text-main shadow-[0_0_15px_rgba(118,185,0,0.1)] space-y-3"
+                        : "bg-surface border border-theme hover:border-[#76B900]/40 text-main shadow-sm space-y-3"
                     }`}
                   >
                     <div className="flex items-center justify-between gap-3 mb-1 text-[11px] font-mono text-neutral-500">
@@ -1232,23 +1232,23 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
               animate={{ width: 340, opacity: 1 }}
               exit={{ width: 0, opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="border-l border-[#202020] bg-[#0e0e11] flex flex-col shrink-0 h-full overflow-hidden"
+              className="border-l border-theme bg-surface flex flex-col shrink-0 h-full overflow-hidden transition-colors duration-200"
             >
               {/* Sidebar Header */}
-              <div className="p-3.5 border-b border-[#202020] bg-[#121316] flex items-center justify-between shrink-0">
+              <div className="p-3.5 border-b border-theme bg-surface flex items-center justify-between shrink-0">
                 <div>
                   <span className="text-[10px] font-mono font-bold tracking-widest text-[#76B900] block mb-0.5">
                     ACTIVITY
                   </span>
                   <div className="flex items-center gap-2">
                     <Terminal className="w-4 h-4 text-[#76B900]" />
-                    <span className="text-xs font-mono font-semibold uppercase tracking-wider text-white">
+                    <span className="text-xs font-mono font-semibold uppercase tracking-wider text-main">
                       Execution trace
                     </span>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#1f2c16] text-[#76B900] border border-[#76B900]/30 flex items-center gap-1.5 font-bold tracking-wider">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#76B900]/15 text-[#76B900] border border-[#76B900]/30 flex items-center gap-1.5 font-bold tracking-wider">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#76B900] animate-pulse" />
                     LIVE
                   </span>
@@ -1256,7 +1256,7 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
                     type="button"
                     onClick={() => setShowTraceSidebar(false)}
                     title="Collapse execution trace"
-                    className="p-1 rounded hover:bg-[#202020] text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                    className="p-1 rounded hover:bg-card-theme text-muted-theme hover:text-main transition-colors cursor-pointer"
                   >
                     <ChevronRight className="w-4 h-4" />
                   </button>
@@ -1264,21 +1264,21 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
               </div>
 
               {/* Small Card: Model & Tools being used */}
-              <div className="mx-3 mt-3 p-2.5 rounded-lg bg-[#141812] border border-[#233320] text-[11px] font-mono space-y-2 shrink-0 shadow-sm">
+              <div className="mx-3 mt-3 p-2.5 rounded-lg bg-card-theme border border-theme text-[11px] font-mono space-y-2 shrink-0 shadow-sm">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-neutral-400 text-[10px] uppercase tracking-wider flex items-center gap-1.5 font-semibold">
+                  <span className="text-muted-theme text-[10px] uppercase tracking-wider flex items-center gap-1.5 font-semibold">
                     <Cpu className="w-3.5 h-3.5 text-[#76B900]" />
                     Model
                   </span>
                   <span
-                    className="text-[#76B900] font-semibold bg-[#161b22] px-2 py-0.5 rounded border border-[#30363d] text-[10px] truncate max-w-[190px]"
+                    className="text-[#76B900] font-semibold bg-surface px-2 py-0.5 rounded border border-theme text-[10px] truncate max-w-[190px]"
                     title={activeTraceMessage?.model || activeModel}
                   >
                     {activeTraceMessage?.model || activeModel}
                   </span>
                 </div>
-                <div className="flex items-center justify-between gap-2 pt-1.5 border-t border-[#1f2c1d]">
-                  <span className="text-neutral-400 text-[10px] uppercase tracking-wider flex items-center gap-1.5 font-semibold shrink-0">
+                <div className="flex items-center justify-between gap-2 pt-1.5 border-t border-theme">
+                  <span className="text-muted-theme text-[10px] uppercase tracking-wider flex items-center gap-1.5 font-semibold shrink-0">
                     <Wrench className="w-3.5 h-3.5 text-[#76B900]" />
                     Tools
                   </span>
@@ -1286,7 +1286,7 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
                     {traceTools.map((tName, i) => (
                       <span
                         key={i}
-                        className="px-1.5 py-0.5 rounded bg-[#1c221a] text-neutral-300 border border-[#2d3a28] text-[9.5px] font-mono"
+                        className="px-1.5 py-0.5 rounded bg-surface text-main border border-theme text-[9.5px] font-mono"
                       >
                         {tName}
                       </span>
@@ -1299,8 +1299,8 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
               <div className="flex-1 overflow-y-auto px-4 py-3 activity-list-wrap">
                 <div className="activity-list" id="activityList">
                   {displayedActivityEvents.length === 0 ? (
-                    <div className="py-20 text-center text-neutral-500 text-xs flex flex-col items-center gap-2">
-                      <Zap className="w-5 h-5 text-neutral-600 animate-pulse" />
+                    <div className="py-20 text-center text-muted-theme text-xs flex flex-col items-center gap-2">
+                      <Zap className="w-5 h-5 text-neutral-400 animate-pulse" />
                       <p>Activity appears here.</p>
                     </div>
                   ) : (
@@ -1319,14 +1319,14 @@ export const AgentScreen: React.FC<AgentScreenProps> = ({
                               {ev.text}
                             </div>
                             {ev.toolArgs && (
-                              <div className="mt-1 p-2 rounded bg-[#0b0e0a] border border-[#233320] text-[10px] font-mono text-[#a8d38d] max-h-24 overflow-y-auto">
-                                <div className="text-neutral-500 text-[9px] mb-0.5">ARGUMENTS:</div>
+                              <div className="mt-1 p-2 rounded bg-page border border-theme text-[10px] font-mono text-[#528300] dark:text-[#a8d38d] max-h-24 overflow-y-auto">
+                                <div className="text-muted-theme text-[9px] mb-0.5">ARGUMENTS:</div>
                                 <pre className="whitespace-pre-wrap">{typeof ev.toolArgs === "string" ? ev.toolArgs : JSON.stringify(ev.toolArgs, null, 2)}</pre>
                               </div>
                             )}
                             {ev.toolOutput && (
-                              <div className="mt-1 p-2 rounded bg-black/60 border border-white/5 text-[10px] font-mono text-neutral-400 max-h-24 overflow-y-auto">
-                                <div className="text-neutral-500 text-[9px] mb-0.5">OUTPUT:</div>
+                              <div className="mt-1 p-2 rounded bg-page border border-theme text-[10px] font-mono text-main max-h-24 overflow-y-auto">
+                                <div className="text-muted-theme text-[9px] mb-0.5">OUTPUT:</div>
                                 <pre className="whitespace-pre-wrap">{ev.toolOutput}</pre>
                               </div>
                             )}

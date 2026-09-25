@@ -103,7 +103,7 @@ export default function Home() {
   };
 
   return (
-    <div className="h-screen w-screen overflow-hidden bg-black text-white select-none">
+    <div className="h-screen w-screen overflow-hidden bg-page text-main select-none transition-colors duration-200">
       <AnimatePresence mode="wait">
         {currentView === "home" ? (
           /* ================= HERO / LANDING PAGE VIEW ================= */
@@ -139,7 +139,7 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35, ease: "easeInOut" }}
-            className="flex flex-col h-full w-full overflow-hidden bg-[#0a0a0a]"
+            className="flex flex-col h-full w-full overflow-hidden bg-page transition-colors duration-200"
           >
             {/* Title Bar */}
             <TitleBar
@@ -159,18 +159,18 @@ export default function Home() {
               />
 
               {/* Content Pane */}
-              <div className="flex-1 flex flex-col overflow-hidden bg-[#0f0f0f]">
+              <div className="flex-1 flex flex-col overflow-hidden bg-page transition-colors duration-200">
                 {/* Breadcrumb strip */}
-                <div className="h-9 px-4 bg-[#111111] border-b border-[#202020] flex items-center justify-between text-xs select-none shrink-0">
-                  <div className="flex items-center gap-1.5 font-mono text-neutral-400">
+                <div className="h-9 px-4 bg-breadcrumb-theme border-b border-theme flex items-center justify-between text-xs select-none shrink-0 transition-colors duration-200">
+                  <div className="flex items-center gap-1.5 font-mono text-muted-theme">
                     <span className="text-[#76B900] font-bold">SANCTUM</span>
-                    <ChevronRight className="w-3.5 h-3.5 text-neutral-600" />
-                    <span className="text-white font-medium">
+                    <ChevronRight className="w-3.5 h-3.5 text-muted-theme opacity-60" />
+                    <span className="text-main font-medium">
                       {screenTitles[currentScreen]}
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-3 font-mono text-[11px] text-neutral-400">
+                  <div className="flex items-center gap-3 font-mono text-[11px] text-muted-theme">
                     <button
                       type="button"
                       onClick={() => {
@@ -182,7 +182,7 @@ export default function Home() {
                         }, 50);
                       }}
                       title="Click to Open/Change Workspace Folder (VS Code Style)"
-                      className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#161616] hover:bg-[#202020] border border-[#252525] hover:border-[#76B900]/40 transition-colors cursor-pointer text-neutral-300 hover:text-white"
+                      className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface hover:bg-card-theme border border-theme hover:border-[#76B900]/40 transition-colors cursor-pointer text-muted-theme hover:text-main"
                     >
                       <Folder className="w-3 h-3 text-[#76B900]" />
                       <span>/workspace</span>

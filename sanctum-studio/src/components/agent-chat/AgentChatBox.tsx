@@ -72,9 +72,9 @@ function ArrowUpIcon({ stroke = "#8B8B8B" }: { stroke?: string }) {
 
 const CHIP: React.CSSProperties = {
   borderRadius: 36,
-  background: "rgba(255,255,255,0.04)",
+  background: "var(--chatbox-pill, rgba(255,255,255,0.04))",
   boxShadow:
-    "inset 0 0 0 1px rgba(255,255,255,0.02), inset 0 1px 0 0 rgba(255,255,255,0.04)",
+    "inset 0 0 0 1px var(--border-subtle, rgba(255,255,255,0.08))",
 };
 
 export interface AgentChatBoxProps {
@@ -203,12 +203,12 @@ export const AgentChatBox: React.FC<AgentChatBoxProps> = ({
   return (
     <div ref={containerRef} className="flex items-center justify-center w-full py-1 relative z-30 overflow-visible">
       <div
-        className="w-full relative overflow-visible"
+        className="w-full relative overflow-visible transition-colors duration-200"
         style={{
           borderRadius: 20,
-          background: "#1d1d1d",
+          background: "var(--chatbox-bg, #1d1d1d)",
           boxShadow:
-            "inset 0 0 0 1px rgba(44,47,54,0.52), inset 0 0 50px 0 rgba(255,255,255,0.02)",
+            "0 4px 20px -2px rgba(0,0,0,0.06), inset 0 0 0 1px var(--chatbox-border, rgba(44,47,54,0.52))",
           fontFamily: "system-ui, -apple-system, sans-serif",
         }}
       >
@@ -265,12 +265,12 @@ export const AgentChatBox: React.FC<AgentChatBoxProps> = ({
               {isFileMenuOpen && (
                 <div
                   data-testid="at-files-popup"
-                  className="absolute left-0 bottom-full mb-2.5 w-72 sm:w-80 bg-[#16171a] border border-[#2e2e2e] rounded-xl p-2 shadow-[0_25px_60px_rgba(0,0,0,0.98)] z-[100] flex flex-col backdrop-blur-2xl"
+                  className="absolute left-0 bottom-full mb-2.5 w-72 sm:w-80 bg-modal-theme border border-theme rounded-xl p-2 shadow-2xl z-[100] flex flex-col backdrop-blur-2xl"
                   onWheel={(e) => e.stopPropagation()}
                 >
-                  <div className="px-2.5 py-1.5 text-[10px] font-mono uppercase tracking-wider text-neutral-400 border-b border-white/5 flex items-center justify-between shrink-0 select-none">
+                  <div className="px-2.5 py-1.5 text-[10px] font-mono uppercase tracking-wider text-muted-theme border-b border-theme flex items-center justify-between shrink-0 select-none">
                     <span>Attach Context</span>
-                    <span className="text-neutral-500 font-sans text-[10px]">
+                    <span className="text-muted-theme font-sans text-[10px]">
                       {filteredFiles.length} file{filteredFiles.length === 1 ? "" : "s"}
                     </span>
                   </div>
@@ -282,7 +282,7 @@ export const AgentChatBox: React.FC<AgentChatBoxProps> = ({
                       onChange={(e) => setFileSearchQuery(e.target.value)}
                       placeholder="Search files..."
                       autoFocus
-                      className="w-full bg-[#101012] border border-white/5 rounded-md px-2.5 py-1 text-[11px] font-mono text-neutral-200 placeholder-neutral-600 focus:outline-none focus:border-[#76B900]/40"
+                      className="w-full bg-surface border border-theme rounded-md px-2.5 py-1 text-[11px] font-mono text-main placeholder-muted-theme focus:outline-none focus:border-[#76B900]/40"
                     />
                   </div>
 
@@ -327,7 +327,7 @@ export const AgentChatBox: React.FC<AgentChatBoxProps> = ({
                 onChange={(e) => updateText(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder={placeholder}
-                className="w-full bg-transparent text-[13px] text-neutral-200 placeholder-[#4e4e4e] font-sans font-normal leading-[16px] resize-none overflow-x-hidden overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden focus:outline-none"
+                className="w-full bg-transparent text-[13px] text-main placeholder-muted-theme font-sans font-normal leading-[16px] resize-none overflow-x-hidden overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden focus:outline-none"
               />
             </div>
 
@@ -359,7 +359,7 @@ export const AgentChatBox: React.FC<AgentChatBoxProps> = ({
                     padding: "0 6px 0 8px",
                     fontSize: 12,
                     lineHeight: "14px",
-                    color: "#caccd2",
+                    color: "var(--text-main, #caccd2)",
                     marginLeft: 1,
                     cursor: "pointer",
                     ...CHIP,
@@ -373,10 +373,10 @@ export const AgentChatBox: React.FC<AgentChatBoxProps> = ({
                 {isAgentMenuOpen && (
                   <div
                     data-testid="agent-mode-popup"
-                    className="absolute left-0 bottom-full mb-2.5 w-56 bg-[#16171a] border border-[#2e2e2e] rounded-xl p-1.5 shadow-[0_25px_60px_rgba(0,0,0,0.98)] z-[100] flex flex-col backdrop-blur-2xl"
+                    className="absolute left-0 bottom-full mb-2.5 w-56 bg-modal-theme border border-theme rounded-xl p-1.5 shadow-2xl z-[100] flex flex-col backdrop-blur-2xl"
                     onWheel={(e) => e.stopPropagation()}
                   >
-                    <div className="px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-neutral-400 border-b border-white/5 mb-1 select-none">
+                    <div className="px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-muted-theme border-b border-theme mb-1 select-none">
                       Agent Mode
                     </div>
                     <div className="overflow-y-auto max-h-52 p-0.5 space-y-0.5 scrollbar-thin scrollbar-thumb-white/20">
@@ -392,11 +392,11 @@ export const AgentChatBox: React.FC<AgentChatBoxProps> = ({
                             setAgentMode(item.mode);
                             setIsAgentMenuOpen(false);
                           }}
-                          className="w-full text-left px-2.5 py-1.5 rounded-lg text-xs text-neutral-300 hover:bg-[#23252c] hover:text-white flex items-center justify-between transition-colors cursor-pointer group"
+                          className="w-full text-left px-2.5 py-1.5 rounded-lg text-xs text-main hover:bg-card-theme flex items-center justify-between transition-colors cursor-pointer group"
                         >
                           <div>
-                            <div className="font-medium group-hover:text-white">{item.mode}</div>
-                            <div className="text-[10px] text-neutral-500">{item.desc}</div>
+                            <div className="font-medium group-hover:text-[#76B900]">{item.mode}</div>
+                            <div className="text-[10px] text-muted-theme">{item.desc}</div>
                           </div>
                           {agentMode === item.mode && (
                             <Check className="w-3.5 h-3.5 text-[#76B900] shrink-0" />
@@ -425,7 +425,7 @@ export const AgentChatBox: React.FC<AgentChatBoxProps> = ({
                     padding: "0 6px 0 8px",
                     fontSize: 12,
                     lineHeight: "14px",
-                    color: "#caccd2",
+                    color: "var(--text-main, #caccd2)",
                     cursor: "pointer",
                     ...CHIP,
                   }}
@@ -438,10 +438,10 @@ export const AgentChatBox: React.FC<AgentChatBoxProps> = ({
                 {isRoutingMenuOpen && (
                   <div
                     data-testid="routing-mode-popup"
-                    className="absolute left-0 bottom-full mb-2.5 w-60 bg-[#16171a] border border-[#2e2e2e] rounded-xl p-1.5 shadow-[0_25px_60px_rgba(0,0,0,0.98)] z-[100] flex flex-col backdrop-blur-2xl"
+                    className="absolute left-0 bottom-full mb-2.5 w-60 bg-modal-theme border border-theme rounded-xl p-1.5 shadow-2xl z-[100] flex flex-col backdrop-blur-2xl"
                     onWheel={(e) => e.stopPropagation()}
                   >
-                    <div className="px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-neutral-400 border-b border-white/5 mb-1 select-none">
+                    <div className="px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-muted-theme border-b border-theme mb-1 select-none">
                       Model Routing
                     </div>
                     <div className="overflow-y-auto max-h-52 p-0.5 space-y-0.5 scrollbar-thin scrollbar-thumb-white/20">
@@ -457,11 +457,11 @@ export const AgentChatBox: React.FC<AgentChatBoxProps> = ({
                             setRoutingMode(item.r);
                             setIsRoutingMenuOpen(false);
                           }}
-                          className="w-full text-left px-2.5 py-1.5 rounded-lg text-xs text-neutral-300 hover:bg-[#23252c] hover:text-white flex items-center justify-between transition-colors cursor-pointer group"
+                          className="w-full text-left px-2.5 py-1.5 rounded-lg text-xs text-main hover:bg-card-theme flex items-center justify-between transition-colors cursor-pointer group"
                         >
                           <div>
-                            <div className="font-medium group-hover:text-white">{item.r}</div>
-                            <div className="text-[10px] text-neutral-500">{item.desc}</div>
+                            <div className="font-medium group-hover:text-[#76B900]">{item.r}</div>
+                            <div className="text-[10px] text-muted-theme">{item.desc}</div>
                           </div>
                           {routingMode === item.r && (
                             <Check className="w-3.5 h-3.5 text-[#76B900] shrink-0" />

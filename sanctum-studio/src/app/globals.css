@@ -6,24 +6,82 @@
 }
 
 @layer base {
-  :root {
+  :root,
+  .dark {
+    color-scheme: dark;
     --nvidia-green: #76B900;
+    --nvidia-green-hover: #86d000;
     --nvidia-green-subtle: rgba(118, 185, 0, 0.12);
     --nvidia-green-glow: rgba(118, 185, 0, 0.28);
     --nvidia-green-border: rgba(118, 185, 0, 0.35);
 
+    --bg-page: #0a0a0a;
     --bg-dark: #0a0a0a;
-    --bg-surface: #121212;
-    --bg-card: #191919;
-    --bg-card-hover: #222222;
-    --bg-input: #111111;
+    --bg-base: #0d0f0e;
+    --bg-surface: #121413;
+    --bg-card: #161816;
+    --bg-card-hover: #1f231f;
+    --bg-input: #141816;
+    --bg-header: #0c0e0d;
+    --bg-rail: #0d0d0d;
+    --bg-breadcrumb: #111111;
+    --bg-modal: #131417;
 
-    --border-subtle: #242424;
+    --border-subtle: #202622;
+    --border-card: #28302b;
     --border-accent: #76B900;
 
     --text-main: #FFFFFF;
-    --text-muted: #D1D5DB;
-    --text-faint: #808080;
+    --text-secondary: #d1d5db;
+    --text-muted: #9ca3af;
+    --text-faint: #6b7280;
+
+    --chatbox-bg: #1d1d1d;
+    --chatbox-border: rgba(44, 47, 54, 0.52);
+    --chatbox-pill: rgba(255, 255, 255, 0.05);
+
+    --scrollbar-track: #0d0d0d;
+    --scrollbar-thumb: #282828;
+    --scrollbar-thumb-hover: #76B900;
+  }
+
+  .light {
+    color-scheme: light;
+    /* High-contrast sovereign emerald for white backgrounds */
+    --nvidia-green: #528300;
+    --nvidia-green-hover: #436b00;
+    --nvidia-green-subtle: rgba(82, 131, 0, 0.10);
+    --nvidia-green-glow: rgba(82, 131, 0, 0.20);
+    --nvidia-green-border: rgba(82, 131, 0, 0.30);
+
+    --bg-page: #f5f7fa;
+    --bg-dark: #f5f7fa;
+    --bg-base: #ffffff;
+    --bg-surface: #ffffff;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f8fafc;
+    --bg-input: #f1f5f9;
+    --bg-header: #ffffff;
+    --bg-rail: #f8fafc;
+    --bg-breadcrumb: #f1f5f9;
+    --bg-modal: #ffffff;
+
+    --border-subtle: #e2e8f0;
+    --border-card: #cbd5e1;
+    --border-accent: #528300;
+
+    --text-main: #0f172a;
+    --text-secondary: #334155;
+    --text-muted: #64748b;
+    --text-faint: #94a3b8;
+
+    --chatbox-bg: #ffffff;
+    --chatbox-border: #e2e8f0;
+    --chatbox-pill: rgba(0, 0, 0, 0.05);
+
+    --scrollbar-track: #f1f5f9;
+    --scrollbar-thumb: #cbd5e1;
+    --scrollbar-thumb-hover: #528300;
   }
 
   * {
@@ -31,12 +89,13 @@
   }
 
   html, body {
-    background-color: var(--bg-dark);
+    background-color: var(--bg-page);
     color: var(--text-main);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     overflow: hidden;
     user-select: none;
     -webkit-font-smoothing: antialiased;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   code, pre, kbd {
@@ -49,16 +108,34 @@
     height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #0d0d0d;
+    background: var(--scrollbar-track);
   }
   ::-webkit-scrollbar-thumb {
-    background: #282828;
+    background: var(--scrollbar-thumb);
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #76B900;
+    background: var(--scrollbar-thumb-hover);
   }
 }
+
+/* Theme Utility Classes */
+.bg-page { background-color: var(--bg-page); }
+.bg-surface { background-color: var(--bg-surface); }
+.bg-card-theme { background-color: var(--bg-card); }
+.bg-input-theme { background-color: var(--bg-input); }
+.bg-header-theme { background-color: var(--bg-header); }
+.bg-rail-theme { background-color: var(--bg-rail); }
+.bg-breadcrumb-theme { background-color: var(--bg-breadcrumb); }
+.bg-modal-theme { background-color: var(--bg-modal); }
+
+.border-theme { border-color: var(--border-subtle); }
+.border-card-theme { border-color: var(--border-card); }
+
+.text-main { color: var(--text-main); }
+.text-secondary-theme { color: var(--text-secondary); }
+.text-muted-theme { color: var(--text-muted); }
+.text-faint-theme { color: var(--text-faint); }
 
 /* Glassmorphism & Cybernetic Utilities */
 .glass-panel {
@@ -409,3 +486,318 @@
   background: rgba(255, 255, 255, 0.12);
   color: #ffffff;
 }
+
+/* ═════════════════════════════════════════════════════════════════════
+   LIGHT THEME DESIGN OVERRIDES (SENIOR FRONT-END ARCHITECTURE)
+   ═════════════════════════════════════════════════════════════════════ */
+
+/* Glass Panels & Cards in Light Mode */
+.light .glass-panel {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+}
+
+.light .glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.light .glass-card:hover {
+  background: #ffffff;
+  border-color: rgba(82, 131, 0, 0.45);
+  box-shadow: 0 8px 30px -4px rgba(82, 131, 0, 0.12);
+}
+
+.light .glow-green {
+  box-shadow: 0 0 20px -2px rgba(82, 131, 0, 0.25);
+}
+
+.light .border-glow {
+  box-shadow: inset 0 0 12px rgba(82, 131, 0, 0.12);
+}
+
+/* Activity Trace Timeline in Light Mode */
+.light .activity-list::before {
+  background: #cbd5e1;
+}
+
+.light .activity-dot {
+  border-color: #94a3b8;
+  background: #f1f5f9;
+}
+
+.light .activity-event.active .activity-dot,
+.light .activity-event.thinking .activity-dot {
+  border-color: #528300;
+  background: #528300;
+  box-shadow: 0 0 10px rgba(82, 131, 0, 0.7);
+}
+
+.light .activity-event.complete .activity-dot {
+  border-color: #528300;
+  background: #528300;
+  box-shadow: 0 0 4px rgba(82, 131, 0, 0.3);
+}
+
+.light .activity-event-text {
+  color: #1e293b;
+}
+
+.light .activity-event-time {
+  color: #64748b;
+}
+
+.light .activity-event-text.active-shimmer {
+  background: linear-gradient(
+    90deg,
+    #475569 0%,
+    #0f172a 25%,
+    #528300 50%,
+    #3b6100 56%,
+    #0f172a 75%,
+    #475569 100%
+  );
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Word (.docx) Artifact Card in Light Mode */
+.light .docx-artifact-card {
+  background: linear-gradient(135deg, #f0f6ff 0%, #e8f0fe 100%);
+  border: 1px solid #c7d9f7;
+  box-shadow: 0 2px 10px rgba(43, 87, 154, 0.08);
+}
+
+.light .docx-card-icon {
+  background: rgba(43, 87, 154, 0.1);
+  border-color: rgba(43, 87, 154, 0.3);
+}
+
+.light .docx-card-title {
+  color: #0f172a;
+}
+
+.light .docx-card-meta {
+  color: #475569;
+}
+
+.light .docx-card-badge {
+  color: #3b6100;
+  background: rgba(82, 131, 0, 0.12);
+  border-color: rgba(82, 131, 0, 0.3);
+}
+
+.light .docx-btn-open {
+  background: #ffffff;
+  color: #1e293b;
+  border-color: #cbd5e1;
+}
+
+.light .docx-btn-open:hover {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+/* Markdown Renderer in Light Mode */
+.light .markdown-content p,
+.light .markdown-content li {
+  color: #1e293b;
+}
+
+.light .markdown-content strong,
+.light .markdown-content b,
+.light .markdown-content h1,
+.light .markdown-content h2,
+.light .markdown-content h4 {
+  color: #0f172a;
+}
+
+.light .markdown-content h3 {
+  color: #3b6100;
+}
+
+.light .markdown-content em,
+.light .markdown-content i {
+  color: #334155;
+}
+
+.light .markdown-content blockquote {
+  color: #475569;
+  background: #f8fafc;
+  border-left-color: #528300;
+}
+
+.light .markdown-content code:not(pre code) {
+  background: #f1f7e9;
+  color: #3b6100;
+  border-color: rgba(82, 131, 0, 0.25);
+}
+
+.light .markdown-content pre,
+.light .markdown-content pre code {
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: #e2e8f0;
+}
+
+.light .markdown-content table {
+  border-color: #e2e8f0;
+}
+
+.light .markdown-content th {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.light .markdown-content td {
+  color: #334155;
+  border-color: #e2e8f0;
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   LIGHT THEME UNIVERSAL SURFACE & TEXT HARMONIZATION
+   ═════════════════════════════════════════════════════════════════════ */
+
+/* Screen background overrides for light theme */
+.light .bg-\[\#0a0a0a\],
+.light .bg-\[\#0c0e0d\],
+.light .bg-\[\#0d0d0d\],
+.light .bg-\[\#0f0f0f\],
+.light .bg-\[\#0a0a0a\]\/90 {
+  background-color: var(--bg-page) !important;
+}
+
+/* Card / Surface / Container background overrides for light theme */
+.light .bg-\[\#111\],
+.light .bg-\[\#111111\],
+.light .bg-\[\#121212\],
+.light .bg-\[\#131313\],
+.light .bg-\[\#131417\],
+.light .bg-\[\#141414\],
+.light .bg-\[\#141816\],
+.light .bg-\[\#161616\],
+.light .bg-\[\#16171a\],
+.light .bg-\[\#16171b\],
+.light .bg-\[\#181818\],
+.light .bg-\[\#18191d\],
+.light .bg-\[\#191919\],
+.light .bg-\[\#1a1a1a\],
+.light .bg-\[\#1c1c1c\],
+.light .bg-\[\#101115\],
+.light .bg-\[\#0e0e11\],
+.light .bg-\[\#0d110d\],
+.light .bg-\[\#111216\],
+.light .bg-\[\#16171d\] {
+  background-color: var(--bg-surface) !important;
+}
+
+/* Card hover background overrides for light theme */
+.light .hover\:bg-\[\#181818\]:hover,
+.light .hover\:bg-\[\#1c1c1c\]:hover,
+.light .hover\:bg-\[\#202020\]:hover,
+.light .hover\:bg-\[\#222\]:hover,
+.light .hover\:bg-\[\#222222\]:hover,
+.light .hover\:bg-\[\#282828\]:hover,
+.light .hover\:bg-\[\#2a2a2a\]:hover {
+  background-color: var(--bg-card-hover) !important;
+}
+
+/* Border overrides for light theme */
+.light .border-\[\#1f2622\],
+.light .border-\[\#202020\],
+.light .border-\[\#202127\],
+.light .border-\[\#222\],
+.light .border-\[\#222222\],
+.light .border-\[\#23242c\],
+.light .border-\[\#232c26\],
+.light .border-\[\#242424\],
+.light .border-\[\#252525\],
+.light .border-\[\#262626\],
+.light .border-\[\#26272e\],
+.light .border-\[\#282828\],
+.light .border-\[\#2a2a2a\],
+.light .border-\[\#2b2b2b\],
+.light .border-\[\#2c2c2c\],
+.light .border-\[\#2d2d2d\],
+.light .border-\[\#2d2d30\],
+.light .border-\[\#2e2e2e\],
+.light .border-\[\#303030\],
+.light .border-\[\#333\],
+.light .border-\[\#383838\],
+.light .border-white\/5,
+.light .border-white\/10 {
+  border-color: var(--border-subtle) !important;
+}
+
+/* Text color harmonization in light mode */
+.light .text-neutral-100,
+.light .text-neutral-200 {
+  color: var(--text-main) !important;
+}
+.light .text-neutral-300 {
+  color: var(--text-secondary) !important;
+}
+.light .text-neutral-400 {
+  color: var(--text-muted) !important;
+}
+.light .text-neutral-500 {
+  color: var(--text-faint) !important;
+}
+
+/* Headings in light mode */
+.light h1,
+.light h2,
+.light h3,
+.light h4,
+.light h5,
+.light h6 {
+  color: var(--text-main);
+}
+
+.light h1.text-white,
+.light h2.text-white,
+.light h3.text-white,
+.light span.text-white:not(button *):not(.badge *):not([class*="bg-[#76B900]"]):not([class*="bg-black"]):not([class*="bg-green"]):not([class*="bg-blue"]):not([class*="bg-rose"]):not([class*="bg-red"]),
+.light div.text-white:not(button *):not(.badge *):not([class*="bg-[#76B900]"]):not([class*="bg-black"]):not([class*="bg-green"]):not([class*="bg-blue"]):not([class*="bg-rose"]):not([class*="bg-red"]),
+.light p.text-white {
+  color: var(--text-main) !important;
+}
+
+/* Inputs & textareas in light mode */
+.light input:not([type="checkbox"]):not([type="radio"]):not([type="button"]):not([type="submit"]):not([type="range"]),
+.light textarea {
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+  border-color: var(--border-subtle);
+}
+.light input::placeholder,
+.light textarea::placeholder {
+  color: var(--text-muted) !important;
+}
+
+/* Emerald badges in light mode: deep accessible contrast */
+.light .text-\[\#86e810\],
+.light .text-\[\#9ae018\] {
+  color: #456f00 !important;
+}
+.light .bg-\[\#1a2512\],
+.light .bg-\[\#1f2c16\],
+.light .bg-\[\#1f2b14\],
+.light .bg-\[\#1c2616\],
+.light .bg-\[\#192410\],
+.light .bg-\[\#141812\],
+.light .bg-\[\#1f2e14\],
+.light .bg-\[\#1c2912\] {
+  background-color: rgba(82, 131, 0, 0.12) !important;
+  color: #3b6100 !important;
+}
+
+

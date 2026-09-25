@@ -48,7 +48,7 @@ export const ActivityRail: React.FC<ActivityRailProps> = ({
   onSelectScreen,
 }) => {
   return (
-    <aside className="w-14 bg-[#0d0d0d] border-r border-[#202020] flex flex-col items-center py-2 select-none z-20 shrink-0">
+    <aside className="w-14 bg-rail-theme border-r border-theme flex flex-col items-center py-2 select-none z-20 shrink-0 transition-colors duration-200">
       {/* Primary Navigation */}
       <div className="flex flex-col gap-1 w-full px-1.5">
         {primaryItems.map((item) => {
@@ -59,10 +59,10 @@ export const ActivityRail: React.FC<ActivityRailProps> = ({
               key={item.id}
               onClick={() => onSelectScreen(item.id)}
               title={`${item.label} (${item.shortcut})`}
-              className={`relative w-full h-10 rounded-md flex items-center justify-center transition-all group ${
+              className={`relative w-full h-10 rounded-md flex items-center justify-center transition-all group cursor-pointer ${
                 isActive
-                  ? "text-[#76B900] bg-[#1a2512]"
-                  : "text-neutral-400 hover:text-neutral-200 hover:bg-[#181818]"
+                  ? "text-[#76B900] bg-[#76B900]/15 shadow-sm"
+                  : "text-muted-theme hover:text-main hover:bg-card-theme"
               }`}
             >
               {isActive && (
@@ -78,7 +78,7 @@ export const ActivityRail: React.FC<ActivityRailProps> = ({
         })}
       </div>
 
-      <div className="w-8 h-[1px] bg-[#222222] my-2.5" />
+      <div className="w-8 h-[1px] bg-[var(--border-subtle)] my-2.5 opacity-60" />
 
       {/* Secondary Navigation */}
       <div className="flex flex-col gap-1 w-full px-1.5 flex-1">
@@ -90,10 +90,10 @@ export const ActivityRail: React.FC<ActivityRailProps> = ({
               key={item.id}
               onClick={() => onSelectScreen(item.id)}
               title={`${item.label} (${item.shortcut})`}
-              className={`relative w-full h-10 rounded-md flex items-center justify-center transition-all group ${
+              className={`relative w-full h-10 rounded-md flex items-center justify-center transition-all group cursor-pointer ${
                 isActive
-                  ? "text-[#76B900] bg-[#1a2512]"
-                  : "text-neutral-400 hover:text-neutral-200 hover:bg-[#181818]"
+                  ? "text-[#76B900] bg-[#76B900]/15 shadow-sm"
+                  : "text-muted-theme hover:text-main hover:bg-card-theme"
               }`}
             >
               {isActive && (
@@ -113,7 +113,7 @@ export const ActivityRail: React.FC<ActivityRailProps> = ({
       <div className="pt-2 w-full px-2 flex flex-col items-center">
         <div
           title="Host storage: /workspace mounted locally"
-          className="w-full h-8 rounded flex items-center justify-center text-neutral-500 hover:text-[#76B900] cursor-pointer"
+          className="w-full h-8 rounded flex items-center justify-center text-muted-theme hover:text-[#76B900] transition-colors cursor-pointer"
         >
           <HardDrive className="w-3.5 h-3.5" />
         </div>

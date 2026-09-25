@@ -16,8 +16,10 @@ import {
   FileCode,
   ArrowRight,
   Sparkles,
+  SunMoon,
 } from "lucide-react";
 import { ScreenType } from "@/types";
+import { useTheme } from "@/lib/theme";
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -33,9 +35,11 @@ interface CommandItem {
   icon: React.ElementType;
   screen?: ScreenType;
   file?: string;
+  action?: "toggle-theme";
 }
 
 const commands: CommandItem[] = [
+  { id: "a-theme", title: "Toggle Dark / Light Theme", category: "Actions", icon: SunMoon, action: "toggle-theme" },
   { id: "s-1", title: "Open Overview Dashboard", category: "Screens", icon: LayoutDashboard, screen: "overview" },
   { id: "s-2", title: "Open Workspace Explorer & Editor", category: "Screens", icon: FolderTree, screen: "workspace" },
   { id: "s-3", title: "Open AI Agent Assistant", category: "Screens", icon: Bot, screen: "agent" },
@@ -56,6 +60,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   onSelectScreen,
   onSelectFile,
 }) => {
+  const { toggleTheme } = useTheme();
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -97,7 +102,9 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   }, [isOpen, filtered, selectedIndex, onClose]);
 
   const handleSelect = (item: CommandItem) => {
-    if (item.screen) {
+    if (item.action === "toggle-theme") {
+      toggleTheme();
+    } else if (item.screen) {
       onSelectScreen(item.screen);
     }
     if (item.file && onSelectFile) {
@@ -116,7 +123,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/75 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm"
           />
 
           {/* Modal box */}
@@ -125,10 +132,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: -10 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="relative w-full max-w-xl bg-[#141414] border border-[#2d2d2d] rounded-xl shadow-2xl overflow-hidden z-10"
+            className="relative w-full max-w-xl bg-modal-theme border border-theme rounded-xl shadow-2xl overflow-hidden z-10"
           >
             {/* Input bar */}
-            <div className="flex items-center px-4 py-3 border-b border-[#252525] gap-3">
+            <div className="flex items-center px-4 py-3 border-b border-theme gap-3">
               <Search className="w-4 h-4 text-[#76B900]" />
               <input
                 type="text"
@@ -136,68 +143,54 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                 placeholder="Type a command or search workspace..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="w-full bg-transparent text-sm text-white placeholder-neutral-500 focus:outline-none"
+                className="w-full bg-transparent text-sm text-main placeholder-muted-theme focus:outline-none"
               />
-              <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-[#202020] text-neutral-400 border border-[#303030] rounded">
-                ESC
-              </kbd>
+              <span className="text-[10px] font-mono text-muted-theme px-1.5 py-0.5 rounded bg-surface border border-theme">
+                ESC to close
+              </span>
             </div>
 
             {/* Results list */}
-            <div className="max-h-80 overflow-y-auto p-2 divide-y divide-[#1e1e1e]">
+            <div className="max-h-80 overflow-y-auto p-2 space-y-1">
               {filtered.length === 0 ? (
-                <div className="py-8 text-center text-xs text-neutral-500">
+                <div className="py-8 text-center text-xs text-muted-theme font-mono">
                   No matching commands found.
                 </div>
               ) : (
-                filtered.map((item, idx) => {
+                filtered.map((item, index) => {
                   const Icon = item.icon;
-                  const isSelected = idx === selectedIndex;
+                  const isSelected = index === selectedIndex;
                   return (
                     <div
                       key={item.id}
                       onClick={() => handleSelect(item)}
-                      onMouseEnter={() => setSelectedIndex(idx)}
-                      className={`px-3 py-2.5 rounded-lg flex items-center justify-between cursor-pointer transition-colors ${
+                      onMouseEnter={() => setSelectedIndex(index)}
+                      className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-xs cursor-pointer transition-colors ${
                         isSelected
-                          ? "bg-[#202a15] text-[#9ae018]"
-                          : "text-neutral-300 hover:bg-[#1a1a1a]"
+                          ? "bg-[#76B900]/15 text-[#76B900]"
+                          : "text-main hover:bg-surface"
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <div
-                          className={`w-7 h-7 rounded flex items-center justify-center ${
-                            isSelected ? "bg-[#76B900] text-black" : "bg-[#222] text-neutral-400"
-                          }`}
-                        >
-                          <Icon className="w-3.5 h-3.5" />
-                        </div>
-                        <div>
-                          <div className="text-xs font-medium text-white">{item.title}</div>
-                          <div className="text-[10px] text-neutral-500">{item.category}</div>
-                        </div>
+                        <Icon className="w-4 h-4 shrink-0" />
+                        <span className="font-medium">{item.title}</span>
                       </div>
-
-                      {isSelected && (
-                        <ArrowRight className="w-3.5 h-3.5 text-[#76B900]" />
-                      )}
+                      <span className="text-[10px] font-mono text-muted-theme px-1.5 py-0.5 rounded bg-surface border border-theme">
+                        {item.category}
+                      </span>
                     </div>
                   );
                 })
               )}
             </div>
 
-            {/* Footer */}
-            <div className="px-4 py-2 bg-[#0f0f0f] border-t border-[#222] flex items-center justify-between text-[11px] text-neutral-500 font-mono">
-              <div className="flex items-center gap-2">
+            {/* Footer hints */}
+            <div className="px-4 py-2 bg-surface border-t border-theme flex items-center justify-between text-[11px] text-muted-theme font-mono">
+              <div className="flex items-center gap-3">
                 <span>↑↓ Navigate</span>
-                <span>•</span>
                 <span>↵ Select</span>
               </div>
-              <div className="flex items-center gap-1 text-[#76B900]">
-                <Sparkles className="w-3 h-3" />
-                <span>Sanctum Loopback Assistant</span>
-              </div>
+              <span className="text-[#76B900]">Sanctum Sovereign Studio</span>
             </div>
           </motion.div>
         </div>
